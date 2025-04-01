@@ -61,6 +61,11 @@ async def handle_battle_message(message: str):
         print(f"\nBattle ended! {winner} is the winner!")
         battle_state.in_battle = False
         battle_state.battle = None
+    elif parts[0] == "BATTLE_CANCELLED":
+        reason = parts[1]
+        print(f"\nBattle was cancelled: {reason}")
+        battle_state.in_battle = False
+        battle_state.battle = None
     return None
 
 async def battle_loop(writer):
@@ -127,13 +132,62 @@ async def Recieve(reader, writer):
         else:
             print('\n' + f"Message du serveur : {message}")
 
+async def connect_to_server(host: str, port: int, max_retries: int = 3) -> tuple:
+    for attempt in range(max_retries):
+        try:
+            print(f"Attempting to connect to server at {host}:{port}...")
+            reader, writer = await asyncio.open_connection(host=host, port=port)
+            print("Successfully connected to server!")
+            return reader, writer
+        except Exception as e:
+            if attempt < max_retries - 1:
+                print(f"Connection attempt {attempt + 1} failed: {e}")
+                print("Retrying in 2 seconds...")
+                await asyncio.sleep(2)
+            else:
+                print(f"Failed to connect to server after {max_retries} attempts.")
+                raise
+
 async def main():
-    reader, writer = await asyncio.open_connection(host="10.1.2.17", port=13337)
-    pseudo = input("Pseudo : ")
-    writer.write(("Hello|" + pseudo).encode())
-    tasks = [Input(reader, writer), Recieve(reader, writer)]
-    await asyncio.gather(*tasks)
+    # Get server address from user
+    host = input("Enter server IP address (default: localhost): ").strip() or "localhost"
+    port = input("Enter server port (default: 13337): ").strip() or "13337"
+    
+    try:
+        port = int(port)
+    except ValueError:
+        print("Invalid port number. Using default port 13337.")
+        port = 13337
+
+    try:
+        reader, writer = await connect_to_server(host, port)
+        pseudo = input("Pseudo : ")
+        writer.write(("Hello|" + pseudo).encode())
+        await writer.drain()
+        
+        # Create tasks for input, receive, and battle loop
+        tasks = [
+            Input(reader, writer),
+            Recieve(reader, writer),
+            battle_loop(writer)
+        ]
+        await asyncio.gather(*tasks)
+    except Exception as e:
+        print(f"Error: {e}")
+        print("Failed to connect to server. Please check if the server is running and the address is correct.")
+    finally:
+        try:
+            writer.close()
+            await writer.wait_closed()
+        except:
+            pass
 
 if __name__ == "__main__":
-    asyncio.run(main())
-    sys.exit(0)
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\nClient terminated by user.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    finally:
+        sys.exit(0)
