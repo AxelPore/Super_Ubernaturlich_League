@@ -12,6 +12,7 @@ class BattleState:
         self.opponent_pokemon = None
         self.team = []
         self.opponent_team = []
+        self.pseudo = None
 
 battle_state = BattleState()
 
@@ -108,29 +109,41 @@ async def battle_loop(writer):
 
 async def Input(reader, writer):
     while True:
-        messages = []
-        while True:
-            message = await aioconsole.ainput("Message : ")
-            messages.append(message)
+        try:
+            message = await aioconsole.ainput("Message (or 'battle <username>' to challenge someone): ")
+            if message.lower().startswith('battle '):
+                # Handle battle request
+                opponent = message[7:].strip()  # Remove 'battle ' prefix
+                if opponent:
+                    writer.write(f"BATTLE_REQUEST|{battle_state.pseudo}|{opponent}".encode())
+                    await writer.drain()
+                    print(f"Challenging {opponent} to a battle...")
+            else:
+                # Handle regular chat message
+                writer.write(message.encode())
+                await writer.drain()
+        except Exception as e:
+            print(f"Error sending message: {e}")
             break
-        data = '\n'.join(messages)
-        writer.write(data.encode())
-        await writer.drain()
 
 async def Recieve(reader, writer):
     while True:
-        data = await reader.read(1024)
-        if not data:
+        try:
+            data = await reader.read(1024)
+            if not data:
+                break
+            
+            message = data.decode()
+            if message.startswith("BATTLE_"):
+                response = await handle_battle_message(message)
+                if response:
+                    writer.write(response.encode())
+                    await writer.drain()
+            else:
+                print('\n' + f"Message du serveur : {message}")
+        except Exception as e:
+            print(f"Error receiving message: {e}")
             break
-        
-        message = data.decode()
-        if message.startswith("BATTLE_"):
-            response = await handle_battle_message(message)
-            if response:
-                writer.write(response.encode())
-                await writer.drain()
-        else:
-            print('\n' + f"Message du serveur : {message}")
 
 async def connect_to_server(host: str, port: int, max_retries: int = 3) -> tuple:
     for attempt in range(max_retries):
@@ -161,9 +174,14 @@ async def main():
 
     try:
         reader, writer = await connect_to_server(host, port)
-        pseudo = input("Pseudo : ")
-        writer.write(("Hello|" + pseudo).encode())
+        battle_state.pseudo = input("Pseudo : ")
+        writer.write(("Hello|" + battle_state.pseudo).encode())
         await writer.drain()
+        
+        print("\n=== Available Commands ===")
+        print("battle <username> - Challenge a player to a battle")
+        print("quit - Exit the game")
+        print("========================")
         
         # Create tasks for input, receive, and battle loop
         tasks = [
