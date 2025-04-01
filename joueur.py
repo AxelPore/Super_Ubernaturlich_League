@@ -13,6 +13,7 @@ class BattleState:
         self.team = []
         self.opponent_team = []
         self.pseudo = None
+        self.battle_queue = asyncio.Queue()
 
 battle_state = BattleState()
 
@@ -37,37 +38,53 @@ def display_team_status(team: list[Pokemon]):
     for i, pokemon in enumerate(team):
         print(f"{i+1}. {pokemon.name} - HP: {pokemon.current_hp}/{pokemon.max_hp}")
 
-async def handle_battle_message(message: str):
-    parts = message.split('|')
-    if parts[0] == "BATTLE_REQUEST":
-        challenger = parts[1]
-        print(f"\n{challenger} wants to battle!")
+async def handle_battle_request(challenger: str):
+    print(f"\n{challenger} wants to battle!")
+    try:
         response = await aioconsole.ainput("Accept battle? (y/n): ")
         if response.lower() == 'y':
             return f"BATTLE_ACCEPT|{challenger}"
-    elif parts[0] == "BATTLE_START":
-        player1, player2 = parts[1], parts[2]
-        battle_state.in_battle = True
-        print(f"\nBattle started between {player1} and {player2}!")
-    elif parts[0] == "BATTLE_UPDATE":
-        attacker, move, damage, current_hp = parts[1], parts[2], parts[3], parts[4]
-        print(f"\n{attacker} used {move}!")
-        print(f"It dealt {damage} damage!")
-        print(f"Opponent's Pokemon has {current_hp} HP remaining!")
-    elif parts[0] == "POKEMON_SWITCH":
-        player, pokemon = parts[1], parts[2]
-        print(f"\n{player} switched to {pokemon}!")
-    elif parts[0] == "BATTLE_END":
-        winner = parts[1]
-        print(f"\nBattle ended! {winner} is the winner!")
-        battle_state.in_battle = False
-        battle_state.battle = None
-    elif parts[0] == "BATTLE_CANCELLED":
-        reason = parts[1]
-        print(f"\nBattle was cancelled: {reason}")
-        battle_state.in_battle = False
-        battle_state.battle = None
+    except Exception as e:
+        print(f"Error accepting battle: {e}")
     return None
+
+async def process_battle_messages(writer):
+    while True:
+        try:
+            message = await battle_state.battle_queue.get()
+            if message.startswith("BATTLE_REQUEST"):
+                challenger = message.split('|')[1]
+                response = await handle_battle_request(challenger)
+                if response:
+                    writer.write(response.encode())
+                    await writer.drain()
+            elif message.startswith("BATTLE_START"):
+                player1, player2 = message.split('|')[1], message.split('|')[2]
+                battle_state.in_battle = True
+                print(f"\nBattle started between {player1} and {player2}!")
+            elif message.startswith("BATTLE_UPDATE"):
+                attacker, move, damage, current_hp = message.split('|')[1:]
+                print(f"\n{attacker} used {move}!")
+                print(f"It dealt {damage} damage!")
+                print(f"Opponent's Pokemon has {current_hp} HP remaining!")
+            elif message.startswith("POKEMON_SWITCH"):
+                player, pokemon = message.split('|')[1:]
+                print(f"\n{player} switched to {pokemon}!")
+            elif message.startswith("BATTLE_END"):
+                winner = message.split('|')[1]
+                print(f"\nBattle ended! {winner} is the winner!")
+                battle_state.in_battle = False
+                battle_state.battle = None
+            elif message.startswith("BATTLE_CANCELLED"):
+                reason = message.split('|')[1]
+                print(f"\nBattle was cancelled: {reason}")
+                battle_state.in_battle = False
+                battle_state.battle = None
+            elif message.startswith("ERROR"):
+                error_msg = message.split('|')[1]
+                print(f"\nError: {error_msg}")
+        except Exception as e:
+            print(f"Error processing battle message: {e}")
 
 async def battle_loop(writer):
     while battle_state.in_battle:
@@ -135,10 +152,7 @@ async def Recieve(reader, writer):
             
             message = data.decode()
             if message.startswith("BATTLE_"):
-                response = await handle_battle_message(message)
-                if response:
-                    writer.write(response.encode())
-                    await writer.drain()
+                await battle_state.battle_queue.put(message)
             else:
                 print('\n' + f"Message du serveur : {message}")
         except Exception as e:
@@ -183,10 +197,11 @@ async def main():
         print("quit - Exit the game")
         print("========================")
         
-        # Create tasks for input, receive, and battle loop
+        # Create tasks for input, receive, battle processing, and battle loop
         tasks = [
             Input(reader, writer),
             Recieve(reader, writer),
+            process_battle_messages(writer),
             battle_loop(writer)
         ]
         await asyncio.gather(*tasks)
