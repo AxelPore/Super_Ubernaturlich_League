@@ -15,6 +15,7 @@ class BattleState:
         self.battle_queue = asyncio.Queue()
         self.input_queue = asyncio.Queue()
         self.loop = None
+        self.writer = None
 
 battle_state = BattleState()
 
@@ -140,7 +141,15 @@ async def handle_input():
             message = input()
             if message.lower() == 'quit':
                 sys.exit(0)
-            await battle_state.input_queue.put(message)
+            elif message.lower().startswith('battle '):
+                opponent = message[7:].strip()  # Remove 'battle ' prefix
+                if opponent:
+                    battle_state.writer.write(f"BATTLE_REQUEST|{battle_state.pseudo}|{opponent}".encode())
+                    await battle_state.writer.drain()
+                    print(f"Challenging {opponent} to a battle...")
+            else:
+                battle_state.writer.write(message.encode())
+                await battle_state.writer.drain()
         except Exception as e:
             print(f"Error handling input: {e}")
             break
@@ -191,6 +200,7 @@ async def main():
 
     try:
         reader, writer = await connect_to_server(host, port)
+        battle_state.writer = writer  # Store writer in battle_state for handle_input
         battle_state.pseudo = input("Pseudo : ")
         writer.write(("Hello|" + battle_state.pseudo).encode())
         await writer.drain()
