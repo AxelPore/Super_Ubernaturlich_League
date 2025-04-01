@@ -51,23 +51,12 @@ global ACTIVE_BATTLES
 ACTIVE_BATTLES = {}
 
 async def handle_battle_request(reader, writer, challenger: str, opponent: str):
-    # Find the opponent's client
-    opponent_client = None
-    for addr, client in CLIENTS.items():
-        if client['pseudo'] == opponent:
-            opponent_client = client
-            break
-    
-    if opponent_client:
+    if opponent in CLIENTS:
         # Send battle request to opponent
-        opponent_client["w"].write(f"BATTLE_REQUEST|{challenger}".encode())
-        await opponent_client["w"].drain()
+        CLIENTS[opponent]["w"].write(f"BATTLE_REQUEST|{challenger}".encode())
+        await CLIENTS[opponent]["w"].drain()
         return True
-    else:
-        # Notify challenger that opponent is not found
-        writer.write(f"ERROR|Player {opponent} not found".encode())
-        await writer.drain()
-        return False
+    return False
 
 async def start_battle(player1: str, player2: str):
     battle = Battle(player1, player2)
@@ -207,14 +196,6 @@ async def handle_client_msg(reader, writer):
                     challenger = parts[1]
                     opponent = parts[2]
                     if await handle_battle_request(reader, writer, challenger, opponent):
-                        logger.info(f"Battle request sent from {challenger} to {opponent}")
-                elif parts[0] == "BATTLE_ACCEPT":
-                    challenger = parts[1]
-                    opponent = CLIENTS[addr]['pseudo']
-                    if opponent == challenger:
-                        writer.write("ERROR|Cannot accept your own battle request".encode())
-                        await writer.drain()
-                    else:
                         await start_battle(challenger, opponent)
                 elif parts[0] == "BATTLE_ACTION":
                     player = parts[1]
