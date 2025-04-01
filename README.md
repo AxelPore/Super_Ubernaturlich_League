@@ -15,7 +15,7 @@ Afin de gérer plusieurs joueurs en simultanés et proche d'un temps réel, le s
 
 De plus, afin de faciliter l'instalation du client pour les joueurs, indépendemment de leurs versions et pour éviter les soucis de "it works on my machine", tout sera converti en une ou plusieurs image Docker qui pourront ainsi toutes être lancés avec une seule ligne de commande.
 
-Ce projet est assuré par Killian Guillemot en B2 filière informatique et Axel Pore en B2 filière informatique.
+Ce projet est assuré par Killian Guillemot en B2 filière informatique, Luca Vellin-Patché en B2 filière informatique (1D10T) et Axel Pore en B2 filière informatique.
 ```
 
 ---
