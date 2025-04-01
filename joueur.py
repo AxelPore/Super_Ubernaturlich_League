@@ -1,6 +1,5 @@
 import socket
 import sys
-import aioconsole
 import asyncio
 from battle_system import Battle, Pokemon, Move, Type, Status, Weather
 
@@ -14,6 +13,7 @@ class BattleState:
         self.opponent_team = []
         self.pseudo = None
         self.battle_queue = asyncio.Queue()
+        self.input_queue = asyncio.Queue()
         self.loop = None
 
 battle_state = BattleState()
@@ -41,12 +41,10 @@ def display_team_status(team: list[Pokemon]):
 
 async def handle_battle_request(challenger: str):
     print(f"\n{challenger} wants to battle!")
-    try:
-        response = await aioconsole.ainput("Accept battle? (y/n): ")
-        if response.lower() == 'y':
-            return f"BATTLE_ACCEPT|{challenger}"
-    except Exception as e:
-        print(f"Error accepting battle: {e}")
+    print("Accept battle? (y/n): ", end='', flush=True)
+    response = await battle_state.input_queue.get()
+    if response.lower() == 'y':
+        return f"BATTLE_ACCEPT|{challenger}"
     return None
 
 async def process_battle_messages(writer):
@@ -89,17 +87,19 @@ async def process_battle_messages(writer):
                 print(f"\nError: {error_msg}")
         except Exception as e:
             print(f"Error processing battle message: {e}")
-            await asyncio.sleep(0.1)  # Prevent tight error loop
+            await asyncio.sleep(0.1)
 
 async def battle_loop(writer):
     while battle_state.in_battle:
         try:
             display_battle_menu()
-            choice = await aioconsole.ainput("Choose an action: ")
+            print("Choose an action: ", end='', flush=True)
+            choice = await battle_state.input_queue.get()
             
             if choice == "1":
                 display_pokemon_status(battle_state.active_pokemon)
-                move_choice = await aioconsole.ainput("Choose a move (1-4): ")
+                print("Choose a move (1-4): ", end='', flush=True)
+                move_choice = await battle_state.input_queue.get()
                 try:
                     move_index = int(move_choice) - 1
                     if 0 <= move_index < len(battle_state.active_pokemon.moves):
@@ -109,7 +109,8 @@ async def battle_loop(writer):
                     print("Invalid move choice!")
             elif choice == "2":
                 display_team_status(battle_state.team)
-                switch_choice = await aioconsole.ainput("Choose a Pokemon to switch to (1-3): ")
+                print("Choose a Pokemon to switch to (1-3): ", end='', flush=True)
+                switch_choice = await battle_state.input_queue.get()
                 try:
                     switch_index = int(switch_choice) - 1
                     if 0 <= switch_index < len(battle_state.team):
@@ -133,21 +134,15 @@ async def battle_loop(writer):
             print(f"Error in battle loop: {e}")
             await asyncio.sleep(0.1)
 
-async def Input(reader, writer):
+async def handle_input():
     while True:
         try:
-            message = await aioconsole.ainput("Message (or 'battle <username>' to challenge someone): ")
-            if message.lower().startswith('battle '):
-                opponent = message[7:].strip()
-                if opponent:
-                    writer.write(f"BATTLE_REQUEST|{battle_state.pseudo}|{opponent}".encode())
-                    await writer.drain()
-                    print(f"Challenging {opponent} to a battle...")
-            else:
-                writer.write(message.encode())
-                await writer.drain()
+            message = input()
+            if message.lower() == 'quit':
+                sys.exit(0)
+            await battle_state.input_queue.put(message)
         except Exception as e:
-            print(f"Error sending message: {e}")
+            print(f"Error handling input: {e}")
             break
 
 async def Recieve(reader, writer):
@@ -206,7 +201,7 @@ async def main():
         print("========================")
         
         tasks = [
-            Input(reader, writer),
+            handle_input(),
             Recieve(reader, writer),
             process_battle_messages(writer),
             battle_loop(writer)
