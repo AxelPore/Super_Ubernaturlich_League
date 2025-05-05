@@ -12,7 +12,10 @@ def create_tables():
     CREATE TABLE IF NOT EXISTS User (
         Userid INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
         Equipeid INTEGER,
+        Zoneid INTEGER,
+        FOREIGN KEY (Zoneid) REFERENCES Zone(Zoneid),
         FOREIGN KEY (Equipeid) REFERENCES Equipe(Equipeid)
     );
     """)
@@ -45,6 +48,21 @@ def create_tables():
         Ability TEXT,
         Userid INTEGER,
         FOREIGN KEY (Userid) REFERENCES User(Userid)
+    );
+    """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Zone (
+        Zoneid INTEGER PRIMARY KEY AUTOINCREMENT,
+        ZoneName TEXT NOT NULL
+    );
+    """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS WildPokemon (
+        WildPokemonid INTEGER PRIMARY KEY AUTOINCREMENT,
+        Zoneid INTEGER NOT NULL,
+        FOREIGN KEY (Zoneid) REFERENCES Zone(Zoneid)
     );
     """)
 
