@@ -2,6 +2,7 @@ import asyncio
 import logging
 import socket
 import sys
+import os
 
 logger = logging.getLogger("logs")
 logger.setLevel(10)
@@ -37,7 +38,17 @@ console_handler = logging.StreamHandler()
 console_handler.setLevel(10)
 console_handler.setFormatter(CustomFormatter(fmt))
 
-file_handler = logging.FileHandler("./logs/server.log", mode="a", encoding="utf-8")
+# Ensure logs directory exists
+if not os.path.exists("logs"):
+    os.makedirs("logs")
+
+# Ensure server.log file exists
+log_file_path = os.path.join("logs", "server.log")
+if not os.path.exists(log_file_path):
+    with open(log_file_path, "w", encoding="utf-8") as f:
+        pass
+
+file_handler = logging.FileHandler(log_file_path, mode="a", encoding="utf-8")
 file_handler.setLevel(10)
 file_handler.setFormatter(logging.Formatter(fmt2))
 
