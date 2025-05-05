@@ -1,4 +1,4 @@
-from player import *
+from Player import *
 
 
 class Game :
