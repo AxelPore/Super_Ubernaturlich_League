@@ -37,7 +37,7 @@ console_handler = logging.StreamHandler()
 console_handler.setLevel(10)
 console_handler.setFormatter(CustomFormatter(fmt))
 
-file_handler = logging.FileHandler("logs/server.log", mode="a", encoding="utf-8")
+file_handler = logging.FileHandler("./logs/server.log", mode="a", encoding="utf-8")
 file_handler.setLevel(10)
 file_handler.setFormatter(logging.Formatter(fmt2))
 
