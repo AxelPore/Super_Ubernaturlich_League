@@ -1,6 +1,9 @@
-from player import *
+from Player import *
 
 
 class Game :
     def __init__(self):
-        Player
+        self.players = []
+    
+    def zoneCheck(self):
+        for i in range(len(self.players)):
