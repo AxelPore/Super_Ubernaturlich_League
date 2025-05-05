@@ -1,1 +1,1 @@
-Player Class:
+class Player :

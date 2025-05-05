@@ -1,1 +1,1 @@
-Battle Class :
+class Battle :
