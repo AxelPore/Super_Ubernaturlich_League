@@ -1,4 +1,8 @@
 import sqlite3
+import add_items
+import add_pokedex
+import add_moves
+import add_learning
 
 def create_tables():
     conn = sqlite3.connect('database.db')
@@ -39,15 +43,54 @@ def create_tables():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Pokemon (
         Pokemonid INTEGER PRIMARY KEY AUTOINCREMENT,
+        Pokedexid INTEGER NOT NULL,
         PokemonName TEXT NOT NULL,
         Surname TEXT,
-        Move1 TEXT,
-        Move2 TEXT,
-        Move3 TEXT,
-        Move4 TEXT,
+        Move1 integer,
+        Move2 integer,
+        Move3 integer,
+        Move4 integer,
         Ability TEXT,
         Userid INTEGER,
+        FOREIGN KEY (Pokedexid) REFERENCES Pokedex(Pokedexid),
+        FOREIGN KEY (Move1) REFERENCES Move(Moveid),
+        FOREIGN KEY (Move2) REFERENCES Move(Moveid),
+        FOREIGN KEY (Move3) REFERENCES Move(Moveid),
+        FOREIGN KEY (Move4) REFERENCES Move(Moveid),
         FOREIGN KEY (Userid) REFERENCES User(Userid)
+    );
+    """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Learning (
+        Learningid INTEGER PRIMARY KEY AUTOINCREMENT,
+        Pokedexid INTEGER NOT NULL,
+        Moveid INTEGER NOT NULL,
+        Foreign KEY (Pokedexid) REFERENCES Pokedex(Pokedexid),
+        Foreign KEY (Moveid) REFERENCES Move(Moveid)
+    );
+    """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Move (
+        Moveid INTEGER PRIMARY KEY AUTOINCREMENT,
+        MoveName TEXT NOT NULL,
+        type TEXT NOT NULL,
+        power INTEGER NOT NULL,
+        effect_chance INTEGER NOT NULL,
+        accuracy INTEGER NOT NULL,
+        priority INTEGER NOT NULL,
+        pp INTEGER NOT NULL,
+        class TEXT NOT NULL,
+        crit_rate INTEGER NOT NULL,
+        drain INTEGER NOT NULL,
+        flinch_chance INTEGER NOT NULL,
+        healing INTEGER NOT NULL,
+        max_hits INTEGER NOT NULL,
+        min_hits INTEGER NOT NULL,
+        max_turns INTEGER NOT NULL,
+        min_turns INTEGER NOT NULL,
+        stat_chance INTEGER NOT NULL
     );
     """)
     
@@ -59,10 +102,45 @@ def create_tables():
     """)
     
     cursor.execute("""
-    CREATE TABLE IF NOT EXISTS WildPokemon (
-        WildPokemonid INTEGER PRIMARY KEY AUTOINCREMENT,
+    CREATE TABLE IF NOT EXISTS Pokedex (
+        Pokedexid INTEGER PRIMARY KEY AUTOINCREMENT,
         Zoneid INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        type_1 TEXT NOT NULL,
+        type_2 TEXT,
+        ability_1 TEXT NOT NULL,
+        ability_1_is_hidden BOOLEAN NOT NULL,
+        ability_2 TEXT,
+        ability_2_is_hidden BOOLEAN,
+        ability_3 TEXT,
+        ability_3_is_hidden BOOLEAN,
+        height INTEGER NOT NULL,
+        weight INTEGER NOT NULL,
+        stat_hp INTEGER NOT NULL,
+        stat_attack INTEGER NOT NULL,
+        stat_defense INTEGER NOT NULL,
+        stat_spattack INTEGER NOT NULL,
+        stat_spdef INTEGER NOT NULL,
+        stat_speed INTEGER NOT NULL,
         FOREIGN KEY (Zoneid) REFERENCES Zone(Zoneid)
+    );
+    """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Item (
+        Itemid INTEGER PRIMARY KEY AUTOINCREMENT,
+        ItemName TEXT NOT NULL
+    );
+    """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Inventory (
+        Iventoryid INTEGER PRIMARY KEY AUTOINCREMENT,
+        Itemid INTEGER NOT NULL,
+        Quantity INTEGER NOT NULL,
+        Userid INTEGER NOT NULL,
+        FOREIGN KEY (Itemid) REFERENCES Item(Itemid)
+        FOREIGN KEY (Userid) REFERENCES User(Userid)
     );
     """)
 
@@ -71,4 +149,8 @@ def create_tables():
 
 if __name__ == "__main__":
     create_tables()
+    add_pokedex.add_pokedex()
+    add_moves.add_moves()
+    add_learning.add_learning()
+    add_items.add_items()
     print("Database and tables created successfully.")
