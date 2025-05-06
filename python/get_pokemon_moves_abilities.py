@@ -41,4 +41,4 @@ def get_pokemon_moves_and_ability(pokemon_name):
     # Select one random ability
     selected_ability = random.choice(abilities) if abilities else "No ability found"
 
-    return selected_moves, selected_ability
+    return pokedex_id, selected_moves, selected_ability
