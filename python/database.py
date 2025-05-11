@@ -97,7 +97,8 @@ def create_tables():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Zone (
         Zoneid INTEGER PRIMARY KEY AUTOINCREMENT,
-        ZoneName TEXT NOT NULL
+        ZoneName TEXT NOT NULL,
+        ZonePosition INTEGER NOT NULL
     );
     """)
     
