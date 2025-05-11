@@ -236,10 +236,9 @@ class Player :
             print("Invalid zone.")
             conn.close()
             return
-        else:
-            print("You are now in zone", result[0])
         cursor.execute("UPDATE User SET Zoneid = Zone.Zoneid FROM Zone WHERE Zone.ZonePosition = ? AND User.Userid = ?", (self.zone, self.userid))
         self.zoneid = cursor.execute("SELECT Zoneid FROM User WHERE Userid = ?", (self.userid,)).fetchone()[0]
+        print("You are now in zone", result[0])
         conn.commit()
         conn.close()
         
