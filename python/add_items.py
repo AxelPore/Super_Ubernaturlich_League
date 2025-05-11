@@ -2,7 +2,7 @@ import csv
 import sqlite3
 
 def add_items():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('../database.db')
     cursor = conn.cursor()
 
     with open('../csv/items.csv', newline='', encoding='utf-8') as csvfile:

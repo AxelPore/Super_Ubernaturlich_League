@@ -15,7 +15,7 @@ class Player :
         print("Welcome to the game!", self.username, "you are in zone", self.zone, "with your team", self.equipe, "and your pokemon", self.pokemon, "and your items", self.item)
     
     def login(self, username, mdp):
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM User WHERE username = ? AND password = ?", (username, mdp))
         result = cursor.fetchone()
@@ -35,7 +35,7 @@ class Player :
         return True
             
     def register(self, username, mdp):
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 1))
         self.userid = cursor.lastrowid
@@ -58,7 +58,7 @@ class Player :
         self.login(username, mdp)
         
     def add_pokemon(self, pokemon_name):
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         pokedexid, moves, ability = gpm.get_pokemon_moves_and_ability(pokemon_name)
         cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Pokedexid, Ability, Move1, Move2, Move3, Move4) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (pokemon_name, self.userid, pokedexid, ability, moves[0], moves[1], moves[2], moves[3]))
@@ -108,7 +108,7 @@ class Player :
                 print("Invalid choice.")
         
     def add_pokemon_to_team(self):
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         print(f"Choose a Pokemon to add : \n")
         for i, pokemon in enumerate(self.pokemon):
@@ -132,7 +132,7 @@ class Player :
         print(self.username, "this is now your team", self.equipe, "and your pokemons", self.pokemon)
         
     def replace_pokemon_in_team(self):
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         if len(self.equipe) == 1:
             print(f"Choose a Pokemon to replace: \n 1. {self.equipe[0]}")
@@ -171,7 +171,7 @@ class Player :
         print(self.username, "this is now your team", self.equipe, "and your pokemons", self.pokemon)
         
     def remove_pokemon_to_team(self):
-        conn = sqlite3.connect('database.db')
+        conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         if len(self.equipe) == 2:
             print(f"Choose a Pokemon to remove from your team: \n 1. {self.equipe[0]} \n 2. {self.equipe[1]}")

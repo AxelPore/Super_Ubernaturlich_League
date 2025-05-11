@@ -5,7 +5,7 @@ import add_moves
 import add_learning
 
 def create_tables():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('../database.db')
     cursor = conn.cursor()
 
     # Enable foreign key support

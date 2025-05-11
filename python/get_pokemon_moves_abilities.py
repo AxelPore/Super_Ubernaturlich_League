@@ -2,7 +2,7 @@ import sqlite3
 import random
 
 def get_pokemon_moves_and_ability(pokemon_name):
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('../database.db')
     cursor = conn.cursor()
     pokemon_name = pokemon_name.lower()
     # Get Pokedexid and abilities for the given Pokémon name

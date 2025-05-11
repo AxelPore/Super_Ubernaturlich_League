@@ -5,7 +5,7 @@ def str_to_bool(s):
     return 1 if s.lower() == 'true' else 0
 
 def add_pokedex():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect('../database.db')
     cursor = conn.cursor()
 
     with open('../csv/pokemon.csv', newline='', encoding='utf-8') as csvfile:
