@@ -14,7 +14,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-async def as_input(r, w) :
+async def asInput(r, w) :
     while True:
         lines = []
         while True:
@@ -27,7 +27,7 @@ async def as_input(r, w) :
         await w.drain()
 
 
-async def as_recieve(r, w) :
+async def asRecieve(r, w) :
     while True:
         data = await r.read(1024)
         if not data:
