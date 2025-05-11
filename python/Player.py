@@ -59,10 +59,21 @@ class Player :
         print("Registration successful")
         self.login(username, mdp)
         
-    def add_pokemon(self, pokemon_name):
+    def generate_pokemon(self, random_pokemon):
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
+        pokemon_name = cursor.execute("SELECT PokemonName FROM Pokedex WHERE Pokedexid = ?", (random_pokemon,)).fetchone()[0]
+        if pokemon_name is None:
+            print("Invalid Pokémon ID.")
+            conn.close()
+            return None
+        print("You have encountered a wild", pokemon_name)
         pokedexid, moves, ability = gpm.get_pokemon_moves_and_ability(pokemon_name)
+        return pokemon_name, pokedexid, moves, ability
+    
+    def add_pokemon(self, pokemon_name, pokedexid, moves, ability):
+        conn = sqlite3.connect('../database.db')
+        cursor = conn.cursor()
         cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Pokedexid, Ability, Move1, Move2, Move3, Move4) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (pokemon_name, self.userid, pokedexid, ability, moves[0], moves[1], moves[2], moves[3]))
         if len(self.equipe) == 1:
             cursor.execute("UPDATE Equipe SET Pokemon2 = ? WHERE Equipeid = ?", (cursor.lastrowid, self.equipeid))
@@ -205,28 +216,28 @@ class Player :
         conn.close()
         print(self.username, "this is now your team", self.equipe, "and your pokemons", self.pokemon)
         
-    def getUsername(self):
+    def get_username(self):
         return self.username
     
-    def getZone(self):
+    def get_zone(self):
         return self.zone
     
-    def getEquipe(self):
+    def get_equipe(self):
         return self.equipe
     
-    def getPokemon(self):
+    def get_pokemon(self):
         return self.pokemon
     
-    def getItem(self):
+    def get_item(self):
         return self.item
     
-    def getUserid(self):
+    def get_userid(self):
         return self.userid
     
-    def Equipeid(self):
+    def get_equipeid(self):
         return self.equipeid
     
-    def setZone(self, newZone):
+    def set_zone(self, newZone):
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         self.zone = newZone
