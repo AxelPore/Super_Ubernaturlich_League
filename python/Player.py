@@ -32,13 +32,14 @@ class Player :
         self.pokemon = cursor.execute("SELECT PokemonName, Surname FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
         self.zoneid = result[4]
+        self.zone = cursor.execute("SELECT ZonePosition FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()[0]
         conn.close()
         return True
             
     def register(self, username, mdp):
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 1))
+        cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 10))
         self.userid = cursor.lastrowid
         print("Choose a Pokemon as your starter: \n 1. Pikachu \n 2. Bulbasaur \n 3. Charmander \n 4. Squirtle")
         choice = int(input("Enter the number of your choice: "))

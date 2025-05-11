@@ -7,4 +7,7 @@ def add_zones():
     zoneposition = [1,2,3,4,10,11,12,13,14,15,21,22,23,24]
     for i in range(len(zonename)):
         cursor.execute("""INSERT INTO Zone (ZoneName, ZonePosition) VALUES (?, ?)""", (zonename[i], zoneposition[i]))
+        
+    conn.commit()
+    conn.close()
     
