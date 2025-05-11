@@ -8,7 +8,7 @@ def add_pokedex():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
-    with open('csv/pokemon.csv', newline='', encoding='utf-8') as csvfile:
+    with open('../csv/pokemon.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             # Insert with Zoneid=0 temporarily

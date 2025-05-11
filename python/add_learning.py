@@ -10,7 +10,7 @@ def add_learning():
 
     last_entry = None
 
-    with open('csv/learning.csv', newline='', encoding='utf-8') as csvfile:
+    with open('../csv/learning.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             pokemon_name = row['pokemon']
