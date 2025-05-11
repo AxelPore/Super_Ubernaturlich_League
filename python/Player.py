@@ -253,4 +253,33 @@ class Player :
         conn.commit()
         conn.close()
         
+    def use_item(self, itemid, quantity):
+        conn = sqlite3.connect('../database.db')
+        cursor = conn.cursor()
+        cursor.execute("UPDATE Inventory SET Quantity = Quantity - ? WHERE Userid = ? AND Itemid = ?", (quantity, self.userid, itemid))
+        cursor.execute("DELETE * FROM Item WHERE Quantity = 0")
+        self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
+        conn.commit()
+        conn.close()
+        for item in self.item:
+            if item[0] == itemid:
+                item_name = item[0]
+                break
+        print(f"You used {quantity}{item_name}.")
         
+    def add_item(self, itemid, quantity):
+        conn = sqlite3.connect('../database.db')
+        cursor = conn.cursor()
+        result = cursor.execute("SELECT * FROM Item WHERE Itemid = ?", (itemid,)).fetchone()[0]
+        if result is None:
+            cursor.execute("INSERT INTO Inventory (Itemid, Userid, Quantity) VALUES (?, ?, ?)", (itemid, self.userid, quantity))
+        else:
+            cursor.execute("UPDATE Inventory SET Quantity = Quantity + ? WHERE Userid = ? AND Itemid = ?", (quantity, self.userid, itemid))
+        self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
+        for item in self.item:
+            if item[0] == itemid:
+                item_name = item[0]
+                break
+        conn.commit()
+        conn.close()
+        print(f"You added {quantity} {item_name} to your inventory.")
