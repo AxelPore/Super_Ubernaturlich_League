@@ -230,8 +230,16 @@ class Player :
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         self.zone = newZone
+        cursor.execute("SELECT ZoneName FROM Zone WHERE ZonePosition = ?", (self.zone,))
+        result = cursor.fetchone()
+        if result is None:
+            print("Invalid zone.")
+            conn.close()
+            return
+        else:
+            print("You are now in zone", result[0])
         cursor.execute("UPDATE User SET Zoneid = Zone.Zoneid FROM Zone WHERE Zone.ZonePosition = ? AND User.Userid = ?", (self.zone, self.userid))
-        self.zoneid =cursor.execute("SELECT Zoneid FROM User WHERE Userid = ?", (self.userid,)).fetchone()[0]
+        self.zoneid = cursor.execute("SELECT Zoneid FROM User WHERE Userid = ?", (self.userid,)).fetchone()[0]
         conn.commit()
         conn.close()
         
