@@ -220,11 +220,16 @@ class Player :
     def getItem(self):
         return self.item
     
-    def Userid(self):
+    def getUserid(self):
         return self.userid
     
     def Equipeid(self):
         return self.equipeid
     
-    def changeZone(self, newZone):
+    def setZone(self, newZone):
+        conn = sqlite3.connect('../database.db')
+        cursor = conn.cursor()
         self.zone = newZone
+        cursor.execute("UPDATE User SET Zoneid = ? WHERE Userid = ?", (self.zone, self.userid))
+        
+        
