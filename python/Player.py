@@ -203,4 +203,8 @@ class Player :
         conn.close()
         print(self.username, "this is now your team", self.equipe, "and your pokemons", self.pokemon)
         
+    def getUsername(self):
+        return self.username
     
+    def getZone(self):
+        return self.zone
