@@ -9,6 +9,7 @@ class Player :
         self.equipe = []
         self.pokemon = [[]]
         self.item = [[]]
+        self.zoneid = 0
         self.zone = 0
         if not self.login(username, mdp) :
             self.register(username, mdp)
@@ -30,7 +31,7 @@ class Player :
         self.equipe = cursor.execute("SELECT PokemonName, Surname FROM Pokemon WHERE Userid = ? AND Pokemonid IN (?, ?, ?, ?)", (self.userid, self.equipe[0][0], self.equipe[0][1], self.equipe[0][2], self.equipe[0][3])).fetchall()
         self.pokemon = cursor.execute("SELECT PokemonName, Surname FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
-        self.zone = result[4]
+        self.zoneid = result[4]
         conn.close()
         return True
             
@@ -208,3 +209,21 @@ class Player :
     
     def getZone(self):
         return self.zone
+    
+    def getEquipe(self):
+        return self.equipe
+    
+    def getPokemon(self):
+        return self.pokemon
+    
+    def getItem(self):
+        return self.item
+    
+    def Userid(self):
+        return self.userid
+    
+    def Equipeid(self):
+        return self.equipeid
+    
+    def changeZone(self, newZone):
+        self.zone = newZone

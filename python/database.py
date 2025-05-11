@@ -3,6 +3,7 @@ import add_items
 import add_pokedex
 import add_moves
 import add_learning
+import add_zones
 
 def create_tables():
     conn = sqlite3.connect('../database.db')
@@ -154,4 +155,5 @@ if __name__ == "__main__":
     add_moves.add_moves()
     add_learning.add_learning()
     add_items.add_items()
+    add_zones.add_zones()
     print("Database and tables created successfully.")
