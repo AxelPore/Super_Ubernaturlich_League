@@ -1,4 +1,7 @@
 from Player import *
+from Pokemon import *
+from Battle import *
+from random import *
 
 
 class Game :
@@ -37,3 +40,12 @@ class Game :
     
     def remove_player(self, player):
         self.players.pop(player)
+
+    def encounter_pokemon(self, player):
+        conn = sqlite3.connect('../database.db')
+        cursor = conn.cursor()
+        spawnable_pokemons = cursor.execute("SELECT Pokedexid FROM Pokedex WHERE Zoneid = ?", (self.players[player].get_zoneid(),)).fetchall()
+        place_holder = Player()
+        place_holder.add_pokemon_to_team(Pokemon(spawnable_pokemons[randint(range(spawnable_pokemons))]))
+        wild_battle = Battle(self.players[player], place_holder)
+        wild_battle.start_battle()
