@@ -8,7 +8,7 @@ class Game :
     def add_player(self, new_player):
         for i in self.players:
             if (i == new_player):
-                return "Joueur déjà existant"
+                return "Joueur déjà connecté"
         self.players.append(new_player)
     
     def zone_check(self): #Renvoi un dictionnaire avec le nom du player en clé, et l'id de sa zone en valeur
