@@ -7,7 +7,7 @@ class Player :
         self.userid = 0
         self.equipeid = 0
         self.equipe = []
-        self.pokemon = [[]]
+        self.pokemon = []
         self.item = [[]]
         self.zoneid = 0
         self.zone = 0
@@ -26,9 +26,14 @@ class Player :
         self.equipeid = result[3]
         pc = cursor.execute("SELECT Pokedexid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         for i in pc:
-            self.pokemon.append(Pokemon.Pokemon(i))
-        self.equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
-        self.equipe = cursor.execute("SELECT PokemonName, Surname FROM Pokemon WHERE Userid = ? AND Pokemonid IN (?, ?, ?, ?)", (self.userid, self.equipe[0][0], self.equipe[0][1], self.equipe[0][2], self.equipe[0][3])).fetchall()
+            tmp_poke = Pokemon.Pokemon(i)
+            tmp_poke.change_stat(cursor.execute("SELECT Surname, Ability, Move1, Move2, Move3, Move4 FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchone()[0])
+            self.pokemon.append(tmp_poke)
+        tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
+        for j in tmp_equipe:
+            for k in self.pokemon:
+                if k.pokemonid == j:
+                    self.equipe.append(k)  
         self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
         self.zoneid = result[4]
         self.zone = cursor.execute("SELECT ZonePosition FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()[0]
