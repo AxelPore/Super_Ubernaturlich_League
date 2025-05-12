@@ -1,6 +1,7 @@
 import asyncio
 import random
 from pprint import pprint
+from Player import Player
 
 global CLIENTS
 CLIENTS = {}
@@ -38,82 +39,66 @@ async def handle_input(client_id, message):
     return data.decode()
 
 async def handle_client_msg(reader, writer):
-    pseudo = ''
-    id = ''
     addr = writer.get_extra_info('peername')
+    print(f"New connection from {addr}")
 
     try:
         while True:
-            data = await reader.read(1024)
-            if data == b'':
-                break
+            # Ask the client whether they want to log in or register
+            writer.write("Welcome! Do you want to (1) Login or (2) Register? ".encode())
+            await writer.drain()
+            choice = await reader.read(1024)
+            choice = choice.decode().strip()
 
-            message = data.decode()
-            newUsr = False
-
-            if 'Hello|new' in message:
-                print('New user received')
-                pseudo = f"User_{addr[1]}"
-                id = generateId(100)
-                writer.write(("ID|" + id).encode())
+            if choice == "1":
+                # Handle login
+                writer.write("Enter your username: ".encode())
                 await writer.drain()
-                newUsr = True
-            elif 'Hello|reconnect|' in message:
-                print('Already existing user trying to reconnect')
-                id = message.split('|')[2]
-                pseudo = CLIENTS.get(id, {}).get('pseudo', f"User_{addr[1]}")
+                username = await reader.read(1024)
+                username = username.decode().strip()
 
-            if data.decode() == "&<CLEAR_CLIENTS>":
-                CLIENTS.clear()
-                print("All clients have been cleared.")
-                writer.write("CLIENTS cleared.".encode())
+                writer.write("Enter your password: ".encode())
                 await writer.drain()
-                continue
+                password = await reader.read(1024)
+                password = password.decode().strip()
 
-            CLIENTS[id] = {
-                'w': writer,
-                'r': reader,
-                'LastAdress': addr,
-                'pseudo': pseudo
-            }
+                player = Player(username, password)
+                if player.login(username, password):
+                    writer.write(f"Login successful! Welcome, {username}.\n".encode())
+                    await writer.drain()
+                    break  # Exit the loop after successful login
+                else:
+                    writer.write("Login failed. Please try again.\n".encode())
+                    await writer.drain()
 
-            if newUsr:
-                # Example registration process
-                try:
-                    username = await handle_input(id, "Enter your username: ")
-                    password = await handle_input(id, "Enter your password: ")
-                    print(f"Registered username: {username}, password: {password}")
-                except (ConnectionResetError, BrokenPipeError):
-                    print(f"Client {id} disconnected during registration.")
-                    del CLIENTS[id]
-                    break
+            elif choice == "2":
+                # Handle registration
+                writer.write("Enter a username to register: ".encode())
+                await writer.drain()
+                username = await reader.read(1024)
+                username = username.decode().strip()
 
-            for client_id in list(CLIENTS.keys()):
-                try:
-                    if newUsr:
-                        CLIENTS[client_id]['w'].write(
-                            f"{bcolors.OKBLUE}{CLIENTS[id]['pseudo']} {bcolors.HEADER} has joined{bcolors.ENDC}".encode()
-                        )
-                        await CLIENTS[client_id]["w"].drain()
-                    elif client_id != id:
-                        CLIENTS[client_id]["w"].write(
-                            f"{bcolors.OKBLUE}{CLIENTS[id]['pseudo']} {bcolors.HEADER}:> {message}{bcolors.ENDC}".encode()
-                        )
-                        await CLIENTS[client_id]["w"].drain()
-                except (ConnectionResetError, BrokenPipeError):
-                    print(f"Client {client_id} disconnected.")
-                    del CLIENTS[client_id]
+                writer.write("Enter a password: ".encode())
+                await writer.drain()
+                password = await reader.read(1024)
+                password = password.decode().strip()
+
+                player = Player(username, password)
+                player.register(username, password)
+                writer.write(f"Registration successful! Welcome, {username}.\n".encode())
+                await writer.drain()
+                break  # Exit the loop after successful registration
+
+            else:
+                # Invalid input, send the user back to the menu
+                writer.write("Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
+                await writer.drain()
 
     except (ConnectionResetError, BrokenPipeError):
-        print(f"Connection lost with client {addr}.")
-        if id in CLIENTS:
-            del CLIENTS[id]
+        print(f"Connection lost with {addr}.")
     finally:
-        try:
-            writer.close()
-            await writer.wait_closed()
-        except (ConnectionResetError, BrokenPipeError):
-            print(f"Error while closing connection with client {addr}.")
+        writer.close()
+        await writer.wait_closed()
 
 async def main():
     server = await asyncio.start_server(handle_client_msg, '10.1.2.69', 8888)
