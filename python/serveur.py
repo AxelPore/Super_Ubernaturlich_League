@@ -47,9 +47,9 @@ async def handle_client_msg(reader, writer):
             # Ask the client whether they want to log in or register
             writer.write("Welcome! Do you want to (1) Login or (2) Register? ".encode())
             await writer.drain()
-            choice = await reader.read(1024)
+            choice = await reader.read(1)
             choice = choice.decode().strip()
-            print(f"New client : {choice}")  # Debugging log
+            print(f"Client chose : {choice}")  # Debugging log
 
             if choice == "1":
                 # Handle login
