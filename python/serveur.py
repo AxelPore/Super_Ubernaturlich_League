@@ -29,10 +29,12 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-async def handle_input(writer, message):
+async def handle_input(client_id, message):
+    writer = CLIENTS[client_id]['w']
+    reader = CLIENTS[client_id]['r']
     writer.write(f"{INPUT_BYTE_ID}|{message}".encode())
     await writer.drain()
-    data = await CLIENTS[writer]['r'].read(1024)
+    data = await reader.read(1024)
     return data.decode()
 
 async def handle_client_msg(reader, writer):
@@ -68,20 +70,22 @@ async def handle_client_msg(reader, writer):
 
         if newUsr:
             # Example registration process
-            username = await handle_input(writer, "Enter your username: ")
-            password = await handle_input(writer, "Enter your password: ")
+            username = await handle_input(id, "Enter your username: ")
+            password = await handle_input(id, "Enter your password: ")
             print(f"Registered username: {username}, password: {password}")
 
-        for ids in CLIENTS.keys():
+        for client_id in CLIENTS.keys():
             pprint(CLIENTS)
             if newUsr:
-                CLIENTS[ids]['w'].write(
+                CLIENTS[client_id]['w'].write(
                     f"{bcolors.OKBLUE}{CLIENTS[id]['pseudo']} {bcolors.HEADER} has joined{bcolors.ENDC}".encode()
                 )
-                await CLIENTS[ids]["w"].drain()
-            elif ids != id:
-                CLIENTS[ids]["w"].write(f"{bcolors.OKBLUE}{CLIENTS[ids]['pseudo']} {bcolors.HEADER}:> {message}{bcolors.ENDC}".encode())
-                await CLIENTS[ids]["w"].drain()
+                await CLIENTS[client_id]["w"].drain()
+            elif client_id != id:
+                CLIENTS[client_id]["w"].write(
+                    f"{bcolors.OKBLUE}{CLIENTS[id]['pseudo']} {bcolors.HEADER}:> {message}{bcolors.ENDC}".encode()
+                )
+                await CLIENTS[client_id]["w"].drain()
 
 async def main():
     server = await asyncio.start_server(handle_client_msg, '10.1.2.69', 8888)
