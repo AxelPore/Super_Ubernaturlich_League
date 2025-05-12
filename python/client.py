@@ -51,7 +51,7 @@ async def asRecieve(r, w):
 async def main():
     reader, writer = await asyncio.open_connection(host="10.1.2.69", port=8888)
     try:
-        pseudo = input("Enter your username: ")
+        # Automatically sending a "Hello" message without a username
         id = ''
         idFile = Path('/tmp/idServ')
         if idFile.exists():
@@ -59,7 +59,7 @@ async def main():
             with open('/tmp/idServ', 'r') as f:
                 id += f.read()
 
-        writer.write(('Hello|' + pseudo + id).encode())
+        writer.write(('Hello|' + id).encode())
         await writer.drain()
         tasks = [asInput(reader, writer), asRecieve(reader, writer)]
         await asyncio.gather(*tasks)
