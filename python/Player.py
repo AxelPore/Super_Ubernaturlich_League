@@ -11,9 +11,6 @@ class Player :
         self.item = [[]]
         self.zoneid = 0
         self.zone = 0
-        if not self.login(username, mdp) :
-            self.register(username, mdp)
-        print("Welcome to the game!", self.username, "you are in zone", self.zone, "with your team", self.equipe, "and your pokemon", self.pokemon, "and your items", self.item)
     
     def login(self, username, mdp):
         conn = sqlite3.connect('../database.db')
@@ -34,6 +31,7 @@ class Player :
         self.zoneid = result[4]
         self.zone = cursor.execute("SELECT ZonePosition FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()[0]
         conn.close()
+        print("Welcome to the game!", self.username, "you are in zone", self.zone, "with your team", self.equipe, "and your pokemon", self.pokemon, "and your items", self.item)
         return True
             
     def register(self, username, mdp):
@@ -58,18 +56,6 @@ class Player :
         conn.close()
         print("Registration successful")
         self.login(username, mdp)
-        
-    def generate_pokemon(self, random_pokemon):
-        conn = sqlite3.connect('../database.db')
-        cursor = conn.cursor()
-        pokemon_name = cursor.execute("SELECT PokemonName FROM Pokedex WHERE Pokedexid = ?", (random_pokemon,)).fetchone()[0]
-        if pokemon_name is None:
-            print("Invalid Pokémon ID.")
-            conn.close()
-            return None
-        print("You have encountered a wild", pokemon_name)
-        pokedexid, moves, ability = gpm.get_pokemon_moves_and_ability(pokemon_name)
-        return pokemon_name, pokedexid, moves, ability
     
     def add_pokemon(self, pokemon_name, pokedexid, moves, ability):
         conn = sqlite3.connect('../database.db')
@@ -236,6 +222,9 @@ class Player :
     
     def get_equipeid(self):
         return self.equipeid
+    
+    def get_zoneid(self):
+        return self.zoneid
     
     def set_zone(self, newZone):
         conn = sqlite3.connect('../database.db')
