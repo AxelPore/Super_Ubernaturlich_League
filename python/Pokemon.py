@@ -6,16 +6,13 @@ class Pokemon :
         self.pokedexid = random_pokemon
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
-        cursor2 = conn.cursor()
         self.pokemon_name, self.type1, self.type2, self.hp, self.atk, self.defense, self.spatk, self.spdef, self.speed = cursor.execute("SELECT PokemonName, type_1, type_2, stat_hp, stat_attack, stat_defense, stat_spattack, stat_spdefense, stat_speed FROM Pokedex WHERE Pokedexid = ?", (random_pokemon,)).fetchone()[0]
-        print("You have encountered a wild", self.pokemon_name)
-        self.pokedex_id, self.ability_1, self.ability_2, self.ability_3 = cursor.execute("""SELECT Pokedexid, ability_1, ability_2, ability_3 FROM Pokedex WHERE name = ?""", (self.pokemon_name,)).fetchone()[0]
-        abilities = [a for a in [self.ability_1, self.ability_2, self.ability_3] if a and a.strip()]
-        cursor.execute("""SELECT Move.MoveName FROM Learning JOIN Move ON Learning.Moveid = Move.Moveid WHERE Learning.Pokedexid = ?""", (self.pokedex_id,))
-        cursor2.execute("""SELECT Move.pp FROM Learning JOIN Move ON Learning.Moveid = Move.Moveid WHERE Learning.Pokedexid = ?""", (self.pokedex_id,))
+        self.pokedex_id, ability_1, ability_2, ability_3 = cursor.execute("""SELECT Pokedexid, ability_1, ability_2, ability_3 FROM Pokedex WHERE name = ?""", (self.pokemon_name,)).fetchone()[0]
+        abilities = [a for a in [ability_1, ability_2, ability_3] if a and a.strip()]
+        result = cursor.execute("""SELECT Move.MoveName, Move.pp FROM Learning JOIN Move ON Learning.Moveid = Move.Moveid WHERE Learning.Pokedexid = ?""", (self.pokedex_id,)).fetchall()
         moves = {}
-        for i in range(cursor.fetchall()):
-            moves[cursor.fetchall()[i]] = [cursor2.fetchall()[i]]
+        for i in range(result):
+            moves[result[i][0]] = [result[i][1]]
         conn.close()
         self.moves = random.sample(moves, min(4, len(moves)))
         self.ability = random.choice(abilities)
@@ -29,3 +26,13 @@ class Pokemon :
 
     def get_moves(self):
         return self.moves
+    
+    def set_attribute(self, userid):
+        conn = sqlite3.connect('../database.db')
+        cursor = conn.cursor()
+        self.pokemonid, self.surname, self.ability, move1, move2, move3, move4 = cursor.execute("SELECT Pokemonid, Surname, Ability, Move1, Move2, Move3, Move4 FROM Pokemon WHERE Userid = ?", (userid,)).fetchone()[0]
+        tmp_moves = [move1, move2, move3, move4]
+        for i in range(len(tmp_moves)):
+            tmp_pp = cursor.execute("SELECT pp FROM Move WHERE MoveName = ?", (tmp_moves[i],)).fetchone()[0]
+            self.moves[tmp_moves[i]] = [tmp_pp]
+        

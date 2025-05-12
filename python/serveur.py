@@ -3,6 +3,40 @@ import random
 from pprint import pprint
 from Player import Player
 
+
+# def change_equipe(self):
+#         if len(self.equipe) == 1:
+#             print("Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon ")
+#             choice = int(input("Enter the number of your choice: "))
+#             if choice == 1:
+#                 self.add_pokemon_to_team()
+#             elif choice == 2:
+#                 self.replace_pokemon_in_team()
+#             else:
+#                 print("Invalid choice.")
+#         if len(self.equipe) == 4:
+#             print("Here you can manage your team : \n 1. Replace a Pokemon \n 2. Remove a Pokemon")
+#             choice = int(input("Enter the number of your choice: "))
+#             if choice == 1:
+#                 self.replace_pokemon_in_team()
+#             elif choice == 2:
+#                 self.remove_pokemon_to_team()
+#             else:
+#                 print("Invalid choice.")
+#         else:
+#             print("Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon \n 3. Remove a Pokemon")
+#             choice = int(input("Enter the number of your choice: "))
+#             if choice == 1:
+#                 self.add_pokemon_to_team()
+#             elif choice == 2:
+#                 self.replace_pokemon_in_team()
+#             elif choice == 3:
+#                 self.remove_pokemon_to_team()
+#             else:
+#                 print("Invalid choice.")
+
+
+
 global CLIENTS
 CLIENTS = {}
 
