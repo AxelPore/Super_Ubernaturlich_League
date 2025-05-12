@@ -45,9 +45,11 @@ async def asRecieve(reader, writer):
 async def main():
     reader, writer = await asyncio.open_connection(host="10.1.2.69", port=8888)
     try:
+        # Send initial connection message
         writer.write("Hello|new".encode())
-
         await writer.drain()
+
+        # Start receiving messages from the server
         await asRecieve(reader, writer)
     except KeyboardInterrupt:
         print(bcolors.FAIL + "Application interrupted" + bcolors.ENDC)
