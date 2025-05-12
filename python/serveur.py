@@ -1,9 +1,12 @@
 import asyncio
 import random
+from pprint import pprint
+
 global CLIENTS
 CLIENTS = {}
 
-from pprint import pprint
+INPUT_BYTE_ID = 'r=Ip'
+DISPLAY_BYTE_ID = 'r=Dp'
 
 def generateId(lenght):
     id = ''
@@ -14,7 +17,6 @@ def generateId(lenght):
         id += str(hex(random.randrange(1, 10**(comp))))[2:]
         lenght -= 9
     return id
-
 
 class bcolors:
     HEADER = '\033[95m'
@@ -27,71 +29,63 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+async def handle_input(writer, message):
+    writer.write(f"{INPUT_BYTE_ID}|{message}".encode())
+    await writer.drain()
+    data = await CLIENTS[writer]['r'].read(1024)
+    return data.decode()
+
 async def handle_client_msg(reader, writer):
     pseudo = ''
     id = ''
+    addr = writer.get_extra_info('peername')
+
     while True:
         data = await reader.read(1024)
-        addr = writer.get_extra_info('peername')
-
         if data == b'':
             break
 
         message = data.decode()
-        
         newUsr = False
 
-        if 'Hello|' in message and len(message.split("|")) == 2 :
-            print('new user received')
+        if 'Hello|' in message and len(message.split("|")) == 2:
+            print('New user received')
             pseudo = message.split('|')[1]
             id = generateId(100)
-            writer.write(("ID|"+id).encode())
+            writer.write(("ID|" + id).encode())
             newUsr = True
-        elif 'Hello|' in message and len(message.split("|")) == 3 :
-            print('already existing user try to reconnect')
+        elif 'Hello|' in message and len(message.split("|")) == 3:
+            print('Already existing user trying to reconnect')
             pseudo = message.split('|')[1]
             id = message.split('|')[2]
 
-        CLIENTS[id] = {}
-        CLIENTS[id]['w'] = writer
-        CLIENTS[id]['r'] = reader
-        CLIENTS[id]['LastAdress'] = addr
-        CLIENTS[id]['pseudo'] = pseudo
+        CLIENTS[id] = {
+            'w': writer,
+            'r': reader,
+            'LastAdress': addr,
+            'pseudo': pseudo
+        }
+
+        if newUsr:
+            # Example registration process
+            username = await handle_input(writer, "Enter your username: ")
+            password = await handle_input(writer, "Enter your password: ")
+            print(f"Registered username: {username}, password: {password}")
 
         for ids in CLIENTS.keys():
             pprint(CLIENTS)
             if newUsr:
-                CLIENTS[ids]['w'].write(f"{bcolors.OKBLUE}{CLIENTS[id]['pseudo']} {bcolors.HEADER} has joined{bcolors.ENDC}".encode())
+                CLIENTS[ids]['w'].write(
+                    f"{bcolors.OKBLUE}{CLIENTS[id]['pseudo']} {bcolors.HEADER} has joined{bcolors.ENDC}".encode()
+                )
                 await CLIENTS[ids]["w"].drain()
             elif ids != id:
-                print(CLIENTS[id]['pseudo'] + ' Sender')
-                print(CLIENTS[ids]['pseudo'] + ' Reciever')
-                messList = message.split("\n")
-                print(messList)
-                if len(messList) > 1:
-                    print("more than one")
-                    CLIENTS[ids]['w'].write(f"{bcolors.OKBLUE}{CLIENTS[ids]['pseudo']} {bcolors.HEADER}:> {messList[0]}{bcolors.ENDC}".encode())
-                    await CLIENTS[ids]["w"].drain()
-                    spaces = " " * len(f'{pseudo}:> ')
-                    for line in messList[1:]:
-                        CLIENTS[ids]['w'].write(b"\n")
-                        CLIENTS[ids]['w'].write(f"{spaces} {bcolors.HEADER}{line}{bcolors.ENDC}".encode())
-                        await CLIENTS[ids]["w"].drain()
-                else:
-                    print("only one")
-                    CLIENTS[ids]["w"].write(f"{bcolors.OKBLUE}{CLIENTS[ids]['pseudo']} {bcolors.HEADER}:> {messList[0]}{bcolors.ENDC}".encode())
-                    await CLIENTS[ids]["w"].drain()
-                CLIENTS[ids]['w'].write(b"\n")
+                CLIENTS[ids]["w"].write(f"{bcolors.OKBLUE}{CLIENTS[ids]['pseudo']} {bcolors.HEADER}:> {message}{bcolors.ENDC}".encode())
                 await CLIENTS[ids]["w"].drain()
-                print(f"message {message} from {addr} to {ids}")
-            else:
-                print("message not sent to self")
 
 async def main():
-    server = await asyncio.start_server(handle_client_msg, '10.1.1.22', 8888)
-    ids = ', '.join(str(sock.getsockname()) for sock in server.sockets)
-    print(f'Serving on {ids}')
-
+    server = await asyncio.start_server(handle_client_msg, '10.1.2.69', 8888)
+    print(f'Serving on {", ".join(str(sock.getsockname()) for sock in server.sockets)}')
     async with server:
         await server.serve_forever()
 

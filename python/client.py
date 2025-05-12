@@ -14,7 +14,7 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-async def asInput(r, w) :
+async def asInput(r, w):
     while True:
         lines = []
         while True:
@@ -26,41 +26,49 @@ async def asInput(r, w) :
         w.write(line.encode())
         await w.drain()
 
-
-async def asRecieve(r, w) :
+async def asRecieve(r, w):
     while True:
         data = await r.read(1024)
         if not data:
             break
         mess = data.decode()
-        if "ID|" in mess:
+        if mess.startswith('r=Ip|'):
+            # Handle input byte
+            prompt = mess.split('|', 1)[1]
+            response = input(prompt + " ")
+            w.write(response.encode())
+            await w.drain()
+        elif mess.startswith('r=Dp|'):
+            # Handle display byte
+            display_message = mess.split('|', 1)[1]
+            print(f"{bcolors.OKGREEN}{display_message}{bcolors.ENDC}")
+        elif "ID|" in mess:
             with open('/tmp/idServ', 'w+') as f:
                 f.write(mess.split('|')[1])
         else:
-            print(f"{data.decode()}")
+            print(f"{mess}")
 
-async def main() :
-    reader, writer = await asyncio.open_connection(host="10.1.1.22", port=8888)
+async def main():
+    reader, writer = await asyncio.open_connection(host="10.1.2.69", port=8888)
     try:
-        pseudo = input("Enter your username : ")
+        pseudo = input("Enter your username: ")
         id = ''
         idFile = Path('/tmp/idServ')
-        if idFile.exists() :
+        if idFile.exists():
             id = '|'
             with open('/tmp/idServ', 'r') as f:
                 id += f.read()
 
-        writer.write(('Hello|'+pseudo+id).encode())
+        writer.write(('Hello|' + pseudo + id).encode())
         await writer.drain()
         tasks = [asInput(reader, writer), asRecieve(reader, writer)]
         await asyncio.gather(*tasks)
-    except KeyboardInterrupt :
-        print(bcolors.FAIL + "Interruption de l'application" + bcolors.ENDC)
-        writer.write('&<END>')
+    except KeyboardInterrupt:
+        print(bcolors.FAIL + "Application interrupted" + bcolors.ENDC)
+        writer.write('&<END>'.encode())
         return
 
 if __name__ == "__main__":
     asyncio.run(main())
-    print("Connexion fermee")
-
+    print("Connection closed")
 sys.exit(0)
