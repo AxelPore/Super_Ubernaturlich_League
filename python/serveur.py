@@ -83,7 +83,7 @@ async def handle_client_msg(reader, writer):
                     username = await handle_input(id, "Enter your username: ")
                     password = await handle_input(id, "Enter your password: ")
                     print(f"Registered username: {username}, password: {password}")
-                except ConnectionResetError:
+                except (ConnectionResetError, BrokenPipeError):
                     print(f"Client {id} disconnected during registration.")
                     del CLIENTS[id]
                     break
@@ -100,17 +100,20 @@ async def handle_client_msg(reader, writer):
                             f"{bcolors.OKBLUE}{CLIENTS[id]['pseudo']} {bcolors.HEADER}:> {message}{bcolors.ENDC}".encode()
                         )
                         await CLIENTS[client_id]["w"].drain()
-                except ConnectionResetError:
+                except (ConnectionResetError, BrokenPipeError):
                     print(f"Client {client_id} disconnected.")
                     del CLIENTS[client_id]
 
-    except ConnectionResetError:
+    except (ConnectionResetError, BrokenPipeError):
         print(f"Connection lost with client {addr}.")
         if id in CLIENTS:
             del CLIENTS[id]
     finally:
-        writer.close()
-        await writer.wait_closed()
+        try:
+            writer.close()
+            await writer.wait_closed()
+        except (ConnectionResetError, BrokenPipeError):
+            print(f"Error while closing connection with client {addr}.")
 
 async def main():
     server = await asyncio.start_server(handle_client_msg, '10.1.2.69', 8888)
