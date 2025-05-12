@@ -35,7 +35,7 @@ async def asRecieve(r, w):
         if mess.startswith('r=Ip|'):
             # Handle input byte
             prompt = mess.split('|', 1)[1]
-            response = input(prompt + " ")
+            response = await aioconsole.ainput(prompt + " ")  # Use aioconsole.ainput() for async input
             w.write(response.encode())
             await w.drain()
         elif mess.startswith('r=Dp|'):
