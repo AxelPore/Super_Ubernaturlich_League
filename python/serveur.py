@@ -61,6 +61,13 @@ async def handle_client_msg(reader, writer):
             pseudo = message.split('|')[1]
             id = message.split('|')[2]
 
+        if data.decode() == "&<CLEAR_CLIENTS>":
+            CLIENTS.clear()
+            print("All clients have been cleared.")
+            writer.write("CLIENTS cleared.".encode())
+            await writer.drain()
+            continue
+
         CLIENTS[id] = {
             'w': writer,
             'r': reader,
