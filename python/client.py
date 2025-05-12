@@ -1,5 +1,4 @@
 import sys
-import aioconsole
 import asyncio
 
 INPUT_BYTE_ID = 'r=Ip'
@@ -9,7 +8,8 @@ async def send_input_to_server(writer, prompt):
     """
     Handles input from the user and sends it to the server.
     """
-    response = await aioconsole.ainput(prompt + " ")  # Prompt the user for input
+    # Use synchronous input() instead of aioconsole.ainput()
+    response = input(prompt + " ")  # Prompt the user for input
     print(f"Sending input to server: {response}")  # Debugging log
     writer.write(response.encode())  # Send the response to the server
     await writer.drain()
