@@ -49,7 +49,7 @@ async def handle_client_msg(reader, writer):
             await writer.drain()
             choice = await reader.read(1024)
             choice = choice.decode().strip()
-            print(f"Client choice: {choice}")  # Debugging log
+            print(f"New client : {choice}")  # Debugging log
 
             if choice == "1":
                 # Handle login
@@ -76,6 +76,7 @@ async def handle_client_msg(reader, writer):
 
             elif choice == "2":
                 # Handle registration
+                print("Registration flow started.")  # Debugging log
                 writer.write("Enter a username to register: ".encode())
                 await writer.drain()
                 username = await reader.read(1024)
@@ -100,6 +101,7 @@ async def handle_client_msg(reader, writer):
 
             else:
                 # Invalid input, send the user back to the menu
+                print(f"Invalid choice received: {choice}")  # Debugging log
                 writer.write("Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
                 await writer.drain()
 
