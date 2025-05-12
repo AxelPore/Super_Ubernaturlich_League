@@ -42,57 +42,75 @@ async def handle_client_msg(reader, writer):
     id = ''
     addr = writer.get_extra_info('peername')
 
-    while True:
-        data = await reader.read(1024)
-        if data == b'':
-            break
+    try:
+        while True:
+            data = await reader.read(1024)
+            if data == b'':
+                break
 
-        message = data.decode()
-        newUsr = False
+            message = data.decode()
+            newUsr = False
 
-        if 'Hello|new' in message:
-            print('New user received')
-            pseudo = f"User_{addr[1]}"
-            id = generateId(100)
-            writer.write(("ID|" + id).encode())
-            newUsr = True
-        elif 'Hello|reconnect|' in message:
-            print('Already existing user trying to reconnect')
-            id = message.split('|')[2]
-            pseudo = CLIENTS.get(id, {}).get('pseudo', f"User_{addr[1]}")
+            if 'Hello|new' in message:
+                print('New user received')
+                pseudo = f"User_{addr[1]}"
+                id = generateId(100)
+                writer.write(("ID|" + id).encode())
+                await writer.drain()
+                newUsr = True
+            elif 'Hello|reconnect|' in message:
+                print('Already existing user trying to reconnect')
+                id = message.split('|')[2]
+                pseudo = CLIENTS.get(id, {}).get('pseudo', f"User_{addr[1]}")
 
-        if data.decode() == "&<CLEAR_CLIENTS>":
-            CLIENTS.clear()
-            print("All clients have been cleared.")
-            writer.write("CLIENTS cleared.".encode())
-            await writer.drain()
-            continue
+            if data.decode() == "&<CLEAR_CLIENTS>":
+                CLIENTS.clear()
+                print("All clients have been cleared.")
+                writer.write("CLIENTS cleared.".encode())
+                await writer.drain()
+                continue
 
-        CLIENTS[id] = {
-            'w': writer,
-            'r': reader,
-            'LastAdress': addr,
-            'pseudo': pseudo
-        }
+            CLIENTS[id] = {
+                'w': writer,
+                'r': reader,
+                'LastAdress': addr,
+                'pseudo': pseudo
+            }
 
-        if newUsr:
-            # Example registration process
-            username = await handle_input(id, "Enter your username: ")
-            password = await handle_input(id, "Enter your password: ")
-            print(f"Registered username: {username}, password: {password}")
-
-        for client_id in CLIENTS.keys():
-            pprint(CLIENTS)
             if newUsr:
-                CLIENTS[client_id]['w'].write(
-                    f"{bcolors.OKBLUE}{CLIENTS[id]['pseudo']} {bcolors.HEADER} has joined{bcolors.ENDC}".encode()
-                )
-                await CLIENTS[client_id]["w"].drain()
-            elif client_id != id:
-                CLIENTS[client_id]["w"].write(
-                    f"{bcolors.OKBLUE}{CLIENTS[id]['pseudo']} {bcolors.HEADER}:> {message}{bcolors.ENDC}".encode()
-                )
-                await CLIENTS[client_id]["w"].drain()
+                # Example registration process
+                try:
+                    username = await handle_input(id, "Enter your username: ")
+                    password = await handle_input(id, "Enter your password: ")
+                    print(f"Registered username: {username}, password: {password}")
+                except ConnectionResetError:
+                    print(f"Client {id} disconnected during registration.")
+                    del CLIENTS[id]
+                    break
+
+            for client_id in list(CLIENTS.keys()):
+                try:
+                    if newUsr:
+                        CLIENTS[client_id]['w'].write(
+                            f"{bcolors.OKBLUE}{CLIENTS[id]['pseudo']} {bcolors.HEADER} has joined{bcolors.ENDC}".encode()
+                        )
+                        await CLIENTS[client_id]["w"].drain()
+                    elif client_id != id:
+                        CLIENTS[client_id]["w"].write(
+                            f"{bcolors.OKBLUE}{CLIENTS[id]['pseudo']} {bcolors.HEADER}:> {message}{bcolors.ENDC}".encode()
+                        )
+                        await CLIENTS[client_id]["w"].drain()
+                except ConnectionResetError:
+                    print(f"Client {client_id} disconnected.")
+                    del CLIENTS[client_id]
+
+    except ConnectionResetError:
+        print(f"Connection lost with client {addr}.")
+        if id in CLIENTS:
+            del CLIENTS[id]
+    finally:
+        writer.close()
+        await writer.wait_closed()
 
 async def main():
     server = await asyncio.start_server(handle_client_msg, '10.1.2.69', 8888)
