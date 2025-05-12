@@ -48,18 +48,18 @@ async def handle_client_msg(reader, writer):
             break
 
         message = data.decode()
-        newUsr = True
+        newUsr = False
 
-        if 'Hello|' in message and len(message.split("|")) == 2:
+        if 'Hello|new' in message:
             print('New user received')
-            pseudo = message.split('|')[1]
+            pseudo = f"User_{addr[1]}"
             id = generateId(100)
             writer.write(("ID|" + id).encode())
             newUsr = True
-        elif 'Hello|' in message and len(message.split("|")) == 3:
+        elif 'Hello|reconnect|' in message:
             print('Already existing user trying to reconnect')
-            pseudo = message.split('|')[1]
             id = message.split('|')[2]
+            pseudo = CLIENTS.get(id, {}).get('pseudo', f"User_{addr[1]}")
 
         if data.decode() == "&<CLEAR_CLIENTS>":
             CLIENTS.clear()
