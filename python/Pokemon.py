@@ -19,6 +19,8 @@ class Pokemon :
         conn.close()
         self.moves = random.sample(moves, min(4, len(moves)))
         self.ability = random.choice(abilities)
+        self.surname = ""
+        self.pokemonid = 0
             
     def attack(self, selected_move):
         conn = sqlite3.connect('../database.db')

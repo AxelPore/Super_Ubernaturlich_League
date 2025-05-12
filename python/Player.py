@@ -27,7 +27,7 @@ class Player :
         pc = cursor.execute("SELECT Pokedexid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         for i in pc:
             tmp_poke = Pokemon.Pokemon(i)
-            tmp_poke.change_stat(cursor.execute("SELECT Surname, Ability, Move1, Move2, Move3, Move4 FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchone()[0])
+            tmp_poke.set_attribute(cursor.execute("SELECT Pokemonid, Surname, Ability, Move1, Move2, Move3, Move4 FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchone()[0])
             self.pokemon.append(tmp_poke)
         tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
         for j in tmp_equipe:
