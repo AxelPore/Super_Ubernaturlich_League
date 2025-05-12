@@ -1,27 +1,16 @@
 import sys
 import aioconsole
 import asyncio
-from pathlib import Path
 
 INPUT_BYTE_ID = 'r=Ip'
 DISPLAY_BYTE_ID = 'r=Dp'
-
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
 
 async def send_input_to_server(writer, prompt):
     """
     Handles input from the user and sends it to the server.
     """
     response = await aioconsole.ainput(prompt + " ")  # Prompt the user for input
+    print(f"Sending input to server: {response}")  # Debugging log
     writer.write(response.encode())  # Send the response to the server
     await writer.drain()
 
@@ -38,7 +27,7 @@ async def asRecieve(reader, writer):
         elif message.startswith(DISPLAY_BYTE_ID):
             # Handle display-only message
             display_message = message.split('|', 1)[1]  # Extract the display message
-            print(f"{bcolors.OKGREEN}{display_message}{bcolors.ENDC}")
+            print(display_message)
         else:
             print(f"Unknown message: {message}")
 
@@ -52,14 +41,10 @@ async def main():
         # Start receiving messages from the server
         await asRecieve(reader, writer)
     except KeyboardInterrupt:
-        print(bcolors.FAIL + "Application interrupted" + bcolors.ENDC)
-        writer.write('&<END>'.encode())
-        return
+        print("Client interrupted.")
     finally:
         writer.close()
         await writer.wait_closed()
 
 if __name__ == "__main__":
     asyncio.run(main())
-    print("Connection closed")
-sys.exit(0)

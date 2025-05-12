@@ -54,6 +54,7 @@ async def handle_client_msg(reader, writer):
                 writer.write(f"{DISPLAY_BYTE_ID}|Welcome! Do you want to (1) Login or (2) Register? ".encode())
                 await writer.drain()
                 choice = await reader.read(1024)
+                print(f"Raw data received: {choice}")  # Debugging log
                 choice = choice.decode().strip()
                 print(f"Client chose: {choice}")  # Debugging log
 
