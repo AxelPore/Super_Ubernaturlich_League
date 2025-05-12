@@ -48,7 +48,7 @@ async def handle_client_msg(reader, writer):
             break
 
         message = data.decode()
-        newUsr = False
+        newUsr = True
 
         if 'Hello|' in message and len(message.split("|")) == 2:
             print('New user received')
