@@ -47,9 +47,9 @@ async def handle_client_msg(reader, writer):
             # Ask the client whether they want to log in or register
             writer.write("Welcome! Do you want to (1) Login or (2) Register? ".encode())
             await writer.drain()
-            choice = await reader.read(1)
+            choice = await reader.read(1024)  # Read the full input
             choice = choice.decode().strip()
-            print(f"Client chose : {choice}")  # Debugging log
+            print(f"Client chose: {choice}")  # Debugging log
 
             if choice == "1":
                 # Handle login
@@ -98,6 +98,12 @@ async def handle_client_msg(reader, writer):
                 except Exception as e:
                     writer.write(f"Registration failed: {str(e)}\n".encode())
                     await writer.drain()
+
+            elif choice.startswith("Hello|new"):
+                # Handle new client connection
+                print("New client connected.")
+                writer.write("Welcome to the server! Please choose an option.\n".encode())
+                await writer.drain()
 
             else:
                 # Invalid input, send the user back to the menu
