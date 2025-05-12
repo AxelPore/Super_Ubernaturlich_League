@@ -45,21 +45,21 @@ async def handle_client_msg(reader, writer):
     try:
         while True:
             # Ask the client whether they want to log in or register
-            writer.write("Welcome! Do you want to (1) Login or (2) Register? ".encode())
+            writer.write(f"{DISPLAY_BYTE_ID}|Welcome! Do you want to (1) Login or (2) Register? ".encode())
             await writer.drain()
-            choice = await reader.read(1024)  # Read the full input
+            choice = await reader.read(1024)
             choice = choice.decode().strip()
             print(f"Client chose: {choice}")  # Debugging log
 
             if choice == "1":
                 # Handle login
-                writer.write("Enter your username: ".encode())
+                writer.write(f"{INPUT_BYTE_ID}|Enter your username: ".encode())
                 await writer.drain()
                 username = await reader.read(1024)
                 username = username.decode().strip()
                 print(f"Received username for login: {username}")  # Debugging log
 
-                writer.write("Enter your password: ".encode())
+                writer.write(f"{INPUT_BYTE_ID}|Enter your password: ".encode())
                 await writer.drain()
                 password = await reader.read(1024)
                 password = password.decode().strip()
@@ -67,23 +67,22 @@ async def handle_client_msg(reader, writer):
 
                 player = Player(username, password)
                 if player.login(username, password):
-                    writer.write(f"Login successful! Welcome, {username}.\n".encode())
+                    writer.write(f"{DISPLAY_BYTE_ID}|Login successful! Welcome, {username}.\n".encode())
                     await writer.drain()
                     break  # Exit the loop after successful login
                 else:
-                    writer.write("Login failed. Please try again.\n".encode())
+                    writer.write(f"{DISPLAY_BYTE_ID}|Login failed. Please try again.\n".encode())
                     await writer.drain()
 
             elif choice == "2":
                 # Handle registration
-                print("Registration flow started.")  # Debugging log
-                writer.write("Enter a username to register: ".encode())
+                writer.write(f"{INPUT_BYTE_ID}|Enter a username to register: ".encode())
                 await writer.drain()
                 username = await reader.read(1024)
                 username = username.decode().strip()
                 print(f"Received username for registration: {username}")  # Debugging log
 
-                writer.write("Enter a password to register: ".encode())
+                writer.write(f"{INPUT_BYTE_ID}|Enter a password to register: ".encode())
                 await writer.drain()
                 password = await reader.read(1024)
                 password = password.decode().strip()
@@ -92,23 +91,16 @@ async def handle_client_msg(reader, writer):
                 player = Player(username, password)
                 try:
                     player.register(username, password)
-                    writer.write(f"Registration successful! Welcome, {username}.\n".encode())
+                    writer.write(f"{DISPLAY_BYTE_ID}|Registration successful! Welcome, {username}.\n".encode())
                     await writer.drain()
                     break  # Exit the loop after successful registration
                 except Exception as e:
-                    writer.write(f"Registration failed: {str(e)}\n".encode())
+                    writer.write(f"{DISPLAY_BYTE_ID}|Registration failed: {str(e)}\n".encode())
                     await writer.drain()
-
-            elif choice.startswith("Hello|new"):
-                # Handle new client connection
-                print("New client connected.")
-                writer.write("Welcome to the server! Please choose an option.\n".encode())
-                await writer.drain()
 
             else:
                 # Invalid input, send the user back to the menu
-                print(f"Invalid choice received: {choice}")  # Debugging log
-                writer.write("Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
+                writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
                 await writer.drain()
 
     except (ConnectionResetError, BrokenPipeError):
