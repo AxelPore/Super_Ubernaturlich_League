@@ -17,6 +17,14 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+async def send_input_to_server(writer, prompt):
+    """
+    Handles input from the user and sends it to the server.
+    """
+    response = await aioconsole.ainput(prompt + " ")  # Prompt the user for input
+    writer.write(response.encode())  # Send the response to the server
+    await writer.drain()
+
 async def asRecieve(reader, writer):
     while True:
         data = await reader.read(1024)
@@ -25,33 +33,19 @@ async def asRecieve(reader, writer):
         message = data.decode()
         if message.startswith(INPUT_BYTE_ID):
             # Handle input request
-            prompt = message.split('|', 1)[1]
-            response = await aioconsole.ainput(prompt + " ")
-            writer.write(response.encode())
-            await writer.drain()
+            prompt = message.split('|', 1)[1]  # Extract the prompt
+            await send_input_to_server(writer, prompt)  # Send user input to the server
         elif message.startswith(DISPLAY_BYTE_ID):
             # Handle display-only message
-            display_message = message.split('|', 1)[1]
+            display_message = message.split('|', 1)[1]  # Extract the display message
             print(f"{bcolors.OKGREEN}{display_message}{bcolors.ENDC}")
-        elif "ID|" in message:
-            with open('/tmp/idServ', 'w+') as f:
-                f.write(message.split('|')[1])
         else:
             print(f"Unknown message: {message}")
 
 async def main():
     reader, writer = await asyncio.open_connection(host="10.1.2.69", port=8888)
     try:
-        id = ''
-        idFile = Path('/tmp/idServ')
-        if idFile.exists():
-            # Reconnecting client
-            with open('/tmp/idServ', 'r') as f:
-                id = f.read()
-            writer.write(f"Hello|reconnect|{id}".encode())
-        else:
-            # New client
-            writer.write("Hello|new".encode())
+        writer.write("Hello|new".encode())
 
         await writer.drain()
         await asRecieve(reader, writer)
