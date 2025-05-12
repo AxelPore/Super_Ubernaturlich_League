@@ -29,7 +29,6 @@ class Player :
             self.pokemon.append(Pokemon.Pokemon(i))
         self.equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
         self.equipe = cursor.execute("SELECT PokemonName, Surname FROM Pokemon WHERE Userid = ? AND Pokemonid IN (?, ?, ?, ?)", (self.userid, self.equipe[0][0], self.equipe[0][1], self.equipe[0][2], self.equipe[0][3])).fetchall()
-        self.pokemon = 
         self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
         self.zoneid = result[4]
         self.zone = cursor.execute("SELECT ZonePosition FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()[0]
