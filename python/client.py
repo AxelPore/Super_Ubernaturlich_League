@@ -14,18 +14,6 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-async def asInput(r, w):
-    while True:
-        lines = []
-        while True:
-            ZaLine = await aioconsole.ainput()
-            if not ZaLine:
-                break
-            lines.append(ZaLine)
-        line = '\n'.join(lines)
-        w.write(line.encode())
-        await w.drain()
-
 async def asRecieve(r, w):
     while True:
         data = await r.read(1024)
@@ -63,12 +51,14 @@ async def main():
             writer.write("Hello|new".encode())
 
         await writer.drain()
-        tasks = [asInput(reader, writer), asRecieve(reader, writer)]
-        await asyncio.gather(*tasks)
+        await asRecieve(reader, writer)  # Only one coroutine handles input/output
     except KeyboardInterrupt:
         print(bcolors.FAIL + "Application interrupted" + bcolors.ENDC)
         writer.write('&<END>'.encode())
         return
+    finally:
+        writer.close()
+        await writer.wait_closed()
 
 if __name__ == "__main__":
     asyncio.run(main())
