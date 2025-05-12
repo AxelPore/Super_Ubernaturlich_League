@@ -72,7 +72,7 @@ async def handle_client_msg(reader, writer):
                     password = password.decode().strip()
                     print(f"Received password for login: {password}")  # Debugging log
 
-                    player = Player(username, password)
+                    player = Player()
                     if player.login(username, password):
                         writer.write(f"{DISPLAY_BYTE_ID}|Login successful! Welcome, {username}.\n".encode())
                         await writer.drain()
@@ -95,7 +95,7 @@ async def handle_client_msg(reader, writer):
                     password = password.decode().strip()
                     print(f"Received password for registration: {password}")  # Debugging log
 
-                    player = Player(username, password)
+                    player = Player()
                     try:
                         player.register(username, password)
                         writer.write(f"{DISPLAY_BYTE_ID}|Registration successful! Welcome, {username}.\n".encode())
