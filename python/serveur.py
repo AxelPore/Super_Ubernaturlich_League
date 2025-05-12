@@ -49,6 +49,7 @@ async def handle_client_msg(reader, writer):
             await writer.drain()
             choice = await reader.read(1024)
             choice = choice.decode().strip()
+            print(f"Client choice: {choice}")  # Debugging log
 
             if choice == "1":
                 # Handle login
@@ -56,11 +57,13 @@ async def handle_client_msg(reader, writer):
                 await writer.drain()
                 username = await reader.read(1024)
                 username = username.decode().strip()
+                print(f"Received username for login: {username}")  # Debugging log
 
                 writer.write("Enter your password: ".encode())
                 await writer.drain()
                 password = await reader.read(1024)
                 password = password.decode().strip()
+                print(f"Received password for login: {password}")  # Debugging log
 
                 player = Player(username, password)
                 if player.login(username, password):
@@ -77,11 +80,13 @@ async def handle_client_msg(reader, writer):
                 await writer.drain()
                 username = await reader.read(1024)
                 username = username.decode().strip()
+                print(f"Received username for registration: {username}")  # Debugging log
 
                 writer.write("Enter a password to register: ".encode())
                 await writer.drain()
                 password = await reader.read(1024)
                 password = password.decode().strip()
+                print(f"Received password for registration: {password}")  # Debugging log
 
                 player = Player(username, password)
                 try:
