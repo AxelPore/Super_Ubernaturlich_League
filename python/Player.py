@@ -1,8 +1,8 @@
 import sqlite3
-import get_pokemon_moves_abilities as gpm
+import Pokemon
 
 class Player :
-    def __init__(self, username, mdp):
+    def __init__(self):
         self.username = ""
         self.userid = 0
         self.equipeid = 0
@@ -24,9 +24,12 @@ class Player :
         self.username = username
         self.userid = result[0]
         self.equipeid = result[3]
+        pc = cursor.execute("SELECT Pokedexid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
+        for i in pc:
+            self.pokemon.append(Pokemon.Pokemon(i))
         self.equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
         self.equipe = cursor.execute("SELECT PokemonName, Surname FROM Pokemon WHERE Userid = ? AND Pokemonid IN (?, ?, ?, ?)", (self.userid, self.equipe[0][0], self.equipe[0][1], self.equipe[0][2], self.equipe[0][3])).fetchall()
-        self.pokemon = cursor.execute("SELECT PokemonName, Surname FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
+        self.pokemon = 
         self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
         self.zoneid = result[4]
         self.zone = cursor.execute("SELECT ZonePosition FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()[0]
@@ -34,21 +37,13 @@ class Player :
         print("Welcome to the game!", self.username, "you are in zone", self.zone, "with your team", self.equipe, "and your pokemon", self.pokemon, "and your items", self.item)
         return True
             
-    def register(self, username, mdp):
+    def register(self, username, mdp, starter_pokemon):
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 10))
         self.userid = cursor.lastrowid
-        print("Choose a Pokemon as your starter: \n 1. Pikachu \n 2. Bulbasaur \n 3. Charmander \n 4. Squirtle")
-        choice = int(input("Enter the number of your choice: "))
-        starter_pokemon = {
-            1: "Pikachu",
-            2: "Bulbasaur",
-            3: "Charmander",
-            4: "Squirtle"
-        }.get(choice, "Pikachu")
-        pokedexid, moves, ability = gpm.get_pokemon_moves_and_ability(starter_pokemon)
-        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Pokedexid, Ability, Move1, Move2, Move3, Move4) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (starter_pokemon, self.userid, pokedexid, ability, moves[0], moves[1], moves[2], moves[3]))
+        first_pokemon = Pokemon.Pokemon(starter_pokemon)
+        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Pokedexid, Ability, Move1, Move2, Move3, Move4) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (first_pokemon.pokemon_name, self.userid, first_pokemon.pokedexid, first_pokemon.ability, first_pokemon.moves[0], first_pokemon.moves[1], first_pokemon.moves[2], first_pokemon.moves[3]))
         cursor.execute("INSERT INTO Equipe (Pokemon1) VALUES (?)", (cursor.lastrowid,))
         cursor.execute("UPDATE User SET Equipeid = ? WHERE Userid = ?", (cursor.lastrowid, self.userid))
         cursor.execute("INSERT INTO Inventory (Itemid, Userid, Quantity) VALUES (?, ?, ?)", (4, self.userid, 10))
@@ -57,10 +52,10 @@ class Player :
         print("Registration successful")
         self.login(username, mdp)
     
-    def add_pokemon(self, pokemon_name, pokedexid, moves, ability):
+    def add_pokemon(self, pokemon):
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Pokedexid, Ability, Move1, Move2, Move3, Move4) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (pokemon_name, self.userid, pokedexid, ability, moves[0], moves[1], moves[2], moves[3]))
+        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Pokedexid, Ability, Move1, Move2, Move3, Move4) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (pokemon.pokemon_name, self.userid, pokemon.pokedexid, pokemon.ability, pokemon.moves[0], pokemon.moves[1], pokemon.moves[2], pokemon.moves[3]))
         if len(self.equipe) == 1:
             cursor.execute("UPDATE Equipe SET Pokemon2 = ? WHERE Equipeid = ?", (cursor.lastrowid, self.equipeid))
         elif len(self.equipe) == 2:
@@ -72,7 +67,7 @@ class Player :
         self.pokemon = cursor.execute("SELECT PokemonName, Surname FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         conn.commit()
         conn.close()
-        print(f"Pokémon {pokemon_name} added to your collection.")
+        print(f"Pokémon {pokemon.pokemon_name} added to your collection.")
         print(self.username, "this is now your team", self.equipe, "and your pokemons", self.pokemon)
         
     def change_equipe(self):
