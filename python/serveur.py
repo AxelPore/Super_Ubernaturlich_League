@@ -78,16 +78,20 @@ async def handle_client_msg(reader, writer):
                 username = await reader.read(1024)
                 username = username.decode().strip()
 
-                writer.write("Enter a password: ".encode())
+                writer.write("Enter a password to register: ".encode())
                 await writer.drain()
                 password = await reader.read(1024)
                 password = password.decode().strip()
 
                 player = Player(username, password)
-                player.register(username, password)
-                writer.write(f"Registration successful! Welcome, {username}.\n".encode())
-                await writer.drain()
-                break  # Exit the loop after successful registration
+                try:
+                    player.register(username, password)
+                    writer.write(f"Registration successful! Welcome, {username}.\n".encode())
+                    await writer.drain()
+                    break  # Exit the loop after successful registration
+                except Exception as e:
+                    writer.write(f"Registration failed: {str(e)}\n".encode())
+                    await writer.drain()
 
             else:
                 # Invalid input, send the user back to the menu
