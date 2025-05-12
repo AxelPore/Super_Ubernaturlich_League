@@ -51,7 +51,7 @@ async def handle_client_msg(reader, writer):
         if initial_message == "Hello|new":
             # Proceed to login/register menu
             while True:
-                writer.write(f"{DISPLAY_BYTE_ID}|Welcome! Do you want to (1) Login or (2) Register? ".encode())
+                writer.write(f"{INPUT_BYTE_ID}|Welcome! Do you want to (1) Login or (2) Register? ".encode())
                 await writer.drain()
                 choice = await reader.read(1024)
                 print(f"Raw data received: {choice}")  # Debugging log
