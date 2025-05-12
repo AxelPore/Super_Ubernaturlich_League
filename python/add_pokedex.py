@@ -47,10 +47,8 @@ def add_pokedex():
                 zone_id = 1
             else:
                 zone_id = pokedex_id // 100 + 1
-            if zone_id >= 5:
-                zone_id = zone_id + 1
-            if zone_id >= 14:
-                zone_id = 14
+            if zone_id > 13:
+                zone_id = 13
             # Update Zoneid
             cursor.execute("UPDATE Pokedex SET Zoneid = ? WHERE Pokedexid = ?", (zone_id, pokedex_id))
 
