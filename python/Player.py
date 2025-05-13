@@ -24,8 +24,10 @@ class Player :
         self.userid = result[0]
         self.equipeid = result[3]
         pc = cursor.execute("SELECT Pokedexid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
+        print(pc)
         for i in pc:
-            tmp_poke = Pokemon(i)
+            print(i[0])
+            tmp_poke = Pokemon(i[0])
             tmp_poke.set_attribute(self.userid)
             self.pokemon.append(tmp_poke)
         tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
@@ -49,8 +51,7 @@ class Player :
         for i in first_pokemon.moves.items():
             moves.append(i)
         pokedexid = int(first_pokemon.pokedexid)
-        userid = int(self.userid)
-        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Ability, Move1, Move2, Move3, Move4, Pokedexid) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (first_pokemon.pokemon_name, cursor.lastrowid, first_pokemon.ability, moves[0], moves[1], moves[2], moves[3], pokedexid))
+        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Ability, Move1, Move2, Move3, Move4, Pokedexid) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (first_pokemon.pokemon_name, self.userid, first_pokemon.ability[0], moves[0][0], moves[1][0], moves[2][0], moves[3][0], pokedexid))
         cursor.execute("INSERT INTO Equipe (Pokemon1) VALUES (?)", (cursor.lastrowid,))
         cursor.execute("UPDATE User SET Equipeid = ? WHERE Userid = ?", (cursor.lastrowid, self.userid))
         cursor.execute("INSERT INTO Inventory (Itemid, Userid, Quantity) VALUES (?, ?, ?)", (4, self.userid, 10))

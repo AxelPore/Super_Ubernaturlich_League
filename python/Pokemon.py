@@ -6,6 +6,7 @@ class Pokemon :
         self.pokedexid = random_pokemon
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
+        print("Pokedexid: ", self.pokedexid)
         self.pokemon_name, self.type1, self.type2, self.hp, self.atk, self.defense, self.spatk, self.spdef, self.speed = cursor.execute("SELECT name, type_1, type_2, stat_hp, stat_attack, stat_defense, stat_spattack, stat_spdef, stat_speed FROM Pokedex WHERE Pokedexid = ?", (random_pokemon,)).fetchall()[0]
         self.pokedex_id, ability_1, ability_2, ability_3 = cursor.execute("""SELECT Pokedexid, ability_1, ability_2, ability_3 FROM Pokedex WHERE name = ?""", (self.pokemon_name,)).fetchone()
         abilities = [ability_1, ability_2, ability_3]
