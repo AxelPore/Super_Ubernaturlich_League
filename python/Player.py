@@ -24,9 +24,7 @@ class Player :
         self.userid = result[0]
         self.equipeid = result[3]
         pc = cursor.execute("SELECT Pokedexid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
-        print(pc)
         for i in pc:
-            print(i[0])
             tmp_poke = Pokemon(i[0])
             tmp_poke.set_attribute(self.userid)
             self.pokemon.append(tmp_poke)
