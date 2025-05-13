@@ -3,40 +3,6 @@ import random
 from pprint import pprint
 from Player import Player
 
-
-# def change_equipe(self):
-#         if len(self.equipe) == 1:
-#             print("Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon ")
-#             choice = int(input("Enter the number of your choice: "))
-#             if choice == 1:
-#                 self.add_pokemon_to_team()
-#             elif choice == 2:
-#                 self.replace_pokemon_in_team()
-#             else:
-#                 print("Invalid choice.")
-#         if len(self.equipe) == 4:
-#             print("Here you can manage your team : \n 1. Replace a Pokemon \n 2. Remove a Pokemon")
-#             choice = int(input("Enter the number of your choice: "))
-#             if choice == 1:
-#                 self.replace_pokemon_in_team()
-#             elif choice == 2:
-#                 self.remove_pokemon_to_team()
-#             else:
-#                 print("Invalid choice.")
-#         else:
-#             print("Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon \n 3. Remove a Pokemon")
-#             choice = int(input("Enter the number of your choice: "))
-#             if choice == 1:
-#                 self.add_pokemon_to_team()
-#             elif choice == 2:
-#                 self.replace_pokemon_in_team()
-#             elif choice == 3:
-#                 self.remove_pokemon_to_team()
-#             else:
-#                 print("Invalid choice.")
-
-
-
 global CLIENTS
 CLIENTS = {}
 
@@ -71,6 +37,58 @@ async def handle_input(client_id, message):
     await writer.drain()
     data = await reader.read(1024)
     return data.decode()
+
+async def change_equipe(reader, writer, player):
+    if len(player.equipe) == 1:
+        writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon ")
+        await writer.drain()
+        await asyncio.sleep(0.5)
+        writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
+        await writer.drain()
+        choice = await reader.read(1024)
+        choice = choice.decode().strip()
+        if choice == 1:
+            player.add_pokemon_to_team()
+        elif choice == 2:
+            player.replace_pokemon_in_team()
+        else:
+            writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+    elif len(player.equipe) == 4:
+        writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Replace a Pokemon \n 2. Remove a Pokemon")
+        await writer.drain()
+        await asyncio.sleep(0.5)
+        writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
+        await writer.drain()
+        choice = await reader.read(1024)
+        choice = choice.decode().strip()
+        if choice == 1:
+            player.replace_pokemon_in_team()
+        elif choice == 2:
+            player.remove_pokemon_to_team()
+        else:
+            writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+    else:
+        writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon \n 3. Remove a Pokemon")
+        await writer.drain()
+        await asyncio.sleep(0.5)
+        writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
+        await writer.drain()
+        choice = await reader.read(1024)
+        choice = choice.decode().strip()
+        if choice == 1:
+            player.add_pokemon_to_team()
+        elif choice == 2:
+            player.replace_pokemon_in_team()
+        elif choice == 3:
+            player.remove_pokemon_to_team()
+        else:
+            writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
 
 async def login_or_register(reader, writer):
     while True:
