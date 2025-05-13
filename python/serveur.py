@@ -122,6 +122,7 @@ async def login_or_register(reader, writer):
             STARTER_POKEMONS = ["Bulbasaur", "Charmander", "Squirtle", "Pikachu"]
             writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.BOLD}Here is a list of Pokemon starters : {bcolors.ENDC}\n".encode())
             await writer.drain()
+            await asyncio.sleep(0.5)
 
             for i in range (len(STARTER_POKEMONS)):
                 writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {STARTER_POKEMONS[i]}".encode())
