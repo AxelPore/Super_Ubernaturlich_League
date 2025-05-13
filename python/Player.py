@@ -25,7 +25,7 @@ class Player :
         self.equipeid = result[3]
         pc = cursor.execute("SELECT Pokedexid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         for i in pc:
-            tmp_poke = Pokemon.Pokemon(i)
+            tmp_poke = Pokemon(i)
             tmp_poke.set_attribute(self.userid)
             self.pokemon.append(tmp_poke)
         tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
@@ -44,7 +44,7 @@ class Player :
         cursor = conn.cursor()
         cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 10))
         self.userid = cursor.lastrowid
-        first_pokemon = Pokemon.Pokemon(starter_pokemon)
+        first_pokemon = Pokemon(starter_pokemon)
         moves = []
         for i in first_pokemon.moves.items():
             moves.append(i)
@@ -71,7 +71,7 @@ class Player :
             cursor.execute("UPDATE Equipe SET Pokemon4 = ? WHERE Equipeid = ?", (cursor.lastrowid, self.equipeid))
         pc = cursor.execute("SELECT Pokedexid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         for i in pc:
-            tmp_poke = Pokemon.Pokemon(i)
+            tmp_poke = Pokemon(i)
             tmp_poke.set_attribute(self.userid)
             self.pokemon.append(tmp_poke)
         tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
