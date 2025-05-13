@@ -74,7 +74,7 @@ async def handle_input(client_id, message):
 
 async def login_or_register(reader, writer):
     while True:
-        writer.write(f"{INPUT_BYTE_ID}|Welcome! Do you want to (1) Login or (2) Register? ".encode())
+        writer.write(f"{INPUT_BYTE_ID}|{bcolors.OKCYAN}Welcome! Do you want to (1) Login or (2) Register? {bcolors.ENDC}".encode())
         await writer.drain()
         choice = await reader.read(1024)
         print(f"Raw data received: {choice}")  # Debugging log
@@ -83,13 +83,13 @@ async def login_or_register(reader, writer):
 
         if choice == "1":
             # Handle login
-            writer.write(f"{INPUT_BYTE_ID}|Enter your username: ".encode())
+            writer.write(f"{INPUT_BYTE_ID}|{bcolors.HEADER}Enter your username: {bcolors.ENDC}".encode())
             await writer.drain()
             username = await reader.read(1024)
             username = username.decode().strip()
             print(f"Received username for login: {username}")  # Debugging log
 
-            writer.write(f"{INPUT_BYTE_ID}|Enter your password: ".encode())
+            writer.write(f"{INPUT_BYTE_ID}|{bcolors.HEADER}Enter your password: {bcolors.ENDC}".encode())
             await writer.drain()
             password = await reader.read(1024)
             password = password.decode().strip()
@@ -97,30 +97,30 @@ async def login_or_register(reader, writer):
 
             player = Player()
             if player.login(username, password):
-                writer.write(f"{DISPLAY_BYTE_ID}|Login successful! Welcome, {username}.\n".encode())
+                writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Login successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 break  # Exit the loop after successful login
             else:
-                writer.write(f"{DISPLAY_BYTE_ID}|Login failed or account not found. Please try again or Register.\n".encode())
+                writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Login failed or account not found. Please try again or Register.{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5) 
 
         elif choice == "2":
             # Handle registration
-            writer.write(f"{INPUT_BYTE_ID}|Enter a username to register: ".encode())
+            writer.write(f"{INPUT_BYTE_ID}|{bcolors.HEADER}Enter a username to register: {bcolors.ENDC}".encode())
             await writer.drain()
             username = await reader.read(1024)
             username = username.decode().strip()
             print(f"Received username for registration: {username}")  # Debugging log
 
-            writer.write(f"{INPUT_BYTE_ID}|Enter a password to register: ".encode())
+            writer.write(f"{INPUT_BYTE_ID}|{bcolors.HEADER}Enter a password to register: {bcolors.ENDC}".encode())
             await writer.drain()
             password = await reader.read(1024)
             password = password.decode().strip()
             print(f"Received password for registration: {password}")  # Debugging log
 
             STARTER_POKEMONS = ["Bulbasaur", "Charmander", "Squirtle", "Pikachu"]
-            writer.write(f"{DISPLAY_BYTE_ID}|Here is a list of Pokemon starters : \n".encode())
+            writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.BOLD}Here is a list of Pokemon starters : {bcolors.ENDC}\n".encode())
             await writer.drain()
 
             for i in range (len(STARTER_POKEMONS)):
@@ -128,7 +128,7 @@ async def login_or_register(reader, writer):
                 await writer.drain()
                 await asyncio.sleep(0.5)  # Optional delay for better readability
 
-            writer.write(f"{INPUT_BYTE_ID}|\nChoose a pokemon starter: ".encode())
+            writer.write(f"{INPUT_BYTE_ID}|\n{bcolors.HEADER}Choose a pokemon starter: {bcolors.ENDC}".encode())
             await writer.drain()
             starter = await reader.read(1024)
             starter = starter.decode().strip()
@@ -143,12 +143,12 @@ async def login_or_register(reader, writer):
             player = Player()
             try:
                 player.register(username, password, starter)
-                writer.write(f"{DISPLAY_BYTE_ID}|Registration successful! Welcome, {username}.\n".encode())
+                writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Registration successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5) 
                 break  # Exit the loop after successful registration
             except Exception as e:
-                writer.write(f"{DISPLAY_BYTE_ID}|Registration failed: {str(e)}\n".encode())
+                writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Registration failed: {str(e)}{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)  # Optional delay for better readability
 
