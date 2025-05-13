@@ -23,12 +23,12 @@ class Player :
         self.username = username
         self.userid = result[0]
         self.equipeid = result[3]
-        pc = cursor.execute("SELECT Pokedexid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
+        pc = cursor.execute("SELECT Pokedexid, Pokemonid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         for i in pc:
             tmp_poke = Pokemon(i[0])
-            tmp_poke.set_attribute(self.userid)
+            tmp_poke.set_attribute(self.userid, i[1])
             self.pokemon.append(tmp_poke)
-        tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
+        tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchone()
         for j in tmp_equipe:
             for k in self.pokemon:
                 if k.pokemonid == j:
@@ -63,19 +63,23 @@ class Player :
         moves = []
         for i in pokemon.moves.items():
             moves.append(i)
-        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Pokedexid, Ability, Move1, Move2, Move3, Move4) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (pokemon.pokemon_name, self.userid, pokemon.pokedexid, pokemon.ability, moves[0], moves[1], moves[2], moves[3]))
+        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Pokedexid, Ability, Move1, Move2, Move3, Move4) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (pokemon.pokemon_name, self.userid, pokemon.pokedexid, pokemon.ability[0], moves[0][0], moves[1][0], moves[2][0], moves[3][0]))
+        print(len(self.equipe))
         if len(self.equipe) == 1:
             cursor.execute("UPDATE Equipe SET Pokemon2 = ? WHERE Equipeid = ?", (cursor.lastrowid, self.equipeid))
         elif len(self.equipe) == 2:
             cursor.execute("UPDATE Equipe SET Pokemon3 = ? WHERE Equipeid = ?", (cursor.lastrowid, self.equipeid))
         elif len(self.equipe) == 3:
             cursor.execute("UPDATE Equipe SET Pokemon4 = ? WHERE Equipeid = ?", (cursor.lastrowid, self.equipeid))
-        pc = cursor.execute("SELECT Pokedexid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
+        conn.commit()
+        self.pokemon.clear()
+        self.equipe.clear()
+        pc = cursor.execute("SELECT Pokedexid, Pokemonid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         for i in pc:
-            tmp_poke = Pokemon(i)
-            tmp_poke.set_attribute(self.userid)
+            tmp_poke = Pokemon(i[0])
+            tmp_poke.set_attribute(self.userid, i[1])
             self.pokemon.append(tmp_poke)
-        tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
+        tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchone()
         for j in tmp_equipe:
             for k in self.pokemon:
                 if k.pokemonid == j:

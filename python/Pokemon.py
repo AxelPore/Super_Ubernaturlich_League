@@ -11,9 +11,10 @@ class Pokemon :
         abilities = [ability_1, ability_2, ability_3]
         result = cursor.execute("""SELECT Move.MoveName, Move.pp FROM Learning JOIN Move ON Learning.Moveid = Move.Moveid WHERE Learning.Pokedexid = ?""", (self.pokedex_id,)).fetchall()
         self.moves = {}
-        x = random.sample(range(len(result)), 4)
-        for i in x:
-            self.moves[result[i][0]] = [[result[i][1]], [result[i][1]]]
+        sample_size = min(4, len(result))
+        x = random.sample(sorted(result), sample_size)
+        for move_name, pp in x:
+            self.moves[move_name] = [[pp], [pp]]
         conn.close()
         self.ability = random.sample(abilities, 1)
         self.surname = ""
@@ -28,10 +29,12 @@ class Pokemon :
     def get_moves(self):
         return self.moves
     
-    def set_attribute(self, userid):
+    def set_attribute(self, userid, pokemonid):
+        self.moves = {}
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
-        self.pokemonid, self.surname, self.ability, move1, move2, move3, move4 = cursor.execute("SELECT Pokemonid, Surname, Ability, Move1, Move2, Move3, Move4 FROM Pokemon WHERE Userid = ?", (userid,)).fetchone()
+        self.pokemonid = pokemonid
+        self.surname, self.ability, move1, move2, move3, move4 = cursor.execute("SELECT Surname, Ability, Move1, Move2, Move3, Move4 FROM Pokemon WHERE Userid = ? AND Pokemonid = ?", (userid, pokemonid)).fetchone()
         tmp_moves = [move1, move2, move3, move4]
         for i in range(len(tmp_moves)):
             tmp_pp = cursor.execute("SELECT pp FROM Move WHERE MoveName = ?", (tmp_moves[i],)).fetchone()[0]
