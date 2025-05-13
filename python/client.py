@@ -9,12 +9,12 @@ async def send_input_to_server(writer, prompt):
     """
     Handles input from the user and sends it to the server asynchronously.
     """
-    print(f"Prompting user: {prompt}")  # Debugging log
+    #print(f"Prompting user: {prompt}")  # Debugging log
     response = await aioconsole.ainput(prompt + " ")  # Prompt the user for input asynchronously
-    print(f"Sending input to server: {response}")  # Debugging log
+    #print(f"Sending input to server: {response}")  # Debugging log
     writer.write(response.encode())  # Send the response to the server
     await writer.drain()
-    print("Input sent to server.")  # Debugging log
+    #print("Input sent to server.")  # Debugging log
 
 async def asRecieve(reader, writer):
     while True:
@@ -23,7 +23,7 @@ async def asRecieve(reader, writer):
             print("No data received. Closing connection.")  # Debugging log
             break
         message = data.decode()
-        print(f"Message received from server: {message}")  # Debugging log
+        #print(f"Message received from server: {message}")  # Debugging log
         if message.startswith(INPUT_BYTE_ID):
             # Handle input request
             prompt = message.split('|', 1)[1]  # Extract the prompt
