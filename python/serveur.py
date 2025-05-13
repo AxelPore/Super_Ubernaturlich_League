@@ -131,8 +131,8 @@ async def handle_client_msg(reader, writer):
 
                     STARTER_POKEMONS = ["Bulbasaur", "Charmander", "Squirtle", "Pikachu"]
 
-                    for i, pokemon in enumerate(STARTER_POKEMONS):
-                        writer.write(f"{DISPLAY_BYTE_ID}|{i + 1}. {pokemon}\n".encode())
+                    for i in range (len(STARTER_POKEMONS)):
+                        writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {STARTER_POKEMONS[i]}\n".encode())
                         await writer.drain()
 
                     writer.write(f"{INPUT_BYTE_ID}|Choose a pokemon starter: ".encode())
