@@ -32,7 +32,7 @@ class Pokemon :
     def set_attribute(self, userid):
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
-        self.pokemonid, self.surname, self.ability, move1, move2, move3, move4 = cursor.execute("SELECT Pokemonid, Surname, Ability, Move1, Move2, Move3, Move4 FROM Pokemon WHERE Userid = ?", (userid,)).fetchone()[0]
+        self.pokemonid, self.surname, self.ability, move1, move2, move3, move4 = cursor.execute("SELECT Pokemonid, Surname, Ability, Move1, Move2, Move3, Move4 FROM Pokemon WHERE Userid = ?", (userid,)).fetchone()
         tmp_moves = [move1, move2, move3, move4]
         for i in range(len(tmp_moves)):
             tmp_pp = cursor.execute("SELECT pp FROM Move WHERE MoveName = ?", (tmp_moves[i],)).fetchone()[0]
