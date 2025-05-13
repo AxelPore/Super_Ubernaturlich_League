@@ -131,11 +131,11 @@ async def handle_client_msg(reader, writer):
                     print(f"Received password for registration: {password}")  # Debugging log
 
                     STARTER_POKEMONS = ["Bulbasaur", "Charmander", "Squirtle", "Pikachu"]
-                    writer.write(f"{DISPLAY_BYTE_ID}|Here is a list of Pokemon starters : ".encode())
+                    writer.write(f"{DISPLAY_BYTE_ID}|Here is a list of Pokemon starters : \n".encode())
                     await writer.drain()
 
                     for i in range (len(STARTER_POKEMONS)):
-                        writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {STARTER_POKEMONS[i]}\n".encode())
+                        writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {STARTER_POKEMONS[i]}".encode())
                         await writer.drain()
                         await asyncio.sleep(0.5)  # Optional delay for better readability
 
