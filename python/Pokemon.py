@@ -12,12 +12,13 @@ class Pokemon :
         result = cursor.execute("""SELECT Move.MoveName, Move.pp FROM Learning JOIN Move ON Learning.Moveid = Move.Moveid WHERE Learning.Pokedexid = ?""", (self.pokedex_id,)).fetchall()
         moves = {}
         for i in range(result):
-            moves[result[i][0]] = [result[i][1]]
+            moves[result[i][0]] = [[result[i][1]], [result[i][1]]]
         conn.close()
         self.moves = random.sample(moves, min(4, len(moves)))
         self.ability = random.choice(abilities)
         self.surname = ""
         self.pokemonid = 0
+        self.hpmax = self.hp
             
     def attack(self, selected_move):
         conn = sqlite3.connect('../database.db')
@@ -34,5 +35,5 @@ class Pokemon :
         tmp_moves = [move1, move2, move3, move4]
         for i in range(len(tmp_moves)):
             tmp_pp = cursor.execute("SELECT pp FROM Move WHERE MoveName = ?", (tmp_moves[i],)).fetchone()[0]
-            self.moves[tmp_moves[i]] = [tmp_pp]
+            self.moves[tmp_moves[i]] = [[tmp_pp], [tmp_pp]]
         
