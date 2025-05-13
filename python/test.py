@@ -1,5 +1,5 @@
 import sqlite3
-import Player
+from Player import *
     
 if __name__ == "__main__":
     player = Player()

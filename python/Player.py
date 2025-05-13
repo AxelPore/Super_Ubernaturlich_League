@@ -1,5 +1,5 @@
 import sqlite3
-import Pokemon
+from Pokemon import *
 
 class Player :
     def __init__(self):
@@ -48,7 +48,9 @@ class Player :
         moves = []
         for i in first_pokemon.moves.items():
             moves.append(i)
-        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Pokedexid, Ability, Move1, Move2, Move3, Move4) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (first_pokemon.pokemon_name, self.userid, first_pokemon.pokedexid, first_pokemon.ability, moves[0], moves[1], moves[2], moves[3]))
+        pokedexid = int(first_pokemon.pokedexid)
+        userid = int(self.userid)
+        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Ability, Move1, Move2, Move3, Move4, Pokedexid) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (first_pokemon.pokemon_name, cursor.lastrowid, first_pokemon.ability, moves[0], moves[1], moves[2], moves[3], pokedexid))
         cursor.execute("INSERT INTO Equipe (Pokemon1) VALUES (?)", (cursor.lastrowid,))
         cursor.execute("UPDATE User SET Equipeid = ? WHERE Userid = ?", (cursor.lastrowid, self.userid))
         cursor.execute("INSERT INTO Inventory (Itemid, Userid, Quantity) VALUES (?, ?, ?)", (4, self.userid, 10))
