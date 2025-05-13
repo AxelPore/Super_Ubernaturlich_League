@@ -114,6 +114,7 @@ async def handle_client_msg(reader, writer):
                     else:
                         writer.write(f"{DISPLAY_BYTE_ID}|Login failed or account not found. Please try again or Register.\n".encode())
                         await writer.drain()
+                        await asyncio.sleep(0.5) 
 
                 elif choice == "2":
                     # Handle registration
@@ -130,7 +131,7 @@ async def handle_client_msg(reader, writer):
                     print(f"Received password for registration: {password}")  # Debugging log
 
                     STARTER_POKEMONS = ["Bulbasaur", "Charmander", "Squirtle", "Pikachu"]
-                    writer.write(f"{DISPLAY_BYTE_ID}|Here is a list of Pokemon starters : \n".encode())
+                    writer.write(f"{DISPLAY_BYTE_ID}|Here is a list of Pokemon starters : ".encode())
                     await writer.drain()
 
                     for i in range (len(STARTER_POKEMONS)):
@@ -138,7 +139,7 @@ async def handle_client_msg(reader, writer):
                         await writer.drain()
                         await asyncio.sleep(0.5)  # Optional delay for better readability
 
-                    writer.write(f"{INPUT_BYTE_ID}|Choose a pokemon starter: ".encode())
+                    writer.write(f"{INPUT_BYTE_ID}|\nChoose a pokemon starter: ".encode())
                     await writer.drain()
                     starter = await reader.read(1024)
                     starter = starter.decode().strip()
@@ -155,15 +156,18 @@ async def handle_client_msg(reader, writer):
                         player.register(username, password, starter)
                         writer.write(f"{DISPLAY_BYTE_ID}|Registration successful! Welcome, {username}.\n".encode())
                         await writer.drain()
+                        await asyncio.sleep(0.5) 
                         break  # Exit the loop after successful registration
                     except Exception as e:
                         writer.write(f"{DISPLAY_BYTE_ID}|Registration failed: {str(e)}\n".encode())
                         await writer.drain()
+                        await asyncio.sleep(0.5)  # Optional delay for better readability
 
                 else:
                     # Invalid input, send the user back to the menu
                     writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
                     await writer.drain()
+                    await asyncio.sleep(0.5) 
             writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
             await writer.drain()
 
