@@ -449,6 +449,7 @@ async def change_equipe(reader, writer, player):
     while True:
         equipe = player.get_equipe()
         pokemon = player.get_pokemon()
+        
         if len(equipe) == 1:
             writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon \n 3. Exit".encode())
             await writer.drain()

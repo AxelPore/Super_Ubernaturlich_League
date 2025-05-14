@@ -35,7 +35,8 @@ class Player :
         for j in tmp_equipe:
             for k in self.pokemon:
                 if k.pokemonid == j:
-                    self.equipe.append(k)  
+                    self.equipe.append(k)
+                    self.pokemon.remove(k)
         self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
         self.zoneid = result[4]
         self.zone, self.zonename = cursor.execute("SELECT ZonePosition, ZoneName FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()
@@ -90,6 +91,7 @@ class Player :
             for k in self.pokemon:
                 if k.pokemonid == j:
                     self.equipe.append(k)
+                    self.pokemon.remove(k)
         conn.commit()
         conn.close()
         
@@ -111,6 +113,7 @@ class Player :
             for k in self.pokemon:
                 if k.pokemonid == j:
                     self.equipe.append(k)
+                    self.pokemon.remove(k)
         conn.commit()
         conn.close()
         
@@ -137,6 +140,8 @@ class Player :
             for k in self.pokemon:
                 if k.pokemonid == j:
                     self.equipe.append(k)
+                    self.pokemon.remove(k)
+        self.pokemon.append(self.equipe[choice - 1])
         conn.commit()
         conn.close()
         
@@ -163,6 +168,7 @@ class Player :
             for k in self.pokemon:
                 if k.pokemonid == j:
                     self.equipe.append(k)
+        self.pokemon.append(self.equipe[choice - 1])
         conn.commit()
         conn.close()
         
