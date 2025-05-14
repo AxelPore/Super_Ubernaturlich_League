@@ -799,7 +799,7 @@ async def handle_client_msg(reader, writer):
                     await handle_wild_menu(reader, writer, player)
                 player = await login_or_register(reader, writer)
         except Exception as e:
-            if e is ConnectionResetError or BrokenPipeError:
+            if e is ConnectionResetError or e is BrokenPipeError:
                 print(f"Connection lost with {addr}.")
             else:
                 print(f"An error occurred: {e}")
