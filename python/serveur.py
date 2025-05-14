@@ -255,7 +255,9 @@ async def change_player_zone(reader, writer, player):
     move = move.decode().strip()
     print(f"Player move: {move} and id : {MOVES[move]}")  # Debugging log
     if move in MOVES:
-        game.player_move(player, MOVES[move])
+        for i in range(game.get_players()):
+            if game.get_players[i] == player:
+                game.player_move(i, MOVES[move])
         # writer.write(f"{DISPLAY_BYTE_ID}|You moved to zone {game.get_zone_name(player)}.\n".encode())
         # await writer.drain()
         # await asyncio.sleep(0.5)
