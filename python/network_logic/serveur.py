@@ -269,7 +269,7 @@ async def handle_pokecenter_menu(reader, writer, player):
             writer.write(f"{DISPLAY_BYTE_ID}|You are now in the PC.".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
-            await change_equipe(reader, writer, player)
+            await handle_team_change(reader, writer, player)
             continue
         elif choice == "5":
             writer.write(f"{DISPLAY_BYTE_ID}|You are now in the city.".encode())
@@ -449,7 +449,7 @@ async def handle_input(client_id, message):
     data = await reader.read(1024)
     return data.decode()
 
-async def change_equipe(reader, writer, player):
+async def handle_team_change(reader, writer, player):
     while True:
         equipe = player.get_equipe()
         pokemon = player.get_pokemon()        
@@ -799,15 +799,10 @@ async def handle_client_msg(reader, writer):
                     await handle_wild_menu(reader, writer, player)
                 player = await login_or_register(reader, writer)
         except (ConnectionResetError, BrokenPipeError):
-            print(f"Connection lost with {addr}.")
+            print("a client has exited")
         except Exception as e:
             print(f"An error occurred: {e}")
             writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}An error occurred: {e}{bcolors.ENDC}\n".encode())
-            await writer.drain()
-            await asyncio.sleep(0.5)
-        except KeyboardInterrupt:
-            print("Server interrupted.")
-            writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}Server interrupted.{bcolors.ENDC}\n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
         finally:

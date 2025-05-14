@@ -47,7 +47,7 @@ async def main():
         # Start receiving messages from the server
         await asRecieve(reader, writer)
     except KeyboardInterrupt:
-        print("Client interrupted.")
+        print("you have been disconnected")
     finally:
         writer.close()
         await writer.wait_closed()
