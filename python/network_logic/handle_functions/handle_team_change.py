@@ -4,7 +4,7 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from .common import exception_handler_decorator, DISPLAY_BYTE_ID, INPUT_BYTE_ID
+from ..common import exception_handler_decorator, DISPLAY_BYTE_ID, INPUT_BYTE_ID
 
 @exception_handler_decorator
 async def handle_team_change(reader, writer, player):
