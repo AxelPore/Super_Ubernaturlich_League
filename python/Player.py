@@ -39,11 +39,11 @@ class Player :
         conn.close()
         return True
             
-    def register(self, username, mdp, starter_pokemon, zone):
+    def register(self, username, mdp, starter_pokemon):
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         print("Attempting to register user... with username: ", username, " and password: ", mdp, " and starter: ", starter_pokemon)
-        cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, zone))
+        cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 10))
         self.userid = cursor.lastrowid
         print(self.userid)
         conn.commit()
@@ -221,3 +221,19 @@ class Player :
         self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
         conn.commit()
         conn.close()
+        
+    def use_money(self, money):
+        conn = sqlite3.connect('../database.db')
+        cursor = conn.cursor()
+        cursor.execute("UPDATE User SET Money = Money - ? WHERE Userid = ?", (money, self.userid))
+        conn.commit()
+        conn.close()
+        
+    def add_money(self, money):
+        conn = sqlite3.connect('../database.db')
+        cursor = conn.cursor()
+        cursor.execute("UPDATE User SET Money = Money + ? WHERE Userid = ?", (money, self.userid))
+        conn.commit()
+        conn.close()
+    
+    
