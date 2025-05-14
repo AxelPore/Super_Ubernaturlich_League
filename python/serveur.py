@@ -313,7 +313,7 @@ async def change_player_zone(reader, writer, player):
             # writer.write(f"{DISPLAY_BYTE_ID}|You moved to zone {game.get_zone_name(player)}.\n".encode())
             # await writer.drain()
             # await asyncio.sleep(0.5)
-            continue
+            break
         else:
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid move. Please try again.".encode())
             await writer.drain()
