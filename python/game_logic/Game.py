@@ -24,7 +24,8 @@ class Game :
         return result_dict
     
     def player_move(self, player, input): #input: -1 = gauche, 1 = droite, -10 haut, 10 bas
-        self.players[player].set_zone(self.players[player].get_zone() + input)
+        if self.players[player].set_zone(self.players[player].get_zone() + input) == False:
+            return False
     
     def pokemon_captured(self, player, new_pokemon):
         self.players[player].add_pokemon(new_pokemon)

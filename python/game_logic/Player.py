@@ -207,6 +207,7 @@ class Player :
         cursor = conn.cursor()
         cursor.execute("SELECT ItemPrice FROM Item WHERE ItemName = ?", (itemname,))
         result = cursor.fetchone()
+        print(result)
         if result is None:
             conn.close()
             return False

@@ -306,7 +306,7 @@ async def handle_pokecenter_menu(reader, writer, player):
             await asyncio.sleep(0.5)
             continue
 
-async def change_player_zone(reader, writer, player):
+async def handle_change_player_zone(reader, writer, player):
     while True:
         #writer.write(f"{DISPLAY_BYTE_ID}|You are in zone {game.get_zone_name(player)}.\n".encode())
         #writer.write(f"{DISPLAY_BYTE_ID}| You can access these zones : \n".encode())
@@ -330,17 +330,24 @@ async def change_player_zone(reader, writer, player):
         await writer.drain()
         move = await reader.read(1024)
         move = move.decode().strip()
-        print(f"Player move: {move} and id : {MOVES[move]}")  # Debugging log
+        wrong = False
         if move in MOVES:
             for i in range(len(game.get_players())):
                 print(i)
                 if game.get_players()[i] == player:
-                    game.player_move(i, MOVES[move])
+                    if game.player_move(i, MOVES[move]) == False:
+                        writer.write(f"{DISPLAY_BYTE_ID}|You can't move in this direction.".encode())
+                        await writer.drain()
+                        await asyncio.sleep(0.5)
+                        wrong = True
                     break
             # writer.write(f"{DISPLAY_BYTE_ID}|You moved to zone {game.get_zone_name(player)}.\n".encode())
             # await writer.drain()
             # await asyncio.sleep(0.5)
-            break
+            if wrong == False:
+                break
+            else:
+                continue
         else:
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid move. Please try again.".encode())
             await writer.drain()
@@ -403,7 +410,7 @@ async def handle_wild_menu(reader, writer, player):
                 await asyncio.sleep(0.5)
             continue
         elif choice == "5":
-            await change_player_zone(reader, writer, player)
+            await handle_change_player_zone(reader, writer, player)
             continue
         elif choice == "6":
             game.remove_player(player)
@@ -453,7 +460,7 @@ async def handle_city_menu(reader, writer, player):
                 await asyncio.sleep(0.5)
             continue
         elif choice == "6":
-            await change_player_zone(reader, writer, player)
+            await handle_change_player_zone(reader, writer, player)
             continue
         elif choice == "7":
             game.remove_player(player)
