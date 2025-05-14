@@ -138,12 +138,13 @@ async def handle_sell_items(reader, writer, player):
     await writer.drain()
     item_choice = await reader.read(1024)
     item_choice = item_choice.decode().strip()
+    item_choice = int(item_choice) - 1
     if item_choice != None:
         writer.write(f"{INPUT_BYTE_ID}|Enter how many you want to sell: ".encode())
         await writer.drain()
         quantity = await reader.read(1024)
         quantity = quantity.decode().strip()
-        item = items[item_choice-1][0]
+        item = items[item_choice][0]
         writer.write(f"{DISPLAY_BYTE_ID}|You sold {quantity} {item}!".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
