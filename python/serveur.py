@@ -45,7 +45,7 @@ async def handle_arena_menu(reader, writer, player):
     writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the arena!".encode())
     await writer.drain()
     await asyncio.sleep(0.5)
-    writer.write(f"{DISPLAY_BYTE_ID}|Here are your options:\n 1. Fight another trainer in the Arena \n 2. Check your Pokemon \n 3. Check your items \n 4. Explore somewhere else".encode())
+    writer.write(f"{DISPLAY_BYTE_ID}|Here are your options:\n 1. Fight another trainer in the Arena \n 2. Check your Pokemon \n 3. Check your items \n 4. Exit".encode())
     await writer.drain()
     await asyncio.sleep(0.5)
     writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
@@ -138,12 +138,13 @@ async def handle_sell_items(reader, writer, player):
     await writer.drain()
     item_choice = await reader.read(1024)
     item_choice = item_choice.decode().strip()
+    item_choice = int(item_choice) - 1
     if item_choice != None:
         writer.write(f"{INPUT_BYTE_ID}|Enter how many you want to sell: ".encode())
         await writer.drain()
         quantity = await reader.read(1024)
         quantity = quantity.decode().strip()
-        item = items[item_choice-1][0]
+        item = items[item_choice][0]
         writer.write(f"{DISPLAY_BYTE_ID}|You sold {quantity} {item}!".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
