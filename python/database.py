@@ -132,7 +132,8 @@ def create_tables():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Item (
         Itemid INTEGER PRIMARY KEY AUTOINCREMENT,
-        ItemName TEXT NOT NULL
+        ItemName TEXT NOT NULL,
+        ItemPrice INTEGER NOT NULL
     );
     """)
     
