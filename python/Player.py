@@ -38,7 +38,7 @@ class Player :
                     self.equipe.append(k)  
         self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
         self.zoneid = result[4]
-        self.zone, self.zonename = cursor.execute("SELECT ZonePosition, ZoneName FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()[0]
+        self.zone, self.zonename = cursor.execute("SELECT ZonePosition, ZoneName FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()
         conn.close()
         return True
             
