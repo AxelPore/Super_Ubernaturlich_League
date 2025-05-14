@@ -1,9 +1,12 @@
+import sys
+import os
+
+# Add the root directory of the project to sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
 import asyncio
 import random
 from pprint import pprint
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.getcwd()))
 
 from game_logic.Player import Player
 from network_logic.Common import CLIENTS, INPUT_BYTE_ID, DISPLAY_BYTE_ID, game, bcolors, exception_handler_decorator
