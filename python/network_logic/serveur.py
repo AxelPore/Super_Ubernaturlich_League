@@ -3,10 +3,10 @@ import random
 from pprint import pprint
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.getcwd()))
 
 from game_logic.Player import Player
-from .Common import *
+from Common import CLIENTS, INPUT_BYTE_ID, DISPLAY_BYTE_ID, game, bcolors, exception_handler_decorator
 from network_logic.handle_functions.handle_battle import handle_battle
 from network_logic.handle_functions.handle_arena_menu import handle_arena_menu
 from network_logic.handle_functions.handle_buy_items import handle_buy_items
