@@ -1,19 +1,18 @@
 import asyncio
 import random
-
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from game_logic.Player import Player
+from game_logic.Game import Game
+from game_logic.Battle import Battle
 
 global CLIENTS
 CLIENTS = {}
 
 INPUT_BYTE_ID = 'r=Ip'
 DISPLAY_BYTE_ID = 'r=Dp'
-
-from game_logic.Player import Player
-from game_logic.Game import *
-from game_logic.Battle import *
 
 game = Game()
 
