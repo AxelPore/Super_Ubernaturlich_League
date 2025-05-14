@@ -563,8 +563,8 @@ async def handle_client_msg(reader, writer):
             await asyncio.sleep(0.5)
             writer.close()
             await writer.wait_closed()
+        print (f"Zone : {player.get_zone()}")
         try :
-            print (player.get_zone())
             while True:
                 if player.get_zone() == 10:
                     await handle_city_menu(reader, writer, player)
