@@ -1,6 +1,6 @@
 import sqlite3
-from Player import *
-from Pokemon import *
+from game_logic.Player import *
+from game_logic.Pokemon import *
     
 if __name__ == "__main__":
     player = Player()
