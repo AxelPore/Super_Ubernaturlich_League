@@ -20,6 +20,7 @@ def create_tables():
         password TEXT NOT NULL,
         Equipeid INTEGER,
         Zoneid INTEGER,
+        Money INTEGER DEFAULT 1000,
         FOREIGN KEY (Zoneid) REFERENCES Zone(Zoneid),
         FOREIGN KEY (Equipeid) REFERENCES Equipe(Equipeid)
     );

@@ -40,6 +40,7 @@ async def handle_battle(reader, writer, player, trainer):
     await writer.drain()
     await asyncio.sleep(0.5)
     
+    
 async def handle_arena_menu(reader, writer, player):
     writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the arena!".encode())
     await writer.drain()
