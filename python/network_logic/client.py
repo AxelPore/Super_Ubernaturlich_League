@@ -46,11 +46,14 @@ async def main():
 
         # Start receiving messages from the server
         await asRecieve(reader, writer)
-    except KeyboardInterrupt:
-        print("you have been disconnected")
+    except Exception as e:
+        pass
     finally:
         writer.close()
         await writer.wait_closed()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("you have been disconnected")
