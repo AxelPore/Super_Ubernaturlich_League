@@ -447,7 +447,13 @@ async def login_or_register(reader, writer):
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Login failed or account not found. Please try again or Register.{bcolors.ENDC}\n".encode())
                 await writer.drain()
-                await asyncio.sleep(0.5) 
+                await asyncio.sleep(0.5)
+            writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5) 
+            return player
+            
+            
 
         elif choice == "2":
             # Handle registration
@@ -510,7 +516,7 @@ async def login_or_register(reader, writer):
             }.get(int(starter), 1)  # Default to Bulbasaur if invalid choice
             print(f"Received starter choice: {starter}")  # Debugging log
 
-            
+            player = Player()
             try:
                 print(f"Attempting to register user: {username} with password: {password} and starter: {starter}")  # Debugging log
                 player.register(username, password, starter, 10)
@@ -522,14 +528,17 @@ async def login_or_register(reader, writer):
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Registration failed: {str(e)}{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)  # Optional delay for better readability
+            writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+            return player
 
         else:
             # Invalid input, send the user back to the menu
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
             await writer.drain()
             await asyncio.sleep(0.5) 
-    writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
-    await writer.drain()
+        return None
 
 async def handle_client_msg(reader, writer):
     addr = writer.get_extra_info('peername')
@@ -540,11 +549,16 @@ async def handle_client_msg(reader, writer):
         initial_message = await reader.read(1024)
         initial_message = initial_message.decode().strip()
         print(f"Client chose: {initial_message}")  # Debugging log
-
+        player = None
         if initial_message == "Hello|new":
             # Call the login_or_register function
-            await login_or_register(reader, writer)
-        
+            player = await login_or_register(reader, writer)
+        if player is None:
+            writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}{bcolors.ENDC}\n".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+            writer.close()
+            await writer.wait_closed()
         try :
             while True:
                 if player.get_zone() == 10:
