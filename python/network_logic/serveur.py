@@ -38,6 +38,24 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
     
+def exception_handler_decorator(func):
+    async def wrapper(reader, writer, *args, **kwargs):
+        addr = writer.get_extra_info('peername')
+        try:
+            return await func(reader, writer, *args, **kwargs)
+        except (KeyboardInterrupt, ConnectionResetError, BrokenPipeError):
+            print(f"Connection lost with {addr}.")
+            try:
+                writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}Connection closed.{bcolors.ENDC}\n".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+            except Exception:
+                pass
+            writer.close()
+            await writer.wait_closed()
+    return wrapper
+
+@exception_handler_decorator
 async def handle_battle(reader, writer, player, trainer):
     battle = Battle(player, trainer)
     battle.start_battle()
@@ -46,6 +64,8 @@ async def handle_battle(reader, writer, player, trainer):
     await asyncio.sleep(0.5)
     
     
+    
+@exception_handler_decorator
 async def handle_arena_menu(reader, writer, player):
     while True:
         writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the arena!".encode())
@@ -112,6 +132,7 @@ async def handle_arena_menu(reader, writer, player):
             await asyncio.sleep(0.5)
             continue
         
+@exception_handler_decorator
 async def handle_buy_items(reader, writer, player):
     while True:        
         writer.write(f"{DISPLAY_BYTE_ID}|Here are the items available for purchase:\n 1. Potion \n 2. Super Potion \n 3. Revive \n 4. PokeBall \n 5. Elixir \n 6. Antidote \n 7. Burn-Heal \n 8. Ice-Heal \n 9. awakening \n 10. Paralyze-Heal \n 11. Exit".encode())
@@ -150,6 +171,7 @@ async def handle_buy_items(reader, writer, player):
             await handle_pokemart_menu(reader, writer, player)
             break
     
+@exception_handler_decorator
 async def handle_sell_items(reader, writer, player):
     while True:
         writer.write(f"{DISPLAY_BYTE_ID}|Here are the items you can sell:\n".encode())
@@ -184,6 +206,7 @@ async def handle_sell_items(reader, writer, player):
             await handle_pokemart_menu(reader, writer, player)
             break
     
+@exception_handler_decorator
 async def handle_pokemart_menu(reader, writer, player):
     while True:
         writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the Pokemart! Here are your options:\n 1. Buy items \n 2. Sell items \n 3. Check your Pokemon \n 4. Check your items \n 5. Exit Pokemart".encode())
@@ -791,31 +814,23 @@ async def handle_client_msg(reader, writer):
             writer.close()
             await writer.wait_closed()
         print (f"Zone : {player.get_zone()}")
-        try :
-            while True:
-                if player.get_zone() == 10:
-                    await handle_city_menu(reader, writer, player)
-                else:
-                    await handle_wild_menu(reader, writer, player)
-                player = await login_or_register(reader, writer)
-        except Exception as e:
-            if e is ConnectionResetError or e is BrokenPipeError:
-                print(f"Connection lost with {addr}.")
+
+        while True:
+            if player.get_zone() == 10:
+                await handle_city_menu(reader, writer, player)
             else:
-                print(f"An error occurred: {e}")
-                writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}An error occurred: {e}{bcolors.ENDC}\n".encode())
-                await writer.drain()
-                await asyncio.sleep(0.5)
-        finally:
+                await handle_wild_menu(reader, writer, player)
+            player = await login_or_register(reader, writer)
+
+    except (KeyboardInterrupt, ConnectionResetError, BrokenPipeError):
+        print(f"Connection lost with {addr}.")
+    finally:
+        try:
             writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}Connection closed.{bcolors.ENDC}\n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
-            writer.close()
-            await writer.wait_closed()
-
-    except (ConnectionResetError, BrokenPipeError):
-        print(f"Connection lost with {addr}.")
-    finally:
+        except Exception:
+            pass
         writer.close()
         await writer.wait_closed()
 
