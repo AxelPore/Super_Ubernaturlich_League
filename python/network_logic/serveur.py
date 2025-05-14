@@ -829,8 +829,12 @@ async def handle_client_msg(reader, writer):
                 await handle_wild_menu(reader, writer, player)
             player = await login_or_register(reader, writer)
 
-    except (KeyboardInterrupt, ConnectionResetError, BrokenPipeError):
-        print(f"Connection lost with {addr}.")
+    except (KeyboardInterrupt, ConnectionResetError, BrokenPipeError) as e:
+        # Suppress error messages for broken pipe and connection reset
+        if isinstance(e, BrokenPipeError) or isinstance(e, ConnectionResetError) or isinstance(e, KeyboardInterrupt):
+            print(f"Connection lost with {addr}.")
+        else:
+            raise
     finally:
         try:
             writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}Connection closed.{bcolors.ENDC}\n".encode())
@@ -838,8 +842,11 @@ async def handle_client_msg(reader, writer):
             await asyncio.sleep(0.5)
         except Exception:
             pass
-        writer.close()
-        await writer.wait_closed()
+        try:
+            writer.close()
+            await writer.wait_closed()
+        except Exception:
+            pass
 
 async def main():
     server = await asyncio.start_server(handle_client_msg, '10.1.2.69', 8888)
