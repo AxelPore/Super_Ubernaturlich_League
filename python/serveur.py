@@ -457,7 +457,7 @@ async def change_equipe(reader, writer, player):
             await writer.drain()
             choice = await reader.read(1024)
             choice = choice.decode().strip()
-            if choice == 1:
+            if choice == "1":
                 writer.write(f"{DISPLAY_BYTE_ID}|Here are the available Pokemon: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
@@ -470,7 +470,7 @@ async def change_equipe(reader, writer, player):
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
                 player.add_pokemon_to_team(choice)
-            elif choice == 2:
+            elif choice == "2":
                 writer.write(f"{DISPLAY_BYTE_ID}|Here are the available Pokemon: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
@@ -483,7 +483,7 @@ async def change_equipe(reader, writer, player):
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
                 player.replace_pokemon_in_team(choice)
-            elif choice == 3:
+            elif choice == "3":
                 break
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
@@ -498,7 +498,7 @@ async def change_equipe(reader, writer, player):
             await writer.drain()
             choice = await reader.read(1024)
             choice = choice.decode().strip()
-            if choice == 1:
+            if choice == "1":
                 writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
@@ -523,7 +523,7 @@ async def change_equipe(reader, writer, player):
                     choice2 = await reader.read(1024)
                     choice2 = choice.decode().strip()
                 player.replace_pokemon_in_team(choice, choice2)
-            elif choice == 2:
+            elif choice == "2":
                 writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
@@ -536,7 +536,7 @@ async def change_equipe(reader, writer, player):
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
                 player.remove_pokemon_to_team(choice)
-            elif choice == 3:
+            elif choice == "3":
                 break
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
@@ -551,7 +551,7 @@ async def change_equipe(reader, writer, player):
             await writer.drain()
             choice = await reader.read(1024)
             choice = choice.decode().strip()
-            if choice == 1:
+            if choice == "1":
                 writer.write(f"{DISPLAY_BYTE_ID}|Here are the available Pokemon: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
@@ -564,7 +564,7 @@ async def change_equipe(reader, writer, player):
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
                 player.add_pokemon_to_team(choice)
-            elif choice == 2:
+            elif choice == "2":
                 writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
@@ -589,7 +589,7 @@ async def change_equipe(reader, writer, player):
                     choice2 = await reader.read(1024)
                     choice2 = choice.decode().strip()
                 player.replace_pokemon_in_team(choice, choice2)
-            elif choice == 3:
+            elif choice == "3":
                 writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
@@ -602,7 +602,7 @@ async def change_equipe(reader, writer, player):
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
                 player.remove_pokemon_to_team(choice)
-            elif choice == 4:
+            elif choice == "4":
                 break
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
