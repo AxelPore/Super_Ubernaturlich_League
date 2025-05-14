@@ -196,6 +196,19 @@ class Player :
     def zone_name(self):
         return self.zonename
     
+    def get_price(self, itemname):
+        conn = sqlite3.connect('../database.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT ItemPrice FROM Item WHERE ItemName = ?", (itemname,))
+        result = cursor.fetchone()
+        if result is None:
+            conn.close()
+            return False
+        else:
+            price = result[0]
+            conn.close()
+            return price
+    
     def set_zone(self, newZone):
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()

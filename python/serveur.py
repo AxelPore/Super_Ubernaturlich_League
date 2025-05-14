@@ -33,6 +33,7 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    
 async def handle_battle(reader, writer, player, trainer):
     battle = Battle(player, trainer)
     battle.start_battle()
@@ -122,9 +123,19 @@ async def handle_buy_items(reader, writer, player):
             quantity = await reader.read(1024)
             quantity = quantity.decode().strip()
             item = ["Potion", "Super Potion", "Revive", "PokeBall", "Elixir", "Antidote", "Burn-Heal", "Ice-Heal", "awakening", "Paralyze-Heal"]
+            writer.write(f"{INPUT_BYTE_ID}|You will bought {quantity} {item[int(item_choice)-1]} for the price of {quantity * player.get_price(item[int(item_choice)-1])}, continue ? : y/n ".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+            confirm = await reader.read(1024)
+            confirm = confirm.decode().strip()
+            if confirm.lower() == "n":
+                writer.write(f"{DISPLAY_BYTE_ID}|Transaction cancelled".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+                break
             for i in range(len(item)):
                 if item_choice == item[i]:
-                    writer.write(f"{DISPLAY_BYTE_ID}|You bought {quantity} {item[i]}!".encode())
+                    writer.write(f"{DISPLAY_BYTE_ID}|You bought {quantity} {item[i]}!".encode()) 
                     await writer.drain()
                     await asyncio.sleep(0.5)
                     game.buy_item(player, item[i], quantity)
@@ -156,6 +167,9 @@ async def handle_sell_items(reader, writer, player):
             quantity = await reader.read(1024)
             quantity = quantity.decode().strip()
             item = items[item_choice][0]
+            writer.write(f"{INPUT_BYTE_ID}|You will sell {quantity} {item} for the price of {quantity * player.get_price(item)}, continue ? : y/n ".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
             writer.write(f"{DISPLAY_BYTE_ID}|You sold {quantity} {item}!".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
@@ -272,6 +286,13 @@ async def change_player_zone(reader, writer, player):
         #await writer.drain()
         #await asyncio.sleep(0.5)
         #for i in game.get_zones(player):
+        writer.write(f"{INPUT_BYTE_ID}|You are going to change your zone. Are you sure ? : y/n \n".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
+        choice = await reader.read(1)
+        choice = choice.decode().strip()
+        if choice == "n":
+            break
         MOVES = {
             "up": -10,
             "down": 10,
@@ -301,7 +322,7 @@ async def change_player_zone(reader, writer, player):
 
 async def handle_wild_menu(reader, writer, player):
     while True:
-        writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the wild! Here are your options:\n 1. Find and fight a wild Pokemon \n 2. Fight another trainer nearby \n 3. Check your Pokemon \n 4. Check your items \n 5. Explore somewhere else".encode())
+        writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the wild! Here are your options:\n 1. Find and fight a wild Pokemon \n 2. Fight another trainer nearby \n 3. Check your Pokemon \n 4. Check your items \n 5. Explore somewhere else \n 6. Go back to the main menu \n".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
         writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
@@ -357,6 +378,9 @@ async def handle_wild_menu(reader, writer, player):
         elif choice == "5":
             await change_player_zone(reader, writer, player)
             continue
+        elif choice == "6":
+            game.remove_player(player)
+            break
         else:
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
             await writer.drain()
@@ -365,7 +389,7 @@ async def handle_wild_menu(reader, writer, player):
 
 async def handle_city_menu(reader, writer, player):
     while True:
-        writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the city! Here are your options:\n 1. Go to the Pokecenter \n 2. Go to the Pokemart \n 3. Go to the Arena \n 4. Check your Pokemon \n 5. Check your items\n 6. Exit City".encode())
+        writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the city! Here are your options:\n 1. Go to the Pokecenter \n 2. Go to the Pokemart \n 3. Go to the Arena \n 4. Check your Pokemon \n 5. Check your items\n 6. Exit City \n 7. Go back to the main menu".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
         writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
@@ -404,6 +428,9 @@ async def handle_city_menu(reader, writer, player):
         elif choice == "6":
             await change_player_zone(reader, writer, player)
             continue
+        elif choice == "7":
+            game.remove_player(player)
+            break
         else:
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
             await writer.drain()
@@ -470,20 +497,43 @@ async def change_equipe(reader, writer, player):
             choice = await reader.read(1024)
             choice = choice.decode().strip()
             if choice == 1:
+                writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+                for i in range(len(equipe)):
+                    writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {equipe[i].get_name()}".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    writer.write(f"{INPUT_BYTE_ID}|Enter the number of the Pokemon you want to replace: ".encode())
+                    await writer.drain()
+                    choice = await reader.read(1024)
+                    choice = choice.decode().strip()
                 writer.write(f"{DISPLAY_BYTE_ID}|Here are the available Pokemon: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
+                choice2 = 0
                 for i in range(len(pokemon)):
                     writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {pokemon[i].get_name()}".encode())
                     await writer.drain()
                     await asyncio.sleep(0.5)
-                    writer.write(f"{INPUT_BYTE_ID}|Enter the number of the Pokemon you want to replace : ".encode())
+                    writer.write(f"{INPUT_BYTE_ID}|Enter the number of the Pokemon you want to put instead of {equipe[int(choice)-1].get_name()}: ".encode())
+                    await writer.drain()
+                    choice2 = await reader.read(1024)
+                    choice2 = choice.decode().strip()
+                player.replace_pokemon_in_team(choice, choice2)
+            elif choice == 2:
+                writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+                for i in range(len(equipe)):
+                    writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {equipe[i].get_name()}".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    writer.write(f"{INPUT_BYTE_ID}|Enter the number of the Pokemon you want to remove: ".encode())
                     await writer.drain()
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
-                player.replace_pokemon_in_team()
-            elif choice == 2:
-                player.remove_pokemon_to_team()
+                player.remove_pokemon_to_team(choice)
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
                 await writer.drain()
@@ -498,11 +548,56 @@ async def change_equipe(reader, writer, player):
             choice = await reader.read(1024)
             choice = choice.decode().strip()
             if choice == 1:
-                player.add_pokemon_to_team()
+                writer.write(f"{DISPLAY_BYTE_ID}|Here are the available Pokemon: \n".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+                for i in range(len(pokemon)):
+                    writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {pokemon[i].get_name()}".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    writer.write(f"{INPUT_BYTE_ID}|Enter the number of the Pokemon you want to add: ".encode())
+                    await writer.drain()
+                    choice = await reader.read(1024)
+                    choice = choice.decode().strip()
+                player.add_pokemon_to_team(choice)
             elif choice == 2:
-                player.replace_pokemon_in_team()
+                writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+                for i in range(len(equipe)):
+                    writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {equipe[i].get_name()}".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    writer.write(f"{INPUT_BYTE_ID}|Enter the number of the Pokemon you want to replace: ".encode())
+                    await writer.drain()
+                    choice = await reader.read(1024)
+                    choice = choice.decode().strip()
+                writer.write(f"{DISPLAY_BYTE_ID}|Here are the available Pokemon: \n".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+                choice2 = 0
+                for i in range(len(pokemon)):
+                    writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {pokemon[i].get_name()}".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    writer.write(f"{INPUT_BYTE_ID}|Enter the number of the Pokemon you want to put instead of {equipe[int(choice)-1].get_name()}: ".encode())
+                    await writer.drain()
+                    choice2 = await reader.read(1024)
+                    choice2 = choice.decode().strip()
+                player.replace_pokemon_in_team(choice, choice2)
             elif choice == 3:
-                player.remove_pokemon_to_team()
+                writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+                for i in range(len(equipe)):
+                    writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {equipe[i].get_name()}".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    writer.write(f"{INPUT_BYTE_ID}|Enter the number of the Pokemon you want to remove: ".encode())
+                    await writer.drain()
+                    choice = await reader.read(1024)
+                    choice = choice.decode().strip()
+                player.remove_pokemon_to_team(choice)
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
                 await writer.drain()
@@ -511,7 +606,7 @@ async def change_equipe(reader, writer, player):
 
 async def login_or_register(reader, writer):
     while True:
-        writer.write(f"{INPUT_BYTE_ID}|{bcolors.OKCYAN}Welcome! Do you want to (1) Login or (2) Register? {bcolors.ENDC}".encode())
+        writer.write(f"{INPUT_BYTE_ID}|{bcolors.OKCYAN}Welcome! Do you want to (1) Login, (2) Register or (3) Quit? {bcolors.ENDC}".encode())
         await writer.drain()
         choice = await reader.read(1024)
         print(f"Raw data received: {choice}")  # Debugging log
@@ -630,7 +725,9 @@ async def login_or_register(reader, writer):
                 await asyncio.sleep(0.5)  # Optional delay for better readability
                 continue
             
-
+        elif choice == "3":
+            writer.close()
+            await writer.wait_closed()
         else:
             # Invalid input, send the user back to the menu
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
@@ -665,6 +762,7 @@ async def handle_client_msg(reader, writer):
                     await handle_city_menu(reader, writer, player)
                 else:
                     await handle_wild_menu(reader, writer, player)
+                player = await login_or_register(reader, writer)
         except (ConnectionResetError, BrokenPipeError):
             print(f"Connection lost with {addr}.")
         except Exception as e:
