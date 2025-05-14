@@ -367,10 +367,10 @@ async def handle_input(client_id, message):
     return data.decode()
 
 async def change_equipe(reader, writer, player):
-    writer.write(f"{DISPLAY_BYTE_ID}|Here are your Pokemons: \n".encode())
-    await writer.drain()
-    await asyncio.sleep(0.5)
-    if len(player.equipe) == 1:
+    equipe = player.get_equipe()
+    writer.write(f"{DISPLAY_BYTE_ID}|Player object before changing team: {equipe[0].get_name()}".encode())
+    print(f"Player object before changing team: {len(equipe)}")  # Debugging log
+    if int(len(equipe)) == 1:
         writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon ".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
@@ -386,7 +386,7 @@ async def change_equipe(reader, writer, player):
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
-    elif len(player.equipe) == 4:
+    elif len(equipe) == 4:
         writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Replace a Pokemon \n 2. Remove a Pokemon")
         await writer.drain()
         await asyncio.sleep(0.5)

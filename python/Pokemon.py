@@ -29,6 +29,9 @@ class Pokemon :
     def get_moves(self):
         return self.moves
     
+    def get_name(self):
+        return self.pokemon_name
+    
     def set_attribute(self, userid, pokemonid):
         self.moves = {}
         conn = sqlite3.connect('../database.db')
