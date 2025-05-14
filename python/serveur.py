@@ -448,8 +448,7 @@ async def handle_input(client_id, message):
 async def change_equipe(reader, writer, player):
     while True:
         equipe = player.get_equipe()
-        pokemon = player.get_pokemon()
-        
+        pokemon = player.get_pokemon()        
         if len(equipe) == 1:
             writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon \n 3. Exit".encode())
             await writer.drain()
@@ -459,6 +458,11 @@ async def change_equipe(reader, writer, player):
             choice = await reader.read(1024)
             choice = choice.decode().strip()
             if choice == "1":
+                if len(pokemon) == 0:
+                    writer.write(f"{DISPLAY_BYTE_ID}|You don't have any Pokemon in your PC.".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    break
                 writer.write(f"{DISPLAY_BYTE_ID}|Here are the available Pokemon: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
@@ -472,6 +476,11 @@ async def change_equipe(reader, writer, player):
                     choice = choice.decode().strip()
                 player.add_pokemon_to_team(int(choice))
             elif choice == "2":
+                if len(pokemon) == 0:
+                    writer.write(f"{DISPLAY_BYTE_ID}|You don't have any Pokemon in your PC.".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    break
                 writer.write(f"{DISPLAY_BYTE_ID}|Here are the available Pokemon: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
@@ -483,7 +492,7 @@ async def change_equipe(reader, writer, player):
                     await writer.drain()
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
-                player.replace_pokemon_in_team(int(choice))
+                player.replace_pokemon_in_team(1, int(choice))
             elif choice == "3":
                 break
             else:
@@ -500,6 +509,11 @@ async def change_equipe(reader, writer, player):
             choice = await reader.read(1024)
             choice = choice.decode().strip()
             if choice == "1":
+                if len(pokemon) == 0:
+                    writer.write(f"{DISPLAY_BYTE_ID}|You don't have any Pokemon in your PC.".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    break
                 writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
@@ -553,6 +567,11 @@ async def change_equipe(reader, writer, player):
             choice = await reader.read(1024)
             choice = choice.decode().strip()
             if choice == "1":
+                if len(pokemon) == 0:
+                    writer.write(f"{DISPLAY_BYTE_ID}|You don't have any Pokemon in your PC.".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    break
                 writer.write(f"{DISPLAY_BYTE_ID}|Here are the available Pokemon: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
@@ -566,6 +585,11 @@ async def change_equipe(reader, writer, player):
                     choice = choice.decode().strip()
                 player.add_pokemon_to_team(int(choice))
             elif choice == "2":
+                if len(pokemon) == 0:
+                    writer.write(f"{DISPLAY_BYTE_ID}|You don't have any Pokemon in your PC.".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    break
                 writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
