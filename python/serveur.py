@@ -451,6 +451,7 @@ async def login_or_register(reader, writer):
             writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
             await writer.drain()
             await asyncio.sleep(0.5) 
+            pprint(f"Player object after registration: {player}")  # Debugging log
             return player
             
             
@@ -531,6 +532,7 @@ async def login_or_register(reader, writer):
             writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
+            pprint(f"Player object after registration: {player}")  # Debugging log
             return player
 
         else:
