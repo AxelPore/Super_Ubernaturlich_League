@@ -39,11 +39,11 @@ class Player :
         conn.close()
         return True
             
-    def register(self, username, mdp, starter_pokemon):
+    def register(self, username, mdp, starter_pokemon, zone):
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         print("Attempting to register user... with username: ", username, " and password: ", mdp, " and starter: ", starter_pokemon)
-        cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 10))
+        cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, zone))
         self.userid = cursor.lastrowid
         print(self.userid)
         conn.commit()
