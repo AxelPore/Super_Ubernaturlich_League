@@ -549,7 +549,7 @@ async def handle_client_msg(reader, writer):
         initial_message = await reader.read(1024)
         initial_message = initial_message.decode().strip()
         print(f"Client chose: {initial_message}")  # Debugging log
-        player = None
+        player = Player()
         if initial_message == "Hello|new":
             # Call the login_or_register function
             player = await login_or_register(reader, writer)
