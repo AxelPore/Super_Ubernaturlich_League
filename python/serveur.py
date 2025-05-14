@@ -186,6 +186,7 @@ async def login_or_register(reader, writer):
 
             player = Player()
             try:
+                print(f"Attempting to register user: {username} with password: {password} and starter: {starter}")  # Debugging log
                 player.register(username, password, starter)
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Registration successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()

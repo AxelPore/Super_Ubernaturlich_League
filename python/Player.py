@@ -42,8 +42,11 @@ class Player :
     def register(self, username, mdp, starter_pokemon):
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
+        print("Attempting to register user... with username: ", username, " and password: ", mdp, " and starter: ", starter_pokemon)
         cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 10))
         self.userid = cursor.lastrowid
+        print(self.userid)
+        conn.commit()
         first_pokemon = Pokemon(starter_pokemon)
         moves = []
         for i in first_pokemon.moves.items():
