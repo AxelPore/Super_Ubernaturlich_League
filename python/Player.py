@@ -11,6 +11,8 @@ class Player :
         self.item = [[]]
         self.zoneid = 0
         self.zone = 0
+        self.money = 0
+        self.zonename = ""
     
     def login(self, username, mdp):
         conn = sqlite3.connect('../database.db')
@@ -23,6 +25,7 @@ class Player :
         self.username = username
         self.userid = result[0]
         self.equipeid = result[3]
+        self.money = result[5]
         pc = cursor.execute("SELECT Pokedexid, Pokemonid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         for i in pc:
             tmp_poke = Pokemon(i[0])
@@ -35,7 +38,7 @@ class Player :
                     self.equipe.append(k)  
         self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
         self.zoneid = result[4]
-        self.zone = cursor.execute("SELECT ZonePosition FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()[0]
+        self.zone, self.zonename = cursor.execute("SELECT ZonePosition, ZoneName FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()[0]
         conn.close()
         return True
             
@@ -187,12 +190,19 @@ class Player :
     def get_zoneid(self):
         return self.zoneid
     
+    def get_money(self):
+        return self.money
+    
+    def zone_name(self):
+        return self.zonename
+    
     def set_zone(self, newZone):
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         self.zone = newZone
         cursor.execute("SELECT ZoneName FROM Zone WHERE ZonePosition = ?", (self.zone,))
         result = cursor.fetchone()
+        self.zonename = result[0]
         if result is None:
             conn.close()
             return False
