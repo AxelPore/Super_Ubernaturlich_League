@@ -11,6 +11,7 @@ CLIENTS = {}
 INPUT_BYTE_ID = 'r=Ip'
 DISPLAY_BYTE_ID = 'r=Dp'
 
+player = Player()
 game = Game()
 
 def generateId(lenght):
@@ -508,7 +509,7 @@ async def login_or_register(reader, writer):
             }.get(int(starter), 1)  # Default to Bulbasaur if invalid choice
             print(f"Received starter choice: {starter}")  # Debugging log
 
-            player = Player()
+            
             try:
                 print(f"Attempting to register user: {username} with password: {password} and starter: {starter}")  # Debugging log
                 player.register(username, password, starter, 10)
@@ -542,6 +543,31 @@ async def handle_client_msg(reader, writer):
         if initial_message == "Hello|new":
             # Call the login_or_register function
             await login_or_register(reader, writer)
+        
+        try :
+            while True:
+                if player.get_zone() == 10:
+                    await handle_city_menu(reader, writer, player)
+                else:
+                    await handle_wild_menu(reader, writer, player)
+        except (ConnectionResetError, BrokenPipeError):
+            print(f"Connection lost with {addr}.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}An error occurred: {e}{bcolors.ENDC}\n".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+        except KeyboardInterrupt:
+            print("Server interrupted.")
+            writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}Server interrupted.{bcolors.ENDC}\n".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+        finally:
+            writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}Connection closed.{bcolors.ENDC}\n".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+            writer.close()
+            await writer.wait_closed()
 
     except (ConnectionResetError, BrokenPipeError):
         print(f"Connection lost with {addr}.")
