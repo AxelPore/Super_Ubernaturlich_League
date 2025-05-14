@@ -255,7 +255,7 @@ async def change_player_zone(reader, writer, player):
     move = move.decode().strip()
     print(f"Player move: {move} and id : {MOVES[move]}")  # Debugging log
     if move in MOVES:
-        for i in range(game.get_players()):
+        for i in range(len(game.get_players())):
             print[i]
             if game.get_players()[i] == player:
                 game.player_move(i, MOVES[move])
