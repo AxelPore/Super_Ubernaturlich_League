@@ -2,9 +2,9 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from ..common import INPUT_BYTE_ID, DISPLAY_BYTE_ID, bcolors
+from ..Common import INPUT_BYTE_ID, DISPLAY_BYTE_ID, bcolors
 from game_logic.Player import Player
-from ..common import game
+from ..Common import game
 from pprint import pprint
 import asyncio
 

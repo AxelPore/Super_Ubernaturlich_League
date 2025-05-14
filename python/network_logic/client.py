@@ -2,7 +2,7 @@ import sys
 import asyncio
 import aioconsole
 
-from .common import bcolors
+from .Common import bcolors
 
 INPUT_BYTE_ID = 'r=Ip'
 DISPLAY_BYTE_ID = 'r=Dp'

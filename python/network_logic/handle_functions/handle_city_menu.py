@@ -4,7 +4,7 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from ..common import DISPLAY_BYTE_ID, INPUT_BYTE_ID, game
+from ..Common import DISPLAY_BYTE_ID, INPUT_BYTE_ID, game
 from .handle_pokecenter_menu import handle_pokecenter_menu
 from .handle_pokemart_menu import handle_pokemart_menu
 from .handle_arena_menu import handle_arena_menu

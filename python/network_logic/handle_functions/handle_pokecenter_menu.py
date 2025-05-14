@@ -4,7 +4,7 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from ..common import exception_handler_decorator, DISPLAY_BYTE_ID, INPUT_BYTE_ID
+from ..Common import exception_handler_decorator, DISPLAY_BYTE_ID, INPUT_BYTE_ID
 from .handle_team_change import handle_team_change
 # Removed top-level import to avoid circular import
 # from .handle_city_menu import handle_city_menu
