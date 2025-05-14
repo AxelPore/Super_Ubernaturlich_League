@@ -43,7 +43,7 @@ class Player :
         conn = sqlite3.connect('../database.db')
         cursor = conn.cursor()
         print("Attempting to register user... with username: ", username, " and password: ", mdp, " and starter: ", starter_pokemon)
-        cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 10))
+        cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 14))
         self.userid = cursor.lastrowid
         print(self.userid)
         conn.commit()
@@ -236,4 +236,12 @@ class Player :
         conn.commit()
         conn.close()
     
-    
+    def create_pnj_trainer():
+        self.username = ""
+        self.userid = 0
+        self.equipeid = 0
+        self.equipe = []
+        self.pokemon = []
+        self.item = [[]]
+        self.zoneid = 0
+        self.zone = 0
