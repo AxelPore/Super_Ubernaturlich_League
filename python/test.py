@@ -14,4 +14,6 @@ if __name__ == "__main__":
     equipe = player.get_equipe()
     for i in range(len(equipe)):
         print(f"[{i + 1}] {equipe[i].pokemon_name} ({equipe[i].get_moves()})")
-
+    item = player.get_item()
+    for i in range(len(item)):
+        print(f"[{i + 1}] {item[i][0]} ({item[i][1]})")
