@@ -4,7 +4,7 @@ import random
 class Pokemon :
     def __init__(self, random_pokemon):
         self.pokedexid = random_pokemon
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         self.pokemon_name, self.type1, self.type2, self.hp, self.atk, self.defense, self.spatk, self.spdef, self.speed = cursor.execute("SELECT name, type_1, type_2, stat_hp, stat_attack, stat_defense, stat_spattack, stat_spdef, stat_speed FROM Pokedex WHERE Pokedexid = ?", (random_pokemon,)).fetchall()[0]
         self.pokedex_id, ability_1, ability_2, ability_3 = cursor.execute("""SELECT Pokedexid, ability_1, ability_2, ability_3 FROM Pokedex WHERE name = ?""", (self.pokemon_name,)).fetchone()
@@ -22,7 +22,7 @@ class Pokemon :
         self.hpmax = self.hp
             
     def attack(self, selected_move):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         move = self.moves[selected_move]
 
@@ -34,7 +34,7 @@ class Pokemon :
     
     def set_attribute(self, userid, pokemonid):
         self.moves = {}
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         self.pokemonid = pokemonid
         self.surname, self.ability, move1, move2, move3, move4 = cursor.execute("SELECT Surname, Ability, Move1, Move2, Move3, Move4 FROM Pokemon WHERE Userid = ? AND Pokemonid = ?", (userid, pokemonid)).fetchone()

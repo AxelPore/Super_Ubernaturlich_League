@@ -15,7 +15,7 @@ class Player :
         self.zonename = ""
     
     def login(self, username, mdp):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM User WHERE username = ? AND password = ?", (username, mdp))
         result = cursor.fetchone()
@@ -44,7 +44,7 @@ class Player :
         return True
             
     def register(self, username, mdp, starter_pokemon):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         print("Attempting to register user... with username: ", username, " and password: ", mdp, " and starter: ", starter_pokemon)
         cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 14))
@@ -65,7 +65,7 @@ class Player :
         self.login(username, mdp)
     
     def add_pokemon(self, pokemon):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         moves = []
         for i in pokemon.moves.items():
@@ -96,7 +96,7 @@ class Player :
         conn.close()
         
     def add_pokemon_to_team(self, choice):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         if choice < 1 or choice > len(self.pokemon):
             conn.close()
@@ -118,7 +118,7 @@ class Player :
         conn.close()
         
     def replace_pokemon_in_team(self, choice, choice2):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         if choice < 1 or choice > 4:
             conn.close()
@@ -146,7 +146,7 @@ class Player :
         conn.close()
         
     def remove_pokemon_to_team(self, choice):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         if choice < 1 or choice > 4:
             conn.close()
@@ -203,7 +203,7 @@ class Player :
         return self.zonename
     
     def get_price(self, itemname):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         cursor.execute("SELECT ItemPrice FROM Item WHERE ItemName = ?", (itemname,))
         result = cursor.fetchone()
@@ -216,7 +216,7 @@ class Player :
             return price
     
     def set_zone(self, newZone):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         self.zone = newZone
         cursor.execute("SELECT ZoneName FROM Zone WHERE ZonePosition = ?", (self.zone,))
@@ -231,7 +231,7 @@ class Player :
         conn.close()
         
     def use_item(self, itemid, quantity):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         cursor.execute("UPDATE Inventory SET Quantity = Quantity - ? WHERE Userid = ? AND Itemid = ?", (quantity, self.userid, itemid))
         cursor.execute("DELETE * FROM Item WHERE Quantity = 0")
@@ -240,7 +240,7 @@ class Player :
         conn.close()
         
     def add_item(self, itemid, quantity):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         result = cursor.execute("SELECT * FROM Item WHERE Itemid = ?", (itemid,)).fetchone()[0]
         if result is None:
@@ -252,14 +252,14 @@ class Player :
         conn.close()
         
     def use_money(self, money):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         cursor.execute("UPDATE User SET Money = Money - ? WHERE Userid = ?", (money, self.userid))
         conn.commit()
         conn.close()
         
     def add_money(self, money):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         cursor.execute("UPDATE User SET Money = Money + ? WHERE Userid = ?", (money, self.userid))
         conn.commit()

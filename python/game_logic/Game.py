@@ -45,7 +45,7 @@ class Game :
         self.players.pop(player)
 
     def encounter_pokemon(self, player):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         spawnable_pokemons = cursor.execute("SELECT Pokedexid FROM Pokedex WHERE Zoneid = ?", (self.players[player].get_zoneid(),)).fetchall()
         place_holder = Player()
