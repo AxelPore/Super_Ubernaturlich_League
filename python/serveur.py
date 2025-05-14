@@ -372,7 +372,7 @@ async def change_equipe(reader, writer, player):
     writer.write(f"{DISPLAY_BYTE_ID}|Player object before changing team: {equipe[0].get_name()}".encode())
     print(f"Player object before changing team: {len(equipe)}")  # Debugging log
     if int(len(equipe)) == 1:
-        writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon ")
+        writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon ".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
         writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
