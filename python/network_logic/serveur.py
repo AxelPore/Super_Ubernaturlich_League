@@ -3,7 +3,7 @@ import random
 from pprint import pprint
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), 'python', 'network_logic')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.getcwd(), 'python', 'network_logic', 'game_logic')))
 
 from game_logic.Player import Player
 from Common import CLIENTS, INPUT_BYTE_ID, DISPLAY_BYTE_ID, game, bcolors, exception_handler_decorator
