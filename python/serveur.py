@@ -2,12 +2,15 @@ import asyncio
 import random
 from pprint import pprint
 from Player import Player
+from Game import *
 
 global CLIENTS
 CLIENTS = {}
 
 INPUT_BYTE_ID = 'r=Ip'
 DISPLAY_BYTE_ID = 'r=Dp'
+
+game = Game()
 
 def generateId(lenght):
     id = ''
@@ -29,6 +32,112 @@ class bcolors:
     ENDC = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+
+async def handle_pokecenter_menu(reader, writer, player):
+    writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the Pokecenter! Here are your options:\n 1. Heal your Pokemon \n 2. Check your Pokemon \n 3. Check your items \n 4. Access PC \n 5. Exit Pokecenter".encode())
+    await writer.drain()
+    await asyncio.sleep(0.5)
+    writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
+    await writer.drain()
+    choice = await reader.read(1024)
+    choice = choice.decode().strip()
+    if choice == "1":
+        # game.heal_pokemon(player)
+        writer.write(f"{DISPLAY_BYTE_ID}|Healing your Pokemon...".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
+    elif choice == "2":
+        equipe = player.get_equipe()
+        writer.write(f"{DISPLAY_BYTE_ID}|Here are your Pokemons: \n".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
+        for i in range(len(equipe)):
+            writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {equipe[i].pokemon_name} : {equipe[i].get_moves()}".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+    elif choice == "3":
+        items = player.get_item()
+        writer.write(f"{DISPLAY_BYTE_ID}|Here are your Items: \n".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
+        for i in range(len(equipe)):
+            writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {items[i][0]} : {items[i][1]}".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+    elif choice == "4":
+        await change_equipe(reader, writer, player)
+    elif choice == "5":
+        await change_player_zone(reader, writer, player)
+    else:
+        writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
+
+async def change_player_zone(reader, writer, player):
+    #writer.write(f"{DISPLAY_BYTE_ID}|You are in zone {game.get_zone_name(player)}.\n".encode())
+    #writer.write(f"{DISPLAY_BYTE_ID}| You can access these zones : \n".encode())
+    #await writer.drain()
+    #await asyncio.sleep(0.5)
+    #for i in game.get_zones(player):
+    MOVES = {
+        "up": -10,
+        "down": 10,
+        "left": -1,
+        "right": 1
+    }
+    writer.write(f"{INPUT_BYTE_ID}|Enter your move (up, down, left, right): ".encode())
+    await writer.drain()
+    move = await reader.read(1024)
+    move = move.decode().strip()
+    if move in MOVES:
+        game.player_move(player, MOVES[move])
+        # writer.write(f"{DISPLAY_BYTE_ID}|You moved to zone {game.get_zone_name(player)}.\n".encode())
+        # await writer.drain()
+        # await asyncio.sleep(0.5)
+    else:
+        writer.write(f"{DISPLAY_BYTE_ID}|Invalid move. Please try again.".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
+
+async def handle_wild_menu(reader, writer, player):
+    writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the wild! Here are your options:\n 1. Find and fight a wild Pokemon \n 2. Fight another trainer nearby \n 3. Explore somewhere else".encode())
+    await writer.drain()
+    await asyncio.sleep(0.5)
+    writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
+    await writer.drain()
+    choice = await reader.read(1024)
+    choice = choice.decode().strip()
+    if choice == "1":
+        pass
+    elif choice == "2":
+        pass
+    elif choice == "3":
+        await change_player_zone(reader, writer, player)
+    else:
+        writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
+
+async def handle_city_menu(reader, writer, player):
+    writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the city! Here are your options:\n 1. Go to the Pokecenter \n 2. Go to the Pokemart \n 3. Go to the Arena \n 4. Exit City".encode())
+    await writer.drain()
+    await asyncio.sleep(0.5)
+    writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
+    await writer.drain()
+    choice = await reader.read(1024)
+    choice = choice.decode().strip()
+    if choice == "1":
+        pass
+    elif choice == "2":
+        pass
+    elif choice == "3":
+        pass
+    elif choice == "4":
+        await change_player_zone(reader, writer, player)
+    else:
+        writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
 
 async def handle_input(client_id, message):
     writer = CLIENTS[client_id]['w']
