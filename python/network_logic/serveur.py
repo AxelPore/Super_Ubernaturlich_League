@@ -805,13 +805,14 @@ async def handle_client_msg(reader, writer):
                 else:
                     await handle_wild_menu(reader, writer, player)
                 player = await login_or_register(reader, writer)
-        except (ConnectionResetError, BrokenPipeError):
-            print("a client has exited")
         except Exception as e:
-            print(f"An error occurred: {e}")
-            writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}An error occurred: {e}{bcolors.ENDC}\n".encode())
-            await writer.drain()
-            await asyncio.sleep(0.5)
+            if e is ConnectionResetError or e is BrokenPipeError:
+                print(f"Connection lost with {addr}.")
+            else:
+                print(f"An error occurred: {e}")
+                writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}An error occurred: {e}{bcolors.ENDC}\n".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
         finally:
             writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.FAIL}Connection closed.{bcolors.ENDC}\n".encode())
             await writer.drain()
