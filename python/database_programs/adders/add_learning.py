@@ -5,12 +5,12 @@ def verify_no_duplicate_consecutive(current_entry, last_entry):
     return current_entry != last_entry
 
 def add_learning():
-    conn = sqlite3.connect('../database.db')
+    conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
     last_entry = None
 
-    with open('../csv/learning.csv', newline='', encoding='utf-8') as csvfile:
+    with open('csv/learning.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             pokemon_name = row['pokemon']

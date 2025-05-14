@@ -1,12 +1,12 @@
 import sqlite3
-import add_items
-import add_pokedex
-import add_moves
-import add_learning
-import add_zones
+import python.database_programs.adders.add_items as add_items
+import python.database_programs.adders.add_pokedex as add_pokedex
+import python.database_programs.adders.add_moves as add_moves
+import python.database_programs.adders.add_learning as add_learning
+import python.database_programs.adders.add_zones as add_zones
 
 def create_tables():
-    conn = sqlite3.connect('../database.db')
+    conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
     # Enable foreign key support

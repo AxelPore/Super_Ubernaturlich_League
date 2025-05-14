@@ -1,9 +1,9 @@
 import asyncio
 import random
 from pprint import pprint
-from Player import Player
-from Game import *
-from Battle import *
+from game_logic.Player import Player
+from game_logic.Game import *
+from game_logic.Battle import *
 
 global CLIENTS
 CLIENTS = {}
