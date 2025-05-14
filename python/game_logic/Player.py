@@ -1,5 +1,5 @@
 import sqlite3
-from Pokemon import *
+from .Pokemon import *
 
 class Player :
     def __init__(self):
