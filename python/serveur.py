@@ -252,6 +252,7 @@ async def change_player_zone(reader, writer, player):
     await writer.drain()
     move = await reader.read(1024)
     move = move.decode().strip()
+    print(f"Player move: {move} and id : {MOVES[move]}")  # Debugging log
     if move in MOVES:
         game.player_move(player, MOVES[move])
         # writer.write(f"{DISPLAY_BYTE_ID}|You moved to zone {game.get_zone_name(player)}.\n".encode())
