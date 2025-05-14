@@ -1,6 +1,6 @@
-from Player import *
-from Pokemon import *
-from Battle import *
+from .Player import *
+from .Pokemon import *
+from .Battle import *
 from random import *
 
 
