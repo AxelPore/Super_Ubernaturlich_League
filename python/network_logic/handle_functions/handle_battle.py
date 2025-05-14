@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 import asyncio
 from game_logic.Battle import Battle
 
-from common import exception_handler_decorator, DISPLAY_BYTE_ID, game
+from .common import exception_handler_decorator, DISPLAY_BYTE_ID, game
 
 @exception_handler_decorator
 async def handle_battle(reader, writer, player, trainer):

@@ -5,9 +5,9 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from common import DISPLAY_BYTE_ID, INPUT_BYTE_ID, game
-from handle_battle import handle_battle
-from handle_change_player_zone import handle_change_player_zone
+from .common import DISPLAY_BYTE_ID, INPUT_BYTE_ID, game
+from .handle_battle import handle_battle
+from .handle_change_player_zone import handle_change_player_zone
 
 async def handle_wild_menu(reader, writer, player):
     while True:
