@@ -367,7 +367,7 @@ async def handle_input(client_id, message):
     return data.decode()
 
 async def change_equipe(reader, writer, player):
-    writer.write(f"{DISPLAY_BYTE_ID}|Player object before changing team: {len(player.equipe)}".encode())
+    writer.write(f"{DISPLAY_BYTE_ID}|Player object before changing team: {len(player.equipe[0].pokemon_name)}".encode())
     print(f"Player object before changing team: {len(player.equipe)}")  # Debugging log
     if len(player.equipe) == 1:
         writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon ")
