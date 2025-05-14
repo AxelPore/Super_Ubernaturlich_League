@@ -13,6 +13,9 @@ class Game :
             if (i == new_player):
                 return "Joueur déjà connecté"
         self.players.append(new_player)
+
+    def get_players(self):
+        return self.players
     
     def zone_check(self): #Renvoi un dictionnaire avec le nom du player en clé, et l'id de sa zone en valeur
         result_dict = {}
