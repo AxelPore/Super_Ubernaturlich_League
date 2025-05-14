@@ -454,6 +454,7 @@ async def login_or_register(reader, writer):
                 await writer.drain()
                 await asyncio.sleep(0.5) 
                 pprint(f"Player object after registration: {player}")  # Debugging log
+                game.add_player(player)
                 return player
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Login failed or account not found. Please try again or Register.{bcolors.ENDC}\n".encode())
@@ -535,6 +536,7 @@ async def login_or_register(reader, writer):
                 await writer.drain()
                 await asyncio.sleep(0.5)
                 pprint(f"Player object after registration: {player}")  # Debugging log
+                game.add_player(player)
                 return player
             except Exception as e:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Registration failed: {str(e)}{bcolors.ENDC}\n".encode())
