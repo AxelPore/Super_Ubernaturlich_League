@@ -20,6 +20,12 @@ class Pokemon :
         self.surname = ""
         self.pokemonid = 0
         self.hpmax = self.hp
+        self.curve = "medium"
+        self.Level = random.randint(min_spawn_level, max_spawn_level)
+        self.hp_ev = 0
+        self.hp_iv = random.randint(1, 31)
+        self.stats_ev = [0, 0, 0, 0, 0]
+        self.stats_iv = [random.randint(1, 31), random.randint(1, 31), random.randint(1, 31), random.randint(1, 31), random.randint(1, 31)]
             
     def attack(self, selected_move):
         conn = sqlite3.connect('database.db')
