@@ -10,10 +10,12 @@ def add_items():
         for row in reader:
             cursor.execute("""
                 INSERT INTO Item (
-                    ItemName
+                    ItemName,
+                    ItemPrice
                 ) VALUES (?)
             """, (
                 row['identifier'],
+                row['cost']
             ))
 
     conn.commit()
