@@ -1,6 +1,10 @@
 import asyncio
 import random
 from pprint import pprint
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from game_logic.Player import Player
 from game_logic.Game import *
 from game_logic.Battle import *
