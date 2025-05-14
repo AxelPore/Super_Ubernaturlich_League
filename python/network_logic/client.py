@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 import asyncio
 import aioconsole
 
-from network_logic.Common import bcolors, INPUT_BYTE_ID, DISPLAY_BYTE_ID
+from .Common import bcolors, INPUT_BYTE_ID, DISPLAY_BYTE_ID
 
 async def send_input_to_server(writer, prompt):
     """
