@@ -6,7 +6,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 from .common import exception_handler_decorator, DISPLAY_BYTE_ID, INPUT_BYTE_ID
 from .handle_team_change import handle_team_change
-from .handle_city_menu import handle_city_menu
+# Removed top-level import to avoid circular import
+# from .handle_city_menu import handle_city_menu
 
 @exception_handler_decorator
 async def handle_pokecenter_menu(reader, writer, player):
@@ -54,6 +55,8 @@ async def handle_pokecenter_menu(reader, writer, player):
             writer.write(f"{DISPLAY_BYTE_ID}|You are now in the city.".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
+            # Import here to avoid circular import
+            from .handle_city_menu import handle_city_menu
             await handle_city_menu(reader, writer, player)
             break
         else:
