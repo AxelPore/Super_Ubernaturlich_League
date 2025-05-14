@@ -1,9 +1,13 @@
 import sqlite3
-import python.database_programs.adders.add_items as add_items
-import python.database_programs.adders.add_pokedex as add_pokedex
-import python.database_programs.adders.add_moves as add_moves
-import python.database_programs.adders.add_learning as add_learning
-import python.database_programs.adders.add_zones as add_zones
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+import adders.add_items as add_items
+import adders.add_pokedex as add_pokedex
+import adders.add_moves as add_moves
+import adders.add_learning as add_learning
+import adders.add_zones as add_zones
 
 def create_tables():
     conn = sqlite3.connect('database.db')
