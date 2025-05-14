@@ -222,6 +222,9 @@ async def handle_pokecenter_menu(reader, writer, player):
             await writer.drain()
             await asyncio.sleep(0.5)
     elif choice == "4":
+        writer.write(f"{DISPLAY_BYTE_ID}|You are now in the PC.".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
         await change_equipe(reader, writer, player)
     elif choice == "5":
         writer.write(f"{DISPLAY_BYTE_ID}|You are now in the city.".encode())
@@ -364,6 +367,9 @@ async def handle_input(client_id, message):
     return data.decode()
 
 async def change_equipe(reader, writer, player):
+    writer.write(f"{DISPLAY_BYTE_ID}|Here are your Pokemons: \n".encode())
+    await writer.drain()
+    await asyncio.sleep(0.5)
     if len(player.equipe) == 1:
         writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon ")
         await writer.drain()
