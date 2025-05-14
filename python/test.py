@@ -17,6 +17,10 @@ if __name__ == "__main__":
     item = player.get_item()
     for i in range(len(item)):
         print(f"[{i + 1}] {item[i][0]} ({item[i][1]})")
+        
+        
+# courbe d expérience
+# https://www.pokepedia.fr/Courbe_d%27exp%C3%A9rience
 
 
 # Impact de la capture
