@@ -22,7 +22,7 @@ async def asRecieve(reader, writer):
         if not data:
             print("No data received. Closing connection.")  # Debugging log
             break
-        message = data.decode()
+        message = data.decode(errors='replace')
         #print(f"Message received from server: {message}")  # Debugging log
         if message.startswith(INPUT_BYTE_ID):
             # Handle input request
