@@ -443,16 +443,16 @@ async def login_or_register(reader, writer):
             if player.login(username, password):
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Login successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()
-                break  # Exit the loop after successful login
+                writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5) 
+                pprint(f"Player object after registration: {player}")  # Debugging log
+                return player
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Login failed or account not found. Please try again or Register.{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
-            writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
-            await writer.drain()
-            await asyncio.sleep(0.5) 
-            pprint(f"Player object after registration: {player}")  # Debugging log
-            return player
+                continue
             
             
 
@@ -524,23 +524,25 @@ async def login_or_register(reader, writer):
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Registration successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5) 
-                break  # Exit the loop after successful registration
+                writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+                pprint(f"Player object after registration: {player}")  # Debugging log
+                return player
             except Exception as e:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Registration failed: {str(e)}{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)  # Optional delay for better readability
-            writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
-            await writer.drain()
-            await asyncio.sleep(0.5)
-            pprint(f"Player object after registration: {player}")  # Debugging log
-            return player
+                continue
+            
 
         else:
             # Invalid input, send the user back to the menu
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
             await writer.drain()
             await asyncio.sleep(0.5) 
-            return None
+            continue
+    # This point should not be reached
 
 async def handle_client_msg(reader, writer):
     addr = writer.get_extra_info('peername')
