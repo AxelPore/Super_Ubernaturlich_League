@@ -137,7 +137,7 @@ async def login_or_register(reader, writer):
             password = password.decode().strip()
             print(f"Received password for registration: {password}")  # Debugging log
 
-            STARTER_POKEMONS = ["Bulbasaur", "Charmander", "Squirtle", "Pikachu"]
+            STARTER_POKEMONS = ["Bulbasaur", "Charmander", "Squirtle", "Pikachu", "Eevee", "Chikorita", "Cyndaquil", "Totodile", "Treecko", "Torchic", "Mudkip", "Turtwig", "Chimchar", "Piplup", "Snivy", "Tepig", "Oshawott", "Chespin", "Fennekin", "Froakie", "Rowlet", "Litten", "Popplio", "Grookey", "Scorbunny", "Sobble", "Sprigatito", "Fuecoco", "Quaxly"]
             writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.BOLD}Here is a list of Pokemon starters : {bcolors.ENDC}\n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
@@ -155,7 +155,32 @@ async def login_or_register(reader, writer):
                 1: 1,
                 2: 4,
                 3: 7,
-                4: 25
+                4: 25,
+                5: 133,
+                6: 152,
+                7: 155,
+                8: 158,
+                9: 252,
+                10: 255,
+                11: 258,
+                12: 387,
+                13: 390,
+                14: 393,
+                15: 495,
+                16: 498,
+                17: 501,
+                18: 650,
+                19: 653,
+                20: 656,
+                21: 722,
+                22: 725,
+                23: 728,
+                24: 810,
+                25: 813,
+                26: 816,
+                27: 906,
+                28: 909,
+                29: 912,
             }.get(int(starter), 1)  # Default to Bulbasaur if invalid choice
             print(f"Received starter choice: {starter}")  # Debugging log
 
