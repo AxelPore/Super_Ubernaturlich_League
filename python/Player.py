@@ -236,12 +236,7 @@ class Player :
         conn.commit()
         conn.close()
     
-    def create_pnj_trainer():
-        self.username = ""
-        self.userid = 0
-        self.equipeid = 0
-        self.equipe = []
-        self.pokemon = []
-        self.item = [[]]
-        self.zoneid = 0
-        self.zone = 0
+    def create_pnj_trainer(self, name, zone, pokemon):
+        self.username = name
+        self.equipe = pokemon
+        self.zone = zone

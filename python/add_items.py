@@ -12,7 +12,7 @@ def add_items():
                 INSERT INTO Item (
                     ItemName,
                     ItemPrice
-                ) VALUES (?)
+                ) VALUES (?, ?)
             """, (
                 row['identifier'],
                 row['cost']
