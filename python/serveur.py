@@ -538,7 +538,7 @@ async def login_or_register(reader, writer):
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
             await writer.drain()
             await asyncio.sleep(0.5) 
-        return None
+            return None
 
 async def handle_client_msg(reader, writer):
     addr = writer.get_extra_info('peername')
