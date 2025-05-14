@@ -45,7 +45,7 @@ async def handle_arena_menu(reader, writer, player):
     writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the arena!".encode())
     await writer.drain()
     await asyncio.sleep(0.5)
-    writer.write(f"{DISPLAY_BYTE_ID}|Here are your options:\n 1. Fight another trainer in the Arena \n 2. Check your Pokemon \n 3. Check your items \n 4. Explore somewhere else".encode())
+    writer.write(f"{DISPLAY_BYTE_ID}|Here are your options:\n 1. Fight another trainer in the Arena \n 2. Check your Pokemon \n 3. Check your items \n 4. Exit".encode())
     await writer.drain()
     await asyncio.sleep(0.5)
     writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
