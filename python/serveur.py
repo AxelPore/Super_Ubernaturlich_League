@@ -564,6 +564,7 @@ async def handle_client_msg(reader, writer):
             writer.close()
             await writer.wait_closed()
         try :
+            print (player.get_zone())
             while True:
                 if player.get_zone() == 10:
                     await handle_city_menu(reader, writer, player)
