@@ -11,7 +11,6 @@ CLIENTS = {}
 INPUT_BYTE_ID = 'r=Ip'
 DISPLAY_BYTE_ID = 'r=Dp'
 
-player = Player()
 game = Game()
 
 def generateId(lenght):
@@ -88,7 +87,7 @@ async def handle_arena_menu(reader, writer, player):
         writer.write(f"{DISPLAY_BYTE_ID}|Here are your Items: \n".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
-        for i in range(len(equipe)):
+        for i in range(len(items)):
             writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {items[i][0]} : {items[i][1]}".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
@@ -177,7 +176,7 @@ async def handle_pokemart_menu(reader, writer, player):
         writer.write(f"{DISPLAY_BYTE_ID}|Here are your Items: \n".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
-        for i in range(len(equipe)):
+        for i in range(len(items)):
             writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {items[i][0]} : {items[i][1]}".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
@@ -218,7 +217,7 @@ async def handle_pokecenter_menu(reader, writer, player):
         writer.write(f"{DISPLAY_BYTE_ID}|Here are your Items: \n".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
-        for i in range(len(equipe)):
+        for i in range(len(items)):
             writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {items[i][0]} : {items[i][1]}".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
@@ -306,7 +305,7 @@ async def handle_wild_menu(reader, writer, player):
         writer.write(f"{DISPLAY_BYTE_ID}|Here are your Items: \n".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
-        for i in range(len(equipe)):
+        for i in range(len(items)):
             writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {items[i][0]} : {items[i][1]}".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
@@ -345,7 +344,7 @@ async def handle_city_menu(reader, writer, player):
         writer.write(f"{DISPLAY_BYTE_ID}|Here are your Items: \n".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
-        for i in range(len(equipe)):
+        for i in range(len(items)):
             writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {items[i][0]} : {items[i][1]}".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
