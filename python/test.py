@@ -8,7 +8,7 @@ if __name__ == "__main__":
     username = input("[01]Enter your username: ")
     mdp = input("Enter your password: ")
     if choice == "y":
-        player.register(username, mdp, random.randint(1, 1300))
+        player.register(username, mdp, random.randint(1, 1303))
     else:
         player.login(username, mdp)
     equipe = player.get_equipe()
