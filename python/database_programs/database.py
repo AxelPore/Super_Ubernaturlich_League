@@ -141,7 +141,6 @@ def create_tables():
         min_spawn_level INTEGER NOT NULL,
         max_spawn_level INTEGER NOT NULL,
         exp_curve TEXT NOT NULL,
-        Evolving_from TEXT,
         Evolving_to TEXT,
         Evolving_level INTEGER,
         ability_1 TEXT NOT NULL,

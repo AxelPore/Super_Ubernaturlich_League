@@ -65,7 +65,7 @@ def add_pokedex():
     with open('csv/evolution_long.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            cursor
+            cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ? WHERE name = ?", (row['Evolving_to'], int(row['value']), (row['Evolving_from'])))
             
     conn.commit()
     conn.close()
