@@ -2,9 +2,8 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from ..Common import INPUT_BYTE_ID, DISPLAY_BYTE_ID, bcolors
+from ..Common import *
 from game_logic.Player import Player
-from ..Common import game
 from pprint import pprint
 import asyncio
 
@@ -32,6 +31,7 @@ async def handle_login(reader, writer):
             print(f"Received password for login: {password}")  # Debugging log
 
             player = Player()
+            addr = writer.get_extra_info('peername')
             if player.login(username, password):
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Login successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()
@@ -39,7 +39,7 @@ async def handle_login(reader, writer):
                 await writer.drain()
                 await asyncio.sleep(0.5) 
                 pprint(f"Player object after registration: {player}")  # Debugging log
-                game.add_player(player)
+                game.add_player(addr, player)
                 return player
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Login failed or account not found. Please try again or Register.{bcolors.ENDC}\n".encode())
@@ -109,6 +109,7 @@ async def handle_login(reader, writer):
             print(f"Received starter choice: {starter}")  # Debugging log
 
             player = Player()
+            addr = writer.get_extra_info('peername')
             try:
                 print(f"Attempting to register user: {username} with password: {password} and starter: {starter}")  # Debugging log
                 player.register(username, password, starter)
@@ -119,7 +120,7 @@ async def handle_login(reader, writer):
                 await writer.drain()
                 await asyncio.sleep(0.5)
                 pprint(f"Player object after registration: {player}")  # Debugging log
-                game.add_player(player)
+                game.add_player(addr, player)
                 return player
             except Exception as e:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Registration failed: {str(e)}{bcolors.ENDC}\n".encode())
