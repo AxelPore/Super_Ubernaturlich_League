@@ -18,7 +18,7 @@ if __name__ == "__main__":
     for i in range(len(item)):
         print(f"[{i + 1}] {item[i][0]} ({item[i][1]})")
         
-        
+# hello
 # courbe d expérience
 # https://www.pokepedia.fr/Courbe_d%27exp%C3%A9rience
 
