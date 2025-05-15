@@ -51,7 +51,22 @@ def add_pokedex():
                 zone_id = 13
             # Update Zoneid
             cursor.execute("UPDATE Pokedex SET Zoneid = ? WHERE Pokedexid = ?", (zone_id, pokedex_id))
-
+            
+    with open('csv/exp_curve.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("UPDATE Pokedex SET exp_curve = ? WHERE name = ?", (row['Experience type'], (row['Pokémon'])))
+            
+    with open('csv/base_xp_and_evs.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor.execute("UPDATE Pokedex SET base_experience = ?, ev_hp = ?, ev_atk = ?, ev_def = ?, ev_spatk = ?, ev_spdef = ?, ev_speed = ? WHERE name = ?", (int(row['Experience type']), int(row['Exp']), int(row['HP']), int(row['Attack']), int(row['Defense']), int(row['Sp.Attack']), int(row['Sp.Defense']), int(row['Speed']), (row['Pokémon'])))
+            
+    with open('csv/evolution_long.csv', newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            cursor
+            
     conn.commit()
     conn.close()
     print("Pokédex data inserted successfully.")
