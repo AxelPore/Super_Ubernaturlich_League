@@ -22,7 +22,7 @@ class Pokemon :
         self.hpmax = self.hp
         self.base_exp = 0
         self.ev_defeated = [0, 0, 0, 0, 0, 0]
-        self.curve = "medium"
+        self.exp_curve = "medium"
         self.Level = random.randint(min_spawn_level, max_spawn_level)
         self.hp_ev = 0
         self.hp_iv = random.randint(1, 31)
@@ -35,6 +35,15 @@ class Pokemon :
         
     def get_stat(self, level, base_stat, ev_stat, iv_stat):
         
+    def get_max_ev(self,stats_ev):
+               
+    def level_up(self, level):
+        
+    def gain_exp(self, exp, max_exp):
+        
+    def gain_ev(self, ev):
+        
+    def evolve(self, pokemon_name):
             
     def attack(self, selected_move):
         conn = sqlite3.connect('database.db')
