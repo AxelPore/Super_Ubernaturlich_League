@@ -44,4 +44,5 @@ def exception_handler_decorator(func):
                 pass
             writer.close()
             await writer.wait_closed()
+            game.remove_player(addr)
     return wrapper

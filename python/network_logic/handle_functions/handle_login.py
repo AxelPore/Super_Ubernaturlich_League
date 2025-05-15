@@ -131,6 +131,7 @@ async def handle_login(reader, writer):
         elif choice == "3":
             writer.close()
             await writer.wait_closed()
+            game.remove_player(writer.get_extra_info('peername'))
         else:
             # Invalid input, send the user back to the menu
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
