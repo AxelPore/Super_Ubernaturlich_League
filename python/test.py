@@ -1,10 +1,12 @@
 import sqlite3
 from Player import *
+from Game import *
     
 if __name__ == "__main__":
     player = Player()
-    username = input("[01]Enter your username: ")
-    mdp = input("Enter your password: ")
-    starter = random.randint(1, 1300)
-    player.login(username, mdp)
+    player.add_item(26,5)
+    player.add_item(25,2)
+    new_game = Game()
+    new_game.add_player(player)
+    print(new_game.check_bag(player))
 

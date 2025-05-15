@@ -33,7 +33,12 @@ class Game :
         return self.players[player].get_equipe()
     
     def check_bag(self, player):
-        return self.players[player].get_item()
+        temp = self.players[player.get_userid()].get_item()
+        result = ''
+        for i in range(len(temp)-1):
+            result += temp[i][0] + temp[i][i]
+        print(result)
+        return result
     
     def check_pc(self, player):
         return self.players[player].get_pokemon()
