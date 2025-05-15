@@ -59,12 +59,20 @@ def add_pokedex():
     with open('csv/exp_curve.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            cursor.execute("UPDATE Pokedex SET exp_curve = ? WHERE name = ?", (row['Experience type'], (row['Pokémon'])))
+            pokemon = row['Pokemon'].lower()
+            pokemon = pokemon.replace(' ', '-')
+            cursor.execute("UPDATE Pokedex SET exp_curve = ? WHERE name = ?", (row['Experience type'], pokemon))
+            if cursor.lastrowid == 0:
+                print(f"Error: {pokemon} curve not found in Pokedex")
             
     with open('csv/base_xp_and_evs.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            cursor.execute("UPDATE Pokedex SET base_experience = ?, ev_hp = ?, ev_atk = ?, ev_def = ?, ev_spatk = ?, ev_spdef = ?, ev_speed = ? WHERE name = ?", (int(row['Exp']), int(row['HP']), int(row['Attack']), int(row['Defense']), int(row['Sp.Attack']), int(row['Sp.Defense']), int(row['Speed']), (row['Pokémon'])))
+            pokemon = row['Pokemon'].lower()
+            pokemon = pokemon.replace(' ', '-')
+            cursor.execute("UPDATE Pokedex SET base_experience = ?, ev_hp = ?, ev_atk = ?, ev_def = ?, ev_spatk = ?, ev_spdef = ?, ev_speed = ? WHERE name = ?", (int(row['Exp']), int(row['HP']), int(row['Attack']), int(row['Defense']), int(row['Sp.Attack']), int(row['Sp.Defense']), int(row['Speed']), pokemon))
+            if cursor.lastrowid == 0:
+                print(f"Error: {pokemon} curve not found in Pokedex")
             
     with open('csv/evolution_long.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
@@ -74,11 +82,10 @@ def add_pokedex():
             if len(tmp_pokemon) == 0:
                 tmp_pokemon[row['Evolving_from']] = tmp_evo
                 continue
-            for key, value in tmp_pokemon.items():
-                if key == row['Evolving_from']:
-                    value.append([row['Evolving_to'], row['value']])
-                else :
-                    tmp_pokemon[row['Evolving_from']] = tmp_evo
+            if row['Evolving_from'] in tmp_pokemon:
+                tmp_pokemon[row['Evolving_from']].append([row['Evolving_to'], row['value']])
+            else:
+                tmp_pokemon[row['Evolving_from']] = tmp_evo
         for key, value in tmp_pokemon.items():
             if len(value) == 1:
                 cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ? WHERE name = ?", (value[0][0], int(value[0][1]), key))

@@ -1,4 +1,4 @@
-#,,Pokémon,Exp,HP,Attack,Defense,Sp.Attack,Sp.Defense,Speed,Total EVs
+#,,Pokemon,Exp,HP,Attack,Defense,Sp.Attack,Sp.Defense,Speed,Total EVs
 1,,Bulbasaur,64,0,0,0,1,0,0,1
 2,,Ivysaur,142,0,0,0,1,1,0,2
 3,,Venusaur,263,0,0,0,2,1,0,3
@@ -27,18 +27,17 @@
 26,,Raichu,243,0,0,0,0,0,3,3
 27,,Sandshrew,60,0,0,1,0,0,0,1
 28,,Sandslash,158,0,0,2,0,0,0,2
-29,,Nidoran♀,55,1,0,0,0,0,0,1
+29,,Nidoran f,55,1,0,0,0,0,0,1
 30,,Nidorina,128,2,0,0,0,0,0,2
 31,,Nidoqueen,253,3,0,0,0,0,0,3
-32,,Nidoran♂,55,0,1,0,0,0,0,1
+32,,Nidoran m,55,0,1,0,0,0,0,1
 33,,Nidorino,128,0,2,0,0,0,0,2
 34,,Nidoking,253,0,3,0,0,0,0,3
 35,,Clefairy,113,2,0,0,0,0,0,2
 36,,Clefable,242,3,0,0,0,0,0,3
 37,,Vulpix,60,0,0,0,0,0,1,1
 38,,Ninetales,177,0,0,0,0,1,1,2
-38,,"Ninetales
-Alolan Form",177,0,0,0,0,0,2,2
+38,,Ninetales alola,177,0,0,0,0,0,2,2
 39,,Jigglypuff,95,2,0,0,0,0,0,2
 40,,Wigglytuff,218,3,0,0,0,0,0,3
 41,,Zubat,49,0,0,0,0,0,1,1
@@ -52,13 +51,10 @@ Alolan Form",177,0,0,0,0,0,2,2
 49,,Venomoth,158,0,0,0,1,0,1,2
 50,,Diglett,53,0,0,0,0,0,1,1
 51,,Dugtrio,149,0,0,0,0,0,2,2
-51,,"Dugtrio
-Alolan Form",149,0,2,0,0,0,0,2
+51,,Dugtrio alola,149,0,2,0,0,0,0,2
 52,,Meowth,58,0,0,0,0,0,1,1
-52,,"Meowth
-Alolan Form",58,0,0,0,0,0,1,1
-52,,"Meowth
-Galarian Form",58,0,1,0,0,0,0,1
+52,,Meowth alola,58,0,0,0,0,0,1,1
+52,,Meowth galar,58,0,1,0,0,0,0,1
 53,,Persian,154,0,0,0,0,0,2,2
 54,,Psyduck,64,0,0,0,1,0,0,1
 55,,Golduck,175,0,0,0,2,0,0,2
@@ -87,11 +83,10 @@ Galarian Form",58,0,1,0,0,0,0,1
 78,,Rapidash,175,0,0,0,0,0,2,2
 79,,Slowpoke,63,1,0,0,0,0,0,1
 80,,Slowbro,172,0,0,2,0,0,0,2
-80,,"Slowbro
-Galarian Form",172,0,2,0,0,0,0,2
+80,,Slowbro galar,172,0,2,0,0,0,0,2
 81,,Magnemite,65,0,0,0,1,0,0,1
 82,,Magneton,163,0,0,0,2,0,0,2
-83,,Farfetch'd,132,0,1,0,0,0,0,1
+83,,Farfetchd,132,0,1,0,0,0,0,1
 84,,Doduo,62,0,1,0,0,0,0,1
 85,,Dodrio,165,0,2,0,0,0,0,2
 86,,Seel,65,0,0,0,0,1,0,1
@@ -130,24 +125,17 @@ Galarian Form",172,0,2,0,0,0,0,2
 119,,Seaking,158,0,2,0,0,0,0,2
 120,,Staryu,68,0,0,0,0,0,1,1
 121,,Starmie,182,0,0,0,0,0,2,2
-122,,Mr. Mime,161,0,0,0,0,2,0,2
-122,,"Mr. Mime
-Galarian Form",161,0,0,0,0,0,2,2
+122,,Mr-Mime,161,0,0,0,0,2,0,2
+122,,Mr-Mime galar,161,0,0,0,0,0,2,2
 123,,Scyther,100,0,1,0,0,0,0,1
 124,,Jynx,159,0,0,0,2,0,0,2
 125,,Electabuzz,172,0,0,0,0,0,2,2
 126,,Magmar,173,0,0,0,2,0,0,2
 127,,Pinsir,175,0,2,0,0,0,0,2
 128,,Tauros,172,0,1,0,0,0,1,2
-128,,"Tauros
-Paldean Form
-Combat Breed",172,0,2,0,0,0,0,2
-128,,"Tauros
-Paldean Form
-Blaze Breed",172,0,2,0,0,0,0,2
-128,,"Tauros
-Paldean Form
-Aqua Breed",172,0,2,0,0,0,0,2
+128,,Tauros Paldean Combat Breed,172,0,2,0,0,0,0,2
+128,,Tauros Paldean Blaze Breed,172,0,2,0,0,0,0,2
+128,,Tauros Paldean Aqua Breed,172,0,2,0,0,0,0,2
 129,,Magikarp,40,0,0,0,0,0,1,1
 130,,Gyarados,189,0,2,0,0,0,0,2
 131,,Lapras,187,2,0,0,0,0,0,2
@@ -164,14 +152,11 @@ Aqua Breed",172,0,2,0,0,0,0,2
 142,,Aerodactyl,180,0,0,0,0,0,2,2
 143,,Snorlax,189,2,0,0,0,0,0,2
 144,,Articuno,290,0,0,0,0,3,0,3
-144,,"Articuno
-Galarian Form",290,0,0,0,3,0,0,3
+144,,Articuno galar,290,0,0,0,3,0,0,3
 145,,Zapdos,290,0,0,0,3,0,0,3
-145,,"Zapdos
-Galarian Form",290,0,3,0,0,0,0,3
+145,,Zapdos galar,290,0,3,0,0,0,0,3
 146,,Moltres,290,0,0,0,3,0,0,3
-146,,"Moltres
-Galarian Form",290,0,0,0,0,3,0,3
+146,,Moltres galar,290,0,0,0,0,3,0,3
 147,,Dratini,60,0,1,0,0,0,0,1
 148,,Dragonair,147,0,2,0,0,0,0,2
 149,,Dragonite,300,0,3,0,0,0,0,3
@@ -241,8 +226,7 @@ Galarian Form",290,0,0,0,0,3,0,3
 213,,Shuckle,177,0,0,1,0,1,0,2
 214,,Heracross,175,0,2,0,0,0,0,2
 215,,Sneasel,86,0,0,0,0,0,1,1
-215,,"Sneasel
-Hisuian Form",86,0,0,0,0,0,1,1
+215,,Sneasel hisui,86,0,0,0,0,0,1,1
 216,,Teddiursa,66,0,1,0,0,0,0,1
 217,,Ursaring,175,0,2,0,0,0,0,2
 218,,Slugma,50,0,0,0,1,0,0,1
@@ -413,14 +397,10 @@ Hisuian Form",86,0,0,0,0,0,1,1
 383,,Groudon,335,0,3,0,0,0,0,3
 384,,Rayquaza,340,0,2,0,1,0,0,3
 385,,Jirachi,300,3,0,0,0,0,0,3
-386,,"Deoxys
-Normal Forme",300,0,1,0,1,0,1,3
-386,,"Deoxys
-Attack Forme",300,0,2,0,1,0,0,3
-386,,"Deoxys
-Defense Forme",300,0,0,2,0,1,0,3
-386,,"Deoxys
-Speed Forme",300,0,0,0,0,0,3,3
+386,,Deoxys Normal,300,0,1,0,1,0,1,3
+386,,Deoxys Attack,300,0,2,0,1,0,0,3
+386,,Deoxys Defense,300,0,0,2,0,1,0,3
+386,,Deoxys Speed,300,0,0,0,0,0,3,3
 387,,Turtwig,64,0,1,0,0,0,0,1
 388,,Grotle,142,0,1,1,0,0,0,2
 389,,Torterra,263,0,2,1,0,0,0,3
@@ -447,12 +427,9 @@ Speed Forme",300,0,0,0,0,0,3,3
 410,,Shieldon,70,0,0,1,0,0,0,1
 411,,Bastiodon,173,0,0,2,0,0,0,2
 412,,Burmy,45,0,0,0,0,1,0,1
-413,,"Wormadam
-Plant Cloak",148,0,0,0,0,2,0,2
-413,,"Wormadam
-Sandy Cloak",148,0,0,2,0,0,0,2
-413,,"Wormadam
-Trash Cloak",148,0,0,1,0,1,0,2
+413,,Wormadam Plant,148,0,0,0,0,2,0,2
+413,,Wormadam Sandy,148,0,0,2,0,0,0,2
+413,,Wormadam Trash,148,0,0,1,0,1,0,2
 414,,Mothim,148,0,1,0,1,0,0,2
 415,,Combee,49,0,0,0,0,0,1,1
 416,,Vespiquen,166,0,0,1,0,1,0,2
@@ -478,7 +455,7 @@ Trash Cloak",148,0,0,1,0,1,0,2
 436,,Bronzor,60,0,0,1,0,0,0,1
 437,,Bronzong,175,0,0,1,0,1,0,2
 438,,Bonsly,58,0,0,1,0,0,0,1
-439,,Mime Jr.,62,0,0,0,0,1,0,1
+439,,Mime Jr,62,0,0,0,0,1,0,1
 440,,Happiny,110,1,0,0,0,0,0,1
 441,,Chatot,144,0,1,0,0,0,0,1
 442,,Spiritomb,170,0,0,1,0,1,0,2
@@ -519,16 +496,11 @@ Trash Cloak",148,0,0,1,0,1,0,2
 477,,Dusknoir,263,0,0,1,0,2,0,3
 478,,Froslass,168,0,0,0,0,0,2,2
 479,,Rotom,154,0,0,0,1,0,1,2
-479,,"Rotom
-Heat Rotom",182,0,0,0,1,0,1,2
-479,,"Rotom
-Wash Rotom",182,0,0,0,1,0,1,2
-479,,"Rotom
-Frost Rotom",182,0,0,0,1,0,1,2
-479,,"Rotom
-Fan Rotom",182,0,0,0,1,0,1,2
-479,,"Rotom
-Mow Rotom",182,0,0,0,1,0,1,2
+479,,Rotom Heat Rotom,182,0,0,0,1,0,1,2
+479,,Rotom Wash Rotom,182,0,0,0,1,0,1,2
+479,,Rotom Frost Rotom,182,0,0,0,1,0,1,2
+479,,Rotom Fan Rotom,182,0,0,0,1,0,1,2
+479,,Rotom Mow Rotom,182,0,0,0,1,0,1,2
 480,,Uxie,290,0,0,2,0,1,0,3
 481,,Mesprit,290,0,1,0,1,1,0,3
 482,,Azelf,290,0,2,0,1,0,0,3
@@ -541,10 +513,8 @@ Mow Rotom",182,0,0,0,1,0,1,2
 489,,Phione,240,1,0,0,0,0,0,1
 490,,Manaphy,300,3,0,0,0,0,0,3
 491,,Darkrai,300,0,0,0,2,0,1,3
-492,,"Shaymin
-Land Forme",300,3,0,0,0,0,0,3
-492,,"Shaymin
-Sky Forme",300,0,0,0,0,0,3,3
+492,,Shaymin Lande,300,3,0,0,0,0,0,3
+492,,Shaymin Skye,300,0,0,0,0,0,3,3
 493,,Arceus,360,3,0,0,0,0,0,3
 494,,Victini,300,3,0,0,0,0,0,3
 495,,Snivy,62,0,0,0,0,0,1,1
@@ -607,15 +577,10 @@ Sky Forme",300,0,0,0,0,0,3,3
 552,,Krokorok,123,0,2,0,0,0,0,2
 553,,Krookodile,260,0,3,0,0,0,0,3
 554,,Darumaka,63,0,1,0,0,0,0,1
-555,,"Darmanitan
-Standard Mode",168,0,2,0,0,0,0,2
-555,,"Darmanitan
-Zen Mode",189,0,0,0,2,0,0,2
-555,,"Darmanitan
-Galarian Form",168,0,2,0,0,0,0,2
-555,,"Darmanitan
-Galarian Form
-Zen Mode",189,0,0,0,2,0,0,2
+555,,Darmanitan Standard Mode,168,0,2,0,0,0,0,2
+555,,Darmanitan Zen Mode,189,0,0,0,2,0,0,2
+555,,Darmanitan galar,168,0,2,0,0,0,0,2
+555,,Darmanitan galar Zen Mode,189,0,0,0,2,0,0,2
 556,,Maractus,161,0,0,0,2,0,0,2
 557,,Dwebble,65,0,0,1,0,0,0,1
 558,,Crustle,170,0,0,2,0,0,0,2
@@ -701,30 +666,20 @@ Zen Mode",189,0,0,0,2,0,0,2
 638,,Cobalion,290,0,0,3,0,0,0,3
 639,,Terrakion,290,0,3,0,0,0,0,3
 640,,Virizion,290,0,0,0,0,3,0,3
-641,,"Tornadus
-Incarnate Forme",290,0,3,0,0,0,0,3
-641,,"Tornadus
-Therian Forme",290,0,0,0,0,0,3,3
-642,,"Thundurus
-Incarnate Forme",290,0,3,0,0,0,0,3
-642,,"Thundurus
-Therian Forme",290,0,0,0,3,0,0,3
+641,,Tornadus Incarnate,290,0,3,0,0,0,0,3
+641,,Tornadus Theriane,290,0,0,0,0,0,3,3
+642,,Thundurus Incarnate,290,0,3,0,0,0,0,3
+642,,Thundurus Theriane,290,0,0,0,3,0,0,3
 643,,Reshiram,340,0,0,0,3,0,0,3
 644,,Zekrom,340,0,3,0,0,0,0,3
-645,,"Landorus
-Incarnate Forme",300,0,0,0,3,0,0,3
-645,,"Landorus
-Therian Forme",300,0,3,0,0,0,0,3
+645,,Landorus Incarnate,300,0,0,0,3,0,0,3
+645,,Landorus Theriane,300,0,3,0,0,0,0,3
 646,,Kyurem,330,1,1,0,1,0,0,3
-646,,"Kyurem
-White Kyurem",350,0,0,0,3,0,0,3
-646,,"Kyurem
-Black Kyurem",350,0,3,0,0,0,0,3
+646,,Kyurem White Kyurem,350,0,0,0,3,0,0,3
+646,,Kyurem Black Kyurem,350,0,3,0,0,0,0,3
 647,,Keldeo,290,0,0,0,3,0,0,3
-648,,"Meloetta
-Aria Forme",300,0,0,0,1,1,1,3
-648,,"Meloetta
-Pirouette Forme",300,0,1,1,0,0,1,3
+648,,Meloetta Aria,300,0,0,0,1,1,1,3
+648,,Meloetta Pirouette,300,0,1,1,0,0,1,3
 649,,Genesect,300,0,1,0,1,0,1,3
 650,,Chespin,63,0,0,1,0,0,0,1
 651,,Quilladin,142,0,0,2,0,0,0,2
@@ -747,8 +702,7 @@ Pirouette Forme",300,0,1,1,0,0,1,3
 668,,Pyroar,177,0,0,0,2,0,0,2
 669,,Flabébé,61,0,0,0,0,1,0,1
 670,,Floette,130,0,0,0,0,2,0,2
-670,,"Floette
-Eternal Flower",243,0,0,0,0,2,0,2
+670,,Floette Eternal Flower,243,0,0,0,0,2,0,2
 671,,Florges,276,0,0,0,0,3,0,3
 672,,Skiddo,70,1,0,0,0,0,0,1
 673,,Gogoat,186,2,0,0,0,0,0,2
@@ -759,10 +713,8 @@ Eternal Flower",243,0,0,0,0,2,0,2
 678,,Meowstic,163,0,0,0,0,0,2,2
 679,,Honedge,65,0,0,1,0,0,0,1
 680,,Doublade,157,0,0,2,0,0,0,2
-681,,"Aegislash
-Shield Forme",250,0,0,2,0,1,0,3
-681,,"Aegislash
-Blade Forme",250,0,2,0,1,0,0,3
+681,,Aegislash Shield,250,0,0,2,0,1,0,3
+681,,Aegislash Blade,250,0,2,0,1,0,0,3
 682,,Spritzee,68,1,0,0,0,0,0,1
 683,,Aromatisse,162,2,0,0,0,0,0,2
 684,,Swirlix,68,0,0,1,0,0,0,1
@@ -799,17 +751,12 @@ Blade Forme",250,0,2,0,1,0,0,3
 715,,Noivern,187,0,0,0,0,0,2,2
 716,,Xerneas,340,3,0,0,0,0,0,3
 717,,Yveltal,340,3,0,0,0,0,0,3
-718,,"Zygarde
-50% Forme",300,3,0,0,0,0,0,3
-718,,"Zygarde
-10% Forme",243,3,0,0,0,0,0,3
-718,,"Zygarde
-Complete Forme",354,3,0,0,0,0,0,3
+718,,Zygarde 50,300,3,0,0,0,0,0,3
+718,,Zygarde 10,243,3,0,0,0,0,0,3
+718,,Zygarde Complete,354,3,0,0,0,0,0,3
 719,,Diancie,300,0,0,1,0,2,0,3
-720,,"Hoopa
-Hoopa Confined",300,0,0,0,3,0,0,3
-720,,"Hoopa
-Hoopa Unbound",340,0,0,0,3,0,0,3
+720,,Hoopa,300,0,0,0,3,0,0,3
+720,,Hoopa Unbound,340,0,0,0,3,0,0,3
 721,,Volcanion,300,0,0,0,3,0,0,3
 722,,Rowlet,64,1,0,0,0,0,0,1
 723,,Dartrix,147,2,0,0,0,0,0,2
@@ -835,10 +782,8 @@ Hoopa Unbound",340,0,0,0,3,0,0,3
 743,,Ribombee,162,0,0,0,0,0,2,2
 744,,Rockruff,56,0,1,0,0,0,0,1
 745,,Lycanroc,170,0,2,0,0,0,0,2
-746,,"Wishiwashi
-Solo Form",61,1,0,0,0,0,0,1
-746,,"Wishiwashi
-School Form",217,1,0,0,0,0,0,1
+746,,Wishiwashi Solo,61,1,0,0,0,0,0,1
+746,,Wishiwashi School,217,1,0,0,0,0,0,1
 747,,Mareanie,61,0,0,1,0,0,0,1
 748,,Toxapex,173,0,0,2,0,0,0,2
 749,,Mudbray,77,0,1,0,0,0,0,1
@@ -866,10 +811,8 @@ School Form",217,1,0,0,0,0,0,1
 771,,Pyukumuku,144,0,0,0,0,2,0,2
 772,,Type: Null,107,2,0,0,0,0,0,2
 773,,Silvally,285,3,0,0,0,0,0,3
-774,,"Minior
-Meteor Form",154,0,0,1,0,1,0,2
-774,,"Minior
-All Core Forms",175,0,1,0,1,0,0,2
+774,,Minior Meteor,154,0,0,1,0,1,0,2
+774,,Minior All Cores,175,0,1,0,1,0,0,2
 775,,Komala,168,0,2,0,0,0,0,2
 776,,Turtonator,170,0,0,2,0,0,0,2
 777,,Togedemaru,152,0,2,0,0,0,0,2
@@ -896,12 +839,9 @@ All Core Forms",175,0,1,0,1,0,0,2
 798,,Kartana,285,0,3,0,0,0,0,3
 799,,Guzzlord,285,3,0,0,0,0,0,3
 800,,Necrozma,300,0,1,0,2,0,0,3
-800,,"Necrozma
-Dusk Mane",340,0,3,0,0,0,0,3
-800,,"Necrozma
-Dawn Wings",340,0,0,0,3,0,0,3
-800,,"Necrozma
-Ultra Necrozma",340,0,1,0,1,0,1,3
+800,,Necrozma Dusk,340,0,3,0,0,0,0,3
+800,,Necrozma Dawn,340,0,0,0,3,0,0,3
+800,,Necrozma Ultra,340,0,1,0,1,0,1,3
 801,,Magearna,300,0,0,0,3,0,0,3
 802,,Marshadow,300,0,2,0,0,0,1,3
 803,,Poipole,210,0,0,0,0,0,1,1
@@ -967,7 +907,7 @@ Ultra Necrozma",340,0,1,0,1,0,1,3
 863,,Perrserker,154,0,2,0,0,0,0,2
 864,,Cursola,179,0,0,0,2,0,0,2
 865,,Sirfetch'd,177,0,2,0,0,0,0,2
-866,,Mr. Rime,182,0,0,0,3,0,0,3
+866,,Mr-Rime,182,0,0,0,3,0,0,3
 867,,Runerigus,169,0,0,2,0,0,0,2
 868,,Milcery,54,0,0,0,0,1,0,1
 869,,Alcremie,173,0,0,0,0,2,0,2
@@ -977,10 +917,8 @@ Ultra Necrozma",340,0,1,0,1,0,1,3
 873,,Frosmoth,166,0,0,0,2,0,0,2
 874,,Stonjourner,165,0,0,2,0,0,0,2
 875,,Eiscue,165,0,0,2,0,0,0,2
-876,,"Indeedee
-Male",166,0,0,0,2,0,0,2
-876,,"Indeedee
-Female",166,0,0,0,0,2,0,2
+876,,Indeedee Male,166,0,0,0,2,0,0,2
+876,,Indeedee Female,166,0,0,0,0,2,0,2
 877,,Morpeko,153,0,0,0,0,0,2,2
 878,,Cufant,66,0,1,0,0,0,0,1
 879,,Copperajah,175,0,2,0,0,0,0,2
@@ -992,14 +930,10 @@ Female",166,0,0,0,0,2,0,2
 885,,Dreepy,54,0,0,0,0,0,1,1
 886,,Drakloak,144,0,0,0,0,0,2,2
 887,,Dragapult,300,0,0,0,0,0,3,3
-888,,"Zacian
-Hero of Many Battles",335,0,0,0,0,0,3,3
-888,,"Zacian
-Crowned Sword",360,0,0,0,0,0,3,3
-889,,"Zamazenta
-Hero of Many Battles",335,0,0,0,0,0,3,3
-889,,"Zamazenta
-Crowned Shield",360,0,0,0,0,0,3,3
+888,,Zacian,335,0,0,0,0,0,3,3
+888,,Zacian Crowned,360,0,0,0,0,0,3,3
+889,,Zamazenta,335,0,0,0,0,0,3,3
+889,,Zamazenta Crowned,360,0,0,0,0,0,3,3
 890,,Eternatus,345,3,0,0,0,0,0,3
 891,,Kubfu,77,0,1,0,0,0,0,1
 892,,Urshifu,275,0,3,0,0,0,0,3
@@ -1009,22 +943,17 @@ Crowned Shield",360,0,0,0,0,0,3,3
 896,,Glastrier,290,0,3,0,0,0,0,3
 897,,Spectrier,290,0,0,0,3,0,0,3
 898,,Calyrex,250,3,0,0,0,0,0,3
-898,,"Calyrex
-Ice Rider",340,0,3,0,0,0,0,3
-898,,"Calyrex
-Shadow Rider",340,0,0,0,3,0,0,3
+898,,Calyrex Ice Rider,340,0,3,0,0,0,0,3
+898,,Calyrex Shadow Rider,340,0,0,0,3,0,0,3
 899,,Wyrdeer,263,0,1,0,1,0,0,2
 900,,Kleavor,175,0,2,0,0,0,0,2
 901,,Ursaluna,275,0,3,0,0,0,0,3
-901,,"Ursaluna
-Bloodmoon Ursaluna",275,0,0,0,3,0,0,3
+901,,Ursaluna Bloodmoon,275,0,0,0,3,0,0,3
 902,,Basculegion,265,2,0,0,0,0,0,2
 903,,Sneasler,102,0,1,0,0,0,1,2
 904,,Overqwil,179,0,2,0,0,0,0,2
-905,,"Enamorus
-Incarnate Forme",116,0,0,0,3,0,0,3
-905,,"Enamorus
-Therian Forme",116,0,3,0,0,0,0,3
+905,,Enamorus Incarnate,116,0,0,0,3,0,0,3
+905,,Enamorus Theriane,116,0,3,0,0,0,0,3
 906,,Sprigatito,62,0,0,0,0,0,1,1
 907,,Floragato,144,0,0,0,0,0,2,2
 908,,Meowscarada,265,0,0,0,0,0,3,3
@@ -1083,10 +1012,8 @@ Therian Forme",116,0,3,0,0,0,0,3
 961,,Wugtrio,149,0,0,0,0,0,2,2
 962,,Bombirdier,243,0,2,0,0,0,0,2
 963,,Finizen,63,0,0,0,0,0,1,1
-964,,"Palafin
-Zero Form",160,2,0,0,0,0,0,2
-964,,"Palafin
-Hero Form",160,2,0,0,0,0,0,2
+964,,Palafin,160,2,0,0,0,0,0,2
+964,,Palafin Hero,160,2,0,0,0,0,0,2
 965,,Varoom,60,0,1,0,0,0,0,1
 966,,Revavroom,175,0,2,0,0,0,0,2
 967,,Cyclizar,175,0,0,0,0,0,2,2
@@ -1129,10 +1056,8 @@ Hero Form",160,2,0,0,0,0,0,2
 1004,,Chi-Yu,285,0,0,0,3,0,0,3
 1005,,Roaring Moon,295,0,3,0,0,0,0,3
 1006,,Iron Valiant,295,0,3,0,0,0,0,3
-1007,,"Koraidon
-Apex Build",335,0,3,0,0,0,0,3
-1008,,"Miraidon
-Ultimate Mode",335,0,0,0,3,0,0,3
+1007,,Koraidon,335,0,3,0,0,0,0,3
+1008,,Miraidon,335,0,0,0,3,0,0,3
 1009,,Walking Wake,295,0,0,0,3,0,0,3
 1010,,Iron Leaves,295,0,3,0,0,0,0,3
 1011,,Dipplin,170,0,0,2,0,0,0,2
@@ -1141,14 +1066,10 @@ Ultimate Mode",335,0,0,0,3,0,0,3
 1014,,Okidogi,276,0,3,0,0,0,0,3
 1015,,Munkidori,276,0,0,0,3,0,0,3
 1016,,Fezandipiti,276,0,0,0,0,3,0,3
-1017,,"Ogerpon
-Teal Mask Form",275,0,3,0,0,0,0,3
-1017,,"Ogerpon
-Cornerstone Mask Form",275,0,3,0,0,0,0,3
-1017,,"Ogerpon
-Hearthflame Mask Form",275,0,3,0,0,0,0,3
-1017,,"Ogerpon
-Wellspring Mask Form",275,0,3,0,0,0,0,3
+1017,,Ogerpon Teal Mask,275,0,3,0,0,0,0,3
+1017,,Ogerpon Cornerstone Mask,275,0,3,0,0,0,0,3
+1017,,Ogerpon Hearthflame Mask,275,0,3,0,0,0,0,3
+1017,,Ogerpon Wellspring Mask,275,0,3,0,0,0,0,3
 1018,,Archaludon,300,0,0,3,0,0,0,3
 1019,,Hydrapple,270,0,0,0,3,0,0,3
 1020,,Gouging Fire,295,0,0,3,0,0,0,3
@@ -1156,8 +1077,6 @@ Wellspring Mask Form",275,0,3,0,0,0,0,3
 1022,,Iron Boulder,295,0,0,0,0,0,3,3
 1023,,Iron Crown,295,0,0,0,3,0,0,3
 1024,,Terapagos,90,0,0,1,0,0,0,1
-1024,,"Terapagos
-Terastal Form",120,0,0,2,0,2,0,4
-1024,,"Terapagos
-Stellar Form",140,3,0,0,0,0,0,3
+1024,,Terapagos Terastal,120,0,0,2,0,2,0,4
+1024,,Terapagos Stellar,140,3,0,0,0,0,0,3
 1025,,Pecharunt,300,0,0,3,0,0,0,3

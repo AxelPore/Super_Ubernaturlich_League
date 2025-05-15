@@ -20,7 +20,6 @@ def add_learning():
             cursor.execute("SELECT Pokedexid FROM Pokedex WHERE name = ?", (pokemon_name,))
             pokedex_result = cursor.fetchone()
             if not pokedex_result:
-                print(f"Warning: Pokémon '{pokemon_name}' not found in Pokedex table.")
                 continue
             pokedex_id = pokedex_result[0]
 
@@ -28,7 +27,6 @@ def add_learning():
             cursor.execute("SELECT Moveid FROM Move WHERE MoveName = ?", (move_name,))
             move_result = cursor.fetchone()
             if not move_result:
-                print(f"Warning: Move '{move_name}' not found in Move table.")
                 continue
             move_id = move_result[0]
 
@@ -41,7 +39,7 @@ def add_learning():
                 """, current_entry)
                 last_entry = current_entry
             else:
-                print(f"Skipping duplicate consecutive entry: {current_entry}")
+                pass
 
     conn.commit()
     conn.close()
