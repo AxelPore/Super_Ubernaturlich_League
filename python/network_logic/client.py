@@ -1,20 +1,21 @@
 import sys
+import os
+
+# Add the root directory of the project to sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 import asyncio
 import aioconsole
 
-INPUT_BYTE_ID = 'r=Ip'
-DISPLAY_BYTE_ID = 'r=Dp'
+from network_logic.Common import bcolors, INPUT_BYTE_ID, DISPLAY_BYTE_ID
 
 async def send_input_to_server(writer, prompt):
     """
     Handles input from the user and sends it to the server asynchronously.
     """
-    #print(f"Prompting user: {prompt}")  # Debugging log
     response = await aioconsole.ainput(prompt + " ")  # Prompt the user for input asynchronously
-    #print(f"Sending input to server: {response}")  # Debugging log
     writer.write(response.encode())  # Send the response to the server
     await writer.drain()
-    #print("Input sent to server.")  # Debugging log
 
 async def asRecieve(reader, writer):
     while True:
@@ -22,8 +23,7 @@ async def asRecieve(reader, writer):
         if not data:
             print("No data received. Closing connection.")  # Debugging log
             break
-        message = data.decode()
-        #print(f"Message received from server: {message}")  # Debugging log
+        message = data.decode(errors='replace')
         if message.startswith(INPUT_BYTE_ID):
             # Handle input request
             prompt = message.split('|', 1)[1]  # Extract the prompt
@@ -38,19 +38,15 @@ async def asRecieve(reader, writer):
 async def main():
     reader, writer = await asyncio.open_connection(host="10.1.2.69", port=8888)
     try:
-        # Send initial connection message
-        print("Sending initial connection message: Hello|new")  # Debugging log
         writer.write("Hello|new".encode())
         await writer.drain()
-        print("Initial connection message sent.")  # Debugging log
-
-        # Start receiving messages from the server
         await asRecieve(reader, writer)
-    except KeyboardInterrupt:
-        print("Client interrupted.")
     finally:
         writer.close()
         await writer.wait_closed()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        print("\nYou have been disconnected")

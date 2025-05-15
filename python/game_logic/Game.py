@@ -1,6 +1,6 @@
-from Player import *
-from Pokemon import *
-from Battle import *
+from .Player import *
+from .Pokemon import *
+from .Battle import *
 from random import *
 
 
@@ -13,6 +13,9 @@ class Game :
             if (i == new_player):
                 return "Joueur déjà connecté"
         self.players.append(new_player)
+
+    def get_players(self):
+        return self.players
     
     def zone_check(self): #Renvoi un dictionnaire avec le nom du player en clé, et l'id de sa zone en valeur
         result_dict = {}
@@ -21,7 +24,8 @@ class Game :
         return result_dict
     
     def player_move(self, player, input): #input: -1 = gauche, 1 = droite, -10 haut, 10 bas
-        self.players[player].set_zone(self.players[player].get_zone() + input)
+        if self.players[player].set_zone(self.players[player].get_zone() + input) == False:
+            return False
     
     def pokemon_captured(self, player, new_pokemon):
         self.players[player].add_pokemon(new_pokemon)
@@ -47,7 +51,7 @@ class Game :
         self.players.pop(player)
 
     def encounter_pokemon(self, player):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         spawnable_pokemons = cursor.execute("SELECT Pokedexid FROM Pokedex WHERE Zoneid = ?", (self.players[player].get_zoneid(),)).fetchall()
         place_holder = Player()

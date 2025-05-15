@@ -1,80 +1,16 @@
-import asyncio
-import random
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+from ..Common import INPUT_BYTE_ID, DISPLAY_BYTE_ID, bcolors
+from game_logic.Player import Player
+from ..Common import game
 from pprint import pprint
-from Player import Player
+import asyncio
 
-
-# def change_equipe(self):
-#         if len(self.equipe) == 1:
-#             print("Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon ")
-#             choice = int(input("Enter the number of your choice: "))
-#             if choice == 1:
-#                 self.add_pokemon_to_team()
-#             elif choice == 2:
-#                 self.replace_pokemon_in_team()
-#             else:
-#                 print("Invalid choice.")
-#         if len(self.equipe) == 4:
-#             print("Here you can manage your team : \n 1. Replace a Pokemon \n 2. Remove a Pokemon")
-#             choice = int(input("Enter the number of your choice: "))
-#             if choice == 1:
-#                 self.replace_pokemon_in_team()
-#             elif choice == 2:
-#                 self.remove_pokemon_to_team()
-#             else:
-#                 print("Invalid choice.")
-#         else:
-#             print("Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon \n 3. Remove a Pokemon")
-#             choice = int(input("Enter the number of your choice: "))
-#             if choice == 1:
-#                 self.add_pokemon_to_team()
-#             elif choice == 2:
-#                 self.replace_pokemon_in_team()
-#             elif choice == 3:
-#                 self.remove_pokemon_to_team()
-#             else:
-#                 print("Invalid choice.")
-
-
-
-global CLIENTS
-CLIENTS = {}
-
-INPUT_BYTE_ID = 'r=Ip'
-DISPLAY_BYTE_ID = 'r=Dp'
-
-def generateId(lenght):
-    id = ''
-    while lenght > 8:
-        comp = 9
-        if lenght <= 9:
-            comp = lenght
-        id += str(hex(random.randrange(1, 10**(comp))))[2:]
-        lenght -= 9
-    return id
-
-class bcolors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-async def handle_input(client_id, message):
-    writer = CLIENTS[client_id]['w']
-    reader = CLIENTS[client_id]['r']
-    writer.write(f"{INPUT_BYTE_ID}|{message}".encode())
-    await writer.drain()
-    data = await reader.read(1024)
-    return data.decode()
-
-async def login_or_register(reader, writer):
+async def handle_login(reader, writer):
     while True:
-        writer.write(f"{INPUT_BYTE_ID}|{bcolors.OKCYAN}Welcome! Do you want to (1) Login or (2) Register? {bcolors.ENDC}".encode())
+        writer.write(f"{INPUT_BYTE_ID}|{bcolors.OKCYAN}Welcome! Do you want to (1) Login, (2) Register or (3) Quit? {bcolors.ENDC}".encode())
         await writer.drain()
         choice = await reader.read(1024)
         print(f"Raw data received: {choice}")  # Debugging log
@@ -99,11 +35,17 @@ async def login_or_register(reader, writer):
             if player.login(username, password):
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Login successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()
-                break  # Exit the loop after successful login
+                writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5) 
+                pprint(f"Player object after registration: {player}")  # Debugging log
+                game.add_player(player)
+                return player
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Login failed or account not found. Please try again or Register.{bcolors.ENDC}\n".encode())
                 await writer.drain()
-                await asyncio.sleep(0.5) 
+                await asyncio.sleep(0.5)
+                continue
 
         elif choice == "2":
             # Handle registration
@@ -119,7 +61,7 @@ async def login_or_register(reader, writer):
             password = password.decode().strip()
             print(f"Received password for registration: {password}")  # Debugging log
 
-            STARTER_POKEMONS = ["Bulbasaur", "Charmander", "Squirtle", "Pikachu"]
+            STARTER_POKEMONS = ["Bulbasaur", "Charmander", "Squirtle", "Pikachu", "Eevee", "Chikorita", "Cyndaquil", "Totodile", "Treecko", "Torchic", "Mudkip", "Turtwig", "Chimchar", "Piplup", "Snivy", "Tepig", "Oshawott", "Chespin", "Fennekin", "Froakie", "Rowlet", "Litten", "Popplio", "Grookey", "Scorbunny", "Sobble", "Sprigatito", "Fuecoco", "Quaxly"]
             writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.BOLD}Here is a list of Pokemon starters : {bcolors.ENDC}\n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
@@ -137,55 +79,61 @@ async def login_or_register(reader, writer):
                 1: 1,
                 2: 4,
                 3: 7,
-                4: 25
+                4: 25,
+                5: 133,
+                6: 152,
+                7: 155,
+                8: 158,
+                9: 252,
+                10: 255,
+                11: 258,
+                12: 387,
+                13: 390,
+                14: 393,
+                15: 495,
+                16: 498,
+                17: 501,
+                18: 650,
+                19: 653,
+                20: 656,
+                21: 722,
+                22: 725,
+                23: 728,
+                24: 810,
+                25: 813,
+                26: 816,
+                27: 906,
+                28: 909,
+                29: 912,
             }.get(int(starter), 1)  # Default to Bulbasaur if invalid choice
             print(f"Received starter choice: {starter}")  # Debugging log
 
             player = Player()
             try:
+                print(f"Attempting to register user: {username} with password: {password} and starter: {starter}")  # Debugging log
                 player.register(username, password, starter)
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Registration successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5) 
-                break  # Exit the loop after successful registration
+                writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+                pprint(f"Player object after registration: {player}")  # Debugging log
+                game.add_player(player)
+                return player
             except Exception as e:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Registration failed: {str(e)}{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)  # Optional delay for better readability
+                continue
 
+        elif choice == "3":
+            writer.close()
+            await writer.wait_closed()
         else:
             # Invalid input, send the user back to the menu
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
             await writer.drain()
             await asyncio.sleep(0.5) 
-    writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
-    await writer.drain()
-
-async def handle_client_msg(reader, writer):
-    addr = writer.get_extra_info('peername')
-    print(f"New connection from {addr}")
-
-    try:
-        # Handle initial connection message
-        initial_message = await reader.read(1024)
-        initial_message = initial_message.decode().strip()
-        print(f"Client chose: {initial_message}")  # Debugging log
-
-        if initial_message == "Hello|new":
-            # Call the login_or_register function
-            await login_or_register(reader, writer)
-
-    except (ConnectionResetError, BrokenPipeError):
-        print(f"Connection lost with {addr}.")
-    finally:
-        writer.close()
-        await writer.wait_closed()
-
-async def main():
-    server = await asyncio.start_server(handle_client_msg, '10.1.2.69', 8888)
-    print(f'Serving on {", ".join(str(sock.getsockname()) for sock in server.sockets)}')
-    async with server:
-        await server.serve_forever()
-
-if __name__ == "__main__":
-    asyncio.run(main())
+            continue
+    # This point should not be reached

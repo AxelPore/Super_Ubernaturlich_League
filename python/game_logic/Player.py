@@ -1,5 +1,5 @@
 import sqlite3
-from Pokemon import *
+from .Pokemon import *
 
 class Player :
     def __init__(self):
@@ -11,9 +11,11 @@ class Player :
         self.item = [[]]
         self.zoneid = 0
         self.zone = 0
+        self.money = 0
+        self.zonename = ""
     
     def login(self, username, mdp):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM User WHERE username = ? AND password = ?", (username, mdp))
         result = cursor.fetchone()
@@ -23,35 +25,38 @@ class Player :
         self.username = username
         self.userid = result[0]
         self.equipeid = result[3]
-        pc = cursor.execute("SELECT Pokedexid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
-        print(pc)
+        self.money = result[5]
+        pc = cursor.execute("SELECT Pokedexid, Pokemonid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         for i in pc:
-            print(i[0])
             tmp_poke = Pokemon(i[0])
-            tmp_poke.set_attribute(self.userid)
+            tmp_poke.set_attribute(self.userid, i[1])
             self.pokemon.append(tmp_poke)
-        tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
+        tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchone()
         for j in tmp_equipe:
             for k in self.pokemon:
                 if k.pokemonid == j:
-                    self.equipe.append(k)  
+                    self.equipe.append(k)
+                    self.pokemon.remove(k)
         self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
         self.zoneid = result[4]
-        self.zone = cursor.execute("SELECT ZonePosition FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()[0]
+        self.zone, self.zonename = cursor.execute("SELECT ZonePosition, ZoneName FROM Zone WHERE Zoneid = ?", (self.zoneid,)).fetchone()
         conn.close()
         return True
             
     def register(self, username, mdp, starter_pokemon):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 10))
+        print("Attempting to register user... with username: ", username, " and password: ", mdp, " and starter: ", starter_pokemon)
+        cursor.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 14))
         self.userid = cursor.lastrowid
+        print(self.userid)
+        conn.commit()
         first_pokemon = Pokemon(starter_pokemon)
         moves = []
         for i in first_pokemon.moves.items():
             moves.append(i)
         pokedexid = int(first_pokemon.pokedexid)
-        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Ability, Move1, Move2, Move3, Move4, Pokedexid) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (first_pokemon.pokemon_name, self.userid, first_pokemon.ability[0], moves[0][0], moves[1][0], moves[2][0], moves[3][0], pokedexid))
+        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Ability, Move1, Move2, Move3, Move4, Pokedexid, Level, Exp, Needed_exp, Stat_hp, Stat_attack, Stat_defense, Stat_spattack, Stat_spdefense, Stat_speed, Stat_hp_ev, Stat_attack_ev, Stat_defense_ev, Stat_spattack_ev, Stat_spdefense_ev, Stat_speed_ev, Stat_hp_iv , Stat_attack_iv, Stat_defense_iv, Stat_spattack_iv, Stat_spdefense_iv, Stat_speed_iv) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (first_pokemon.pokemon_name, self.userid, first_pokemon.ability[0], moves[0][0], moves[1][0], moves[2][0], moves[3][0], pokedexid, 5, 0, first_pokemon.get_needed_exp(5, first_pokemon.exp_curve), first_pokemon.get_stat_hp(5,first_pokemon.hp, first_pokemon.hp_iv, first_pokemon.hp_ev), first_pokemon.get_stats(5,first_pokemon.stats[0], first_pokemon.stats_iv[0], first_pokemon.stats_ev[0])[0], first_pokemon.get_stats(5,first_pokemon.stats[1], first_pokemon.stats_iv[1], first_pokemon.stats_ev[1])[1], first_pokemon.get_stats(5,first_pokemon.stats[2], first_pokemon.stats_iv[2], first_pokemon.stats_ev[2])[2], first_pokemon.get_stats(5,first_pokemon.stats[3], first_pokemon.stats_iv[3], first_pokemon.stats_ev[3])[3], first_pokemon.get_stats(5,first_pokemon.stats[4], first_pokemon.stats_iv[4], first_pokemon.stats_ev[4])[4], first_pokemon.hp_ev, first_pokemon.stats_ev[0], first_pokemon.stats_ev[1], first_pokemon.stats_ev[2], first_pokemon.stats_ev[3], first_pokemon.stats_ev[4], first_pokemon.hp_iv, first_pokemon.stats_iv[0], first_pokemon.stats_iv[1], first_pokemon.stats_iv[2], first_pokemon.stats_iv[3], first_pokemon.stats_iv[4]))
         cursor.execute("INSERT INTO Equipe (Pokemon1) VALUES (?)", (cursor.lastrowid,))
         cursor.execute("UPDATE User SET Equipeid = ? WHERE Userid = ?", (cursor.lastrowid, self.userid))
         cursor.execute("INSERT INTO Inventory (Itemid, Userid, Quantity) VALUES (?, ?, ?)", (4, self.userid, 10))
@@ -60,33 +65,38 @@ class Player :
         self.login(username, mdp)
     
     def add_pokemon(self, pokemon):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         moves = []
         for i in pokemon.moves.items():
             moves.append(i)
-        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Pokedexid, Ability, Move1, Move2, Move3, Move4) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (pokemon.pokemon_name, self.userid, pokemon.pokedexid, pokemon.ability, moves[0], moves[1], moves[2], moves[3]))
+        cursor.execute("INSERT INTO Pokemon (PokemonName, Userid, Pokedexid, Ability, Move1, Move2, Move3, Move4) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", (pokemon.pokemon_name, self.userid, pokemon.pokedexid, pokemon.ability[0], moves[0][0], moves[1][0], moves[2][0], moves[3][0]))
+        print(len(self.equipe))
         if len(self.equipe) == 1:
             cursor.execute("UPDATE Equipe SET Pokemon2 = ? WHERE Equipeid = ?", (cursor.lastrowid, self.equipeid))
         elif len(self.equipe) == 2:
             cursor.execute("UPDATE Equipe SET Pokemon3 = ? WHERE Equipeid = ?", (cursor.lastrowid, self.equipeid))
         elif len(self.equipe) == 3:
             cursor.execute("UPDATE Equipe SET Pokemon4 = ? WHERE Equipeid = ?", (cursor.lastrowid, self.equipeid))
-        pc = cursor.execute("SELECT Pokedexid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
+        conn.commit()
+        self.pokemon.clear()
+        self.equipe.clear()
+        pc = cursor.execute("SELECT Pokedexid, Pokemonid FROM Pokemon WHERE Userid = ?", (self.userid,)).fetchall()
         for i in pc:
-            tmp_poke = Pokemon(i)
-            tmp_poke.set_attribute(self.userid)
+            tmp_poke = Pokemon(i[0])
+            tmp_poke.set_attribute(self.userid, i[1])
             self.pokemon.append(tmp_poke)
-        tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchall()
+        tmp_equipe = cursor.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,)).fetchone()
         for j in tmp_equipe:
             for k in self.pokemon:
                 if k.pokemonid == j:
                     self.equipe.append(k)
+                    self.pokemon.remove(k)
         conn.commit()
         conn.close()
         
     def add_pokemon_to_team(self, choice):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         if choice < 1 or choice > len(self.pokemon):
             conn.close()
@@ -103,11 +113,12 @@ class Player :
             for k in self.pokemon:
                 if k.pokemonid == j:
                     self.equipe.append(k)
+                    self.pokemon.remove(k)
         conn.commit()
         conn.close()
         
     def replace_pokemon_in_team(self, choice, choice2):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         if choice < 1 or choice > 4:
             conn.close()
@@ -129,11 +140,13 @@ class Player :
             for k in self.pokemon:
                 if k.pokemonid == j:
                     self.equipe.append(k)
+                    self.pokemon.remove(k)
+        self.pokemon.append(self.equipe[choice - 1])
         conn.commit()
         conn.close()
         
     def remove_pokemon_to_team(self, choice):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         if choice < 1 or choice > 4:
             conn.close()
@@ -155,6 +168,7 @@ class Player :
             for k in self.pokemon:
                 if k.pokemonid == j:
                     self.equipe.append(k)
+        self.pokemon.append(self.equipe[choice - 1])
         conn.commit()
         conn.close()
         
@@ -182,12 +196,33 @@ class Player :
     def get_zoneid(self):
         return self.zoneid
     
+    def get_money(self):
+        return self.money
+    
+    def zone_name(self):
+        return self.zonename
+    
+    def get_price(self, itemname):
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT ItemPrice FROM Item WHERE ItemName = ?", (itemname,))
+        result = cursor.fetchone()
+        print(result)
+        if result is None:
+            conn.close()
+            return False
+        else:
+            price = result[0]
+            conn.close()
+            return price
+    
     def set_zone(self, newZone):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         self.zone = newZone
         cursor.execute("SELECT ZoneName FROM Zone WHERE ZonePosition = ?", (self.zone,))
         result = cursor.fetchone()
+        self.zonename = result[0]
         if result is None:
             conn.close()
             return False
@@ -197,7 +232,7 @@ class Player :
         conn.close()
         
     def use_item(self, itemid, quantity):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         cursor.execute("UPDATE Inventory SET Quantity = Quantity - ? WHERE Userid = ? AND Itemid = ?", (quantity, self.userid, itemid))
         cursor.execute("DELETE * FROM Item WHERE Quantity = 0")
@@ -206,7 +241,7 @@ class Player :
         conn.close()
         
     def add_item(self, itemid, quantity):
-        conn = sqlite3.connect('../database.db')
+        conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         result = cursor.execute("SELECT * FROM Item WHERE Itemid = ?", (itemid,)).fetchone()[0]
         if result is None:
@@ -216,3 +251,22 @@ class Player :
         self.item = cursor.execute("SELECT ItemName, Quantity FROM Inventory INNER JOIN Item ON Inventory.Itemid = Item.Itemid WHERE Userid = ?", (self.userid,)).fetchall()
         conn.commit()
         conn.close()
+        
+    def use_money(self, money):
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("UPDATE User SET Money = Money - ? WHERE Userid = ?", (money, self.userid))
+        conn.commit()
+        conn.close()
+        
+    def add_money(self, money):
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("UPDATE User SET Money = Money + ? WHERE Userid = ?", (money, self.userid))
+        conn.commit()
+        conn.close()
+    
+    def create_pnj_trainer(self, name, zone, pokemon):
+        self.username = name
+        self.equipe = pokemon
+        self.zone = zone

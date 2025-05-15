@@ -1,12 +1,16 @@
 import sqlite3
-import add_items
-import add_pokedex
-import add_moves
-import add_learning
-import add_zones
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+import adders.add_items as add_items
+import adders.add_pokedex as add_pokedex
+import adders.add_moves as add_moves
+import adders.add_learning as add_learning
+import adders.add_zones as add_zones
 
 def create_tables():
-    conn = sqlite3.connect('../database.db')
+    conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
     # Enable foreign key support
@@ -20,6 +24,7 @@ def create_tables():
         password TEXT NOT NULL,
         Equipeid INTEGER,
         Zoneid INTEGER,
+        Money INTEGER DEFAULT 1000,
         FOREIGN KEY (Zoneid) REFERENCES Zone(Zoneid),
         FOREIGN KEY (Equipeid) REFERENCES Equipe(Equipeid)
     );
@@ -47,6 +52,27 @@ def create_tables():
         Pokedexid INTEGER NOT NULL,
         PokemonName TEXT NOT NULL,
         Surname TEXT,
+        Level INTEGER NOT NULL,
+        Exp INTEGER NOT NULL,
+        Needed_exp INTEGER NOT NULL,
+        Stat_hp INTEGER NOT NULL,
+        Stat_attack INTEGER NOT NULL,
+        Stat_defense INTEGER NOT NULL,
+        Stat_spattack INTEGER NOT NULL,
+        Stat_spdefense INTEGER NOT NULL,
+        Stat_speed INTEGER NOT NULL,
+        Stat_hp_ev INTEGER NOT NULL,
+        Stat_attack_ev INTEGER NOT NULL,
+        Stat_defense_ev INTEGER NOT NULL,
+        Stat_spattack_ev INTEGER NOT NULL,
+        Stat_spdefense_ev INTEGER NOT NULL,
+        Stat_speed_ev INTEGER NOT NULL,
+        Stat_hp_iv INTEGER NOT NULL,
+        Stat_attack_iv INTEGER NOT NULL,
+        Stat_defense_iv INTEGER NOT NULL,
+        Stat_spattack_iv INTEGER NOT NULL,
+        Stat_spdefense_iv INTEGER NOT NULL,
+        Stat_speed_iv INTEGER NOT NULL,
         Move1 TEXT,
         Move2 TEXT,
         Move3 TEXT,
@@ -110,6 +136,12 @@ def create_tables():
         name TEXT NOT NULL,
         type_1 TEXT NOT NULL,
         type_2 TEXT,
+        base_experience INTEGER NOT NULL,
+        min_spawn_level INTEGER NOT NULL,
+        max_spawn_level INTEGER NOT NULL,
+        Evolving_from TEXT,
+        Evolving_to TEXT,
+        Evolving_level INTEGER,
         ability_1 TEXT NOT NULL,
         ability_1_is_hidden BOOLEAN NOT NULL,
         ability_2 TEXT,
@@ -124,6 +156,12 @@ def create_tables():
         stat_spattack INTEGER NOT NULL,
         stat_spdef INTEGER NOT NULL,
         stat_speed INTEGER NOT NULL,
+        ev_hp INTEGER,
+        ev_attack INTEGER,
+        ev_defense INTEGER,
+        ev_spattack INTEGER,
+        ev_spdef INTEGER,
+        ev_speed INTEGER,
         FOREIGN KEY (Zoneid) REFERENCES Zone(Zoneid)
     );
     """)
@@ -131,7 +169,8 @@ def create_tables():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS Item (
         Itemid INTEGER PRIMARY KEY AUTOINCREMENT,
-        ItemName TEXT NOT NULL
+        ItemName TEXT NOT NULL,
+        ItemPrice INTEGER NOT NULL
     );
     """)
     

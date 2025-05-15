@@ -8,10 +8,10 @@ def safe_int(value, default=0):
         return default
 
 def add_moves():
-    conn = sqlite3.connect('../database.db')
+    conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
-    with open('../csv/moves.csv', newline='', encoding='utf-8') as csvfile:
+    with open('csv/moves.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             cursor.execute("""

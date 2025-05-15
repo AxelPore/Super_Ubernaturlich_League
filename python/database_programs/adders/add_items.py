@@ -2,18 +2,20 @@ import csv
 import sqlite3
 
 def add_items():
-    conn = sqlite3.connect('../database.db')
+    conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
 
-    with open('../csv/items.csv', newline='', encoding='utf-8') as csvfile:
+    with open('csv/items.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             cursor.execute("""
                 INSERT INTO Item (
-                    ItemName
-                ) VALUES (?)
+                    ItemName,
+                    ItemPrice
+                ) VALUES (?, ?)
             """, (
                 row['identifier'],
+                row['cost']
             ))
 
     conn.commit()
