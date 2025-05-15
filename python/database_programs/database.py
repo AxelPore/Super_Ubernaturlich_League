@@ -67,6 +67,7 @@ def create_tables():
         Stat_spattack_ev INTEGER NOT NULL,
         Stat_spdefense_ev INTEGER NOT NULL,
         Stat_speed_ev INTEGER NOT NULL,
+        Max_ev INTEGER NOT NULL,
         Stat_hp_iv INTEGER NOT NULL,
         Stat_attack_iv INTEGER NOT NULL,
         Stat_defense_iv INTEGER NOT NULL,
