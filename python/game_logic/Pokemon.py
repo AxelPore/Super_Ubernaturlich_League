@@ -20,6 +20,7 @@ class Pokemon :
         self.surname = ""
         self.pokemonid = 0
         self.exp = 0
+        self.total_ev = 0
         self.max_exp = 0
         self.hp = self.base_hp
         self.hpmax = self.base_hp
@@ -68,15 +69,24 @@ class Pokemon :
         return ((2 * base_stat + ev_stat/4 + iv_stat) * level) / 100 + 5
         
     def get_max_ev(self,stats_ev):
-        max_ev = 0
+        conn = sqlite3.connect('pokemon.db')
+        cursor = conn.cursor()
+        max_ev = 510
         for i in range(len(stats_ev)):
-            max_ev += stats_ev[i]
-        return max_ev 
+            if self.total_ev + stats_ev[i] <= max_ev:
+                self.total_ev += stats_ev[i]
+            else :
+                return False
+        cursor.execute("UPDATE Pokemon SET Max_ev = ? WHERE Pokemonid = ?", (self.total_ev, self.pokemonid))
+        conn.commit()
+        conn.close()
                
     def level_up(self, level):
         self.Level += level
         
     def gain_exp(self, exp, max_exp, gain_exp, trained_multiplier, lucky_egg_multiplier, nb_pokemon, exp_charm_multiplier):
+        conn = sqlite3.connect('pokemon.db')
+        cursor = conn.cursor()
         if self.Level < 100:
             exp += ((gain_exp *trained_multiplier *lucky_egg_multiplier *self.Level) / (nb_pokemon * 7)) * exp_charm_multiplier
             while exp >= max_exp:
@@ -88,11 +98,35 @@ class Pokemon :
                     max_exp = self.get_needed_exp(self.Level, self.exp_curve)
                 else:
                     break
+            cursor.execute("UPDATE Pokemon SET Level = ?, Exp = ?, Needed_exp = ?, Stat_hp = ?, Stat_attack = ?, Stat_defense = ?, Stat_spattack = ?, Stat_spdefense = ?, Stat_speed = ? WHERE Pokemonid = ?", (self.Level, self.get_needed_exp(self.Level, self.exp_curve), exp, self.get_stat_hp(self.Level, self.base_hp, self.hp_ev, self.hp_iv), self.get_stat(self.Level, self.base_atk, self.stats_ev[0], self.stats_iv[0]), self.get_stat(self.Level, self.base_defense, self.stats_ev[1], self.stats_iv[1]), self.get_stat(self.Level, self.base_spatk, self.stats_ev[2], self.stats_iv[2]), self.get_stat(self.Level, self.base_spdef, self.stats_ev[3], self.stats_iv[3]), self.get_stat(self.Level, self.base_speed, self.stats_ev[4], self.stats_iv[4]), self.pokemonid))
+        conn.commit()
             
         
     def gain_ev(self, ev):
-        for i in range(len(ev)):
-            self.stats_ev[i] += ev[i]
+        conn = sqlite3.connect('pokemon.db')
+        cursor = conn.cursor()
+        if self.total_ev <= 510:
+            if self.hp_ev <= 252:
+                self.hp_ev += ev[0]
+            else :
+                self.hp_ev = 252
+            if self.get_max_ev(self.stats_ev) == False:
+                self.hp_ev -= ev[0]
+            for i in range(len(self.stats_ev)):
+                if self.stats_ev[i] + ev[i+1] <= 252 :
+                    self.stats_ev[i] += ev[i+1]
+                else :
+                    self.stats_ev[i] = 252
+                if self.get_max_ev(self.stats_ev):
+                    continue
+                else :
+                    self.stats_ev[i] -= ev[i+1]
+            cursor.execute("UPDATE Pokemon SET Stat_hp_ev = ?, Stat_attack_ev = ?, Stat_defense_ev = ?, Stat_spattack_ev = ?, Stat_spdefense_ev = ?, Stat_speed_ev = ?", (self.hp_ev, self.stats_ev[0], self.stats_ev[1], self.stats_ev[2], self.stats_ev[3], self.stats_ev[4]))
+                
+        conn.commit()
+        conn.close()
+        
+        
         
     def evolve(self):
         conn = sqlite3.connect('database.db')
