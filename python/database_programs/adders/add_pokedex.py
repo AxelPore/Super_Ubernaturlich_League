@@ -14,15 +14,19 @@ def add_pokedex():
             # Insert with Zoneid=0 temporarily
             cursor.execute("""
                 INSERT INTO Pokedex (
-                    Zoneid, name, type_1, type_2,
+                    base_experience, min_spawn_level, max_spawn_level, exp_curve, Zoneid, name, type_1, type_2,
                     ability_1, ability_1_is_hidden,
                     ability_2, ability_2_is_hidden,
                     ability_3, ability_3_is_hidden,
                     height, weight,
                     stat_hp, stat_attack, stat_defense,
                     stat_spattack, stat_spdef, stat_speed
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
+                0,
+                0,
+                0,
+                "Fast",
                 0,
                 row['name'],
                 row['type_1'],
@@ -60,7 +64,7 @@ def add_pokedex():
     with open('csv/base_xp_and_evs.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            cursor.execute("UPDATE Pokedex SET base_experience = ?, ev_hp = ?, ev_atk = ?, ev_def = ?, ev_spatk = ?, ev_spdef = ?, ev_speed = ? WHERE name = ?", (int(row['Experience type']), int(row['Exp']), int(row['HP']), int(row['Attack']), int(row['Defense']), int(row['Sp.Attack']), int(row['Sp.Defense']), int(row['Speed']), (row['Pokémon'])))
+            cursor.execute("UPDATE Pokedex SET base_experience = ?, ev_hp = ?, ev_atk = ?, ev_def = ?, ev_spatk = ?, ev_spdef = ?, ev_speed = ? WHERE name = ?", (int(row['Exp']), int(row['HP']), int(row['Attack']), int(row['Defense']), int(row['Sp.Attack']), int(row['Sp.Defense']), int(row['Speed']), (row['Pokémon'])))
             
     with open('csv/evolution_long.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
