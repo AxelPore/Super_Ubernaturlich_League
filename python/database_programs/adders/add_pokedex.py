@@ -64,9 +64,34 @@ def add_pokedex():
             
     with open('csv/evolution_long.csv', newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
+        tmp_pokemon = {}
         for row in reader:
-            cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ? WHERE name = ?", (row['Evolving_to'], int(row['value']), (row['Evolving_from'])))
-            
+            tmp_evo = [[row['Evolving_to'], row['value']]]
+            if len(tmp_pokemon) == 0:
+                tmp_pokemon[row['Evolving_from']] = tmp_evo
+                continue
+            for key, value in tmp_pokemon.items():
+                if key == row['Evolving_from']:
+                    value.append([row['Evolving_to'], row['value']])
+                else :
+                    tmp_pokemon[row['Evolving_from']] = tmp_evo
+        for key, value in tmp_pokemon.items():
+            if len(value) == 1:
+                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ? WHERE name = ?", (value[0][0], int(value[0][1]), key))
+            if len(value) == 2:
+                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), key))
+            if len(value) == 3:
+                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), key))
+            if len(value) == 4:
+                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), key))
+            if len(value) == 5:
+                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), key))
+            if len(value) == 6:
+                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ?, Evolving_to6 = ?, Evolving_level6 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), value[5][0], int(value[5][1]), key))
+            if len(value) == 7:
+                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ?, Evolving_to6 = ?, Evolving_level6 = ?, Evolving_to7 = ?, Evolving_level7 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), value[5][0], int(value[5][1]), value[6][0], int(value[6][1]), key))
+            if len(value) == 8:
+                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ?, Evolving_to6 = ?, Evolving_level6 = ?, Evolving_to7 = ?, Evolving_level7 = ?, Evolving_to8 = ?, Evolving_level8 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), value[5][0], int(value[5][1]), value[6][0], int(value[6][1]), value[7][0], int(value[7][1]), key))
     conn.commit()
     conn.close()
     print("Pokédex data inserted successfully.")
