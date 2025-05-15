@@ -46,6 +46,9 @@ class Game :
     
     def remove_player(self, ip_player):
         self.players.pop(ip_player)
+    
+    def buy_item(self, ip_player, choose_item, quantity):
+        self.players[ip_player].add_item(choose_item,quantity)
 
     def encounter_pokemon(self, ip_player):
         conn = sqlite3.connect('database.db')
@@ -55,3 +58,7 @@ class Game :
         place_holder.add_pokemon_to_team(Pokemon(spawnable_pokemons[randint(range(spawnable_pokemons))]))
         wild_battle = Battle(self.players[ip_player], place_holder)
         wild_battle.start_battle()
+    
+    def generate_trainer(self, number_of_trainers, player_zone):
+        for i in number_of_trainers:
+            self.add_player(0, Player().create_pnj_trainer("Billy", player_zone, [Pokemon(randint(1, 1303)), Pokemon(randint(1, 1303)), Pokemon(randint(1, 1303)), Pokemon(randint(1, 1303))]))
