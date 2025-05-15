@@ -1,12 +1,12 @@
-from .Player import *
-from .Pokemon import *
-from .Battle import *
+from Player import *
+from Pokemon import *
+from Battle import *
 from random import *
 
 
 class Game :
     def __init__(self):
-        self.players = []
+        self.players = {}
 
     def add_player(self, new_player):
         for i in self.players:
@@ -30,14 +30,11 @@ class Game :
     def pokemon_captured(self, player, new_pokemon):
         self.players[player].add_pokemon(new_pokemon)
 
-    def change_team(self, player):
-        self.players[player].change_equipe()
-
     def check_team(self, player):
         return self.players[player].get_equipe()
     
     def check_bag(self, player):
-        temp = self.players[player.get_userid()].get_item()
+        temp = self.players[player].get_item()
         result = ''
         for i in range(len(temp)-1):
             result += temp[i][0] + temp[i][i]
