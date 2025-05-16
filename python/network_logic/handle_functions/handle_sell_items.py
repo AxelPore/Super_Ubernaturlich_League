@@ -38,6 +38,6 @@ async def handle_sell_items(reader, writer, player):
             await asyncio.sleep(0.5)
             break
         else:
-            from python.network_logic.handle_functions.handle_pokemart_menu import handle_pokemart_menu
+            from .handle_pokemart_menu import handle_pokemart_menu
             await handle_pokemart_menu(reader, writer, player)
             break

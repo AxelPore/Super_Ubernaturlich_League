@@ -47,7 +47,7 @@ async def handle_pokemart_menu(reader, writer, player):
             writer.write(f"{DISPLAY_BYTE_ID}|You exited the Pokemart".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
-            from python.network_logic.handle_functions.handle_city_menu import handle_city_menu
+            from .handle_city_menu import handle_city_menu
             await handle_city_menu(reader, writer, player)
             break
         else:
