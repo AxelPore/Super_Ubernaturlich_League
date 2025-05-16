@@ -11,9 +11,15 @@ if __name__ == "__main__":
         player.register(username, mdp, random.randint(1, 1303))
     else:
         player.login(username, mdp)
+    player.add_pokemon(Pokemon(1147))
+    player.add_pokemon(Pokemon(1147))
+    player.add_pokemon(Pokemon(1147))
+    player.add_pokemon(Pokemon(1147))
+    player.add_pokemon(Pokemon(1147))
+    player.add_pokemon(Pokemon(1147))
     equipe = player.get_equipe()
     for i in range(len(equipe)):
-        print(f"[{i + 1}] {equipe[i].pokemon_name} ({equipe[i].get_moves()})")
+        print(f"[{i + 1}] {equipe[i].pokemon_name} {equipe[i].Level} {equipe[i].hp}  / {equipe[i].hp_max}")
     item = player.get_item()
     for i in range(len(item)):
         print(f"[{i + 1}] {item[i][0]} ({item[i][1]})")
