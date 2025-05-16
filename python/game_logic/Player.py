@@ -205,13 +205,13 @@ class Player :
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         cursor.execute("SELECT ItemPrice FROM Item WHERE ItemName = ?", (itemname,))
-        result = cursor.fetchone()
+        result = cursor.fetchone()[0]
         print(result)
         if result is None:
             conn.close()
             return False
         else:
-            price = result[0]
+            price = result
             conn.close()
             return price
     
@@ -257,6 +257,7 @@ class Player :
         cursor.execute("UPDATE User SET Money = Money - ? WHERE Userid = ?", (money, self.userid))
         conn.commit()
         conn.close()
+        self.money -= money
         
     def add_money(self, money):
         conn = sqlite3.connect('database.db')
@@ -264,6 +265,7 @@ class Player :
         cursor.execute("UPDATE User SET Money = Money + ? WHERE Userid = ?", (money, self.userid))
         conn.commit()
         conn.close()
+        self.money += money
     
     def create_pnj_trainer(self, name, zone, pokemon):
         self.username = name
