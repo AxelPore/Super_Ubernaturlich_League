@@ -5,6 +5,8 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from ..Common import exception_handler_decorator, DISPLAY_BYTE_ID, INPUT_BYTE_ID
+from .handle_buy_items import handle_buy_items
+from .handle_sell_items import handle_sell_items
 
 @exception_handler_decorator
 async def handle_pokemart_menu(reader, writer, player):
@@ -16,11 +18,9 @@ async def handle_pokemart_menu(reader, writer, player):
         choice = await reader.read(1024)
         choice = choice.decode().strip()
         if choice == "1":
-            from python.network_logic.handle_functions.handle_buy_items import handle_buy_items
             await handle_buy_items(reader, writer, player)
             continue
         elif choice == "2":
-            from python.network_logic.handle_functions.handle_sell_items import handle_sell_items
             await handle_sell_items(reader, writer, player)
             continue
         elif choice == "3":

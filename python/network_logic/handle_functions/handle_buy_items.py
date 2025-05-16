@@ -5,6 +5,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from ..Common import exception_handler_decorator, DISPLAY_BYTE_ID, INPUT_BYTE_ID, game
+from .handle_pokemart_menu import handle_pokemart_menu
 
 @exception_handler_decorator
 async def handle_buy_items(reader, writer, player):
@@ -42,6 +43,5 @@ async def handle_buy_items(reader, writer, player):
             await asyncio.sleep(0.5)
             break
         else:
-            from python.network_logic.handle_functions.handle_pokemart_menu import handle_pokemart_menu
             await handle_pokemart_menu(reader, writer, player)
             break
