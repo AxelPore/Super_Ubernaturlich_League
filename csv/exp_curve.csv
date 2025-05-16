@@ -667,7 +667,7 @@
 666,,Vivillon,Medium Fast
 667,,Litleo,Medium Slow
 668,,Pyroar,Medium Slow
-669,,Flabébé,Medium Fast
+669,,Flabebe,Medium Fast
 670,,Floette,Medium Fast
 671,,Florges,Medium Fast
 672,,Skiddo,Medium Fast
@@ -770,9 +770,10 @@
 769,,Sandygast,Medium Fast
 770,,Palossand,Medium Fast
 771,,Pyukumuku,Fast
-772,,Type: Null,Slow
+772,,Type Null,Slow
 773,,Silvally,Slow
-774,,Minior,Medium Slow
+774,,Minior meteor,Medium Slow
+774,,Minior core,Medium Slow
 775,,Komala,Slow
 776,,Turtonator,Medium Fast
 777,,Togedemaru,Medium Fast
@@ -863,7 +864,7 @@
 862,,Obstagoon,Medium Fast
 863,,Perrserker,Medium Fast
 864,,Cursola,Fast
-865,,Sirfetch'd,Medium Fast
+865,,Sirfetchd,Medium Fast
 866,,Mr. Rime,Medium Fast
 867,,Runerigus,Medium Fast
 868,,Milcery,Medium Fast

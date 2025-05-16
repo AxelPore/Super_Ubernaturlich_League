@@ -24,8 +24,8 @@ def add_pokedex():
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 0,
-                0,
-                0,
+                1,
+                100,
                 "Fast",
                 0,
                 row['name'],
@@ -86,23 +86,148 @@ def add_pokedex():
                 tmp_pokemon[row['Evolving_from']].append([row['Evolving_to'], row['value']])
             else:
                 tmp_pokemon[row['Evolving_from']] = tmp_evo
+            
         for key, value in tmp_pokemon.items():
+            values = [val for _, val in value]
+            max_val = max(values)
             if len(value) == 1:
-                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ? WHERE name = ?", (value[0][0], int(value[0][1]), key))
+                cursor.execute("UPDATE Pokedex SET max_spawn_level = ?, Evolving_to = ?, Evolving_level = ? WHERE name = ?", (max_val, value[0][0], int(value[0][1]), key))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[0][1]), value[0][0]))
             if len(value) == 2:
-                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), key))
+                cursor.execute("UPDATE Pokedex SET max_spawn_level = ?, Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ? WHERE name = ?", (max_val, value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), key))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[0][1]), value[0][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[1][1]), value[1][0]))
             if len(value) == 3:
-                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), key))
+                cursor.execute("UPDATE Pokedex SET max_spawn_level = ?, Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ? WHERE name = ?", (max_val, value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), key))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[0][1]), value[0][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[1][1]), value[1][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[2][1]), value[2][0]))
             if len(value) == 4:
-                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), key))
+                cursor.execute("UPDATE Pokedex SET max_spawn_level = ?, Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, WHERE name = ?", (max_val, value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), key))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[0][1]), value[0][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[1][1]), value[1][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[2][1]), value[2][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[3][1]), value[3][0]))
             if len(value) == 5:
-                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), key))
+                cursor.execute("UPDATE Pokedex SET max_spawn_level = ?, Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ? WHERE name = ?", (max_val, value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), key))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[0][1]), value[0][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[1][1]), value[1][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[2][1]), value[2][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[3][1]), value[3][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[4][1]), value[4][0]))
             if len(value) == 6:
-                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ?, Evolving_to6 = ?, Evolving_level6 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), value[5][0], int(value[5][1]), key))
+                cursor.execute("UPDATE Pokedex SET max_spawn_level = ?, Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ?, Evolving_to6 = ?, Evolving_level6 = ? WHERE name = ?", (max_val, value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), value[5][0], int(value[5][1]), key))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[0][1]), value[0][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[1][1]), value[1][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[2][1]), value[2][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[3][1]), value[3][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[4][1]), value[4][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[5][1]), value[5][0]))
             if len(value) == 7:
-                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ?, Evolving_to6 = ?, Evolving_level6 = ?, Evolving_to7 = ?, Evolving_level7 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), value[5][0], int(value[5][1]), value[6][0], int(value[6][1]), key))
+                cursor.execute("UPDATE Pokedex SET max_spawn_level = ?, Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ?, Evolving_to6 = ?, Evolving_level6 = ?, Evolving_to7 = ?, Evolving_level7 = ? WHERE name = ?", (max_val, value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), value[5][0], int(value[5][1]), value[6][0], int(value[6][1]), key))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[0][1]), value[0][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[1][1]), value[1][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[2][1]), value[2][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[3][1]), value[3][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[4][1]), value[4][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[5][1]), value[5][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[6][1]), value[6][0]))
             if len(value) == 8:
-                cursor.execute("UPDATE Pokedex SET Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ?, Evolving_to6 = ?, Evolving_level6 = ?, Evolving_to7 = ?, Evolving_level7 = ?, Evolving_to8 = ?, Evolving_level8 = ? WHERE name = ?", (value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), value[5][0], int(value[5][1]), value[6][0], int(value[6][1]), value[7][0], int(value[7][1]), key))
+                cursor.execute("UPDATE Pokedex SET max_spawn_level = ?, Evolving_to = ?, Evolving_level = ?, Evolving_to2 = ?, Evolving_level2 = ?, Evolving_to3 = ?, Evolving_level3 = ?, Evolving_to4 = ?, Evolving_level4 = ?, Evolving_to5 = ?, Evolving_level5 = ?, Evolving_to6 = ?, Evolving_level6 = ?, Evolving_to7 = ?, Evolving_level7 = ?, Evolving_to8 = ?, Evolving_level8 = ? WHERE name = ?", (max_val, value[0][0], int(value[0][1]), value[1][0], int(value[1][1]), value[2][0], int(value[2][1]), value[3][0], int(value[3][1]), value[4][0], int(value[4][1]), value[5][0], int(value[5][1]), value[6][0], int(value[6][1]), value[7][0], int(value[7][1]), key))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[0][1]), value[0][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[1][1]), value[1][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[2][1]), value[2][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[3][1]), value[3][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[4][1]), value[4][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[5][1]), value[5][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[6][1]), value[6][0]))
+                cursor.execute("UPDATE Pokedex SET min_spawn_level = ? WHERE name = ?", (int(value[7][1]), value[7][0]))
+                
+    cursor.execute("""
+        UPDATE Pokedex
+        SET
+            base_experience = COALESCE((
+                SELECT o.base_experience
+                FROM Pokedex AS o
+                WHERE instr(Pokedex.name, o.name) > 0
+                  AND o.name != Pokedex.name
+                  AND o.base_experience != 0
+                LIMIT 1
+            ), base_experience),
+            exp_curve = COALESCE((
+                SELECT o.exp_curve
+                FROM Pokedex AS o
+                WHERE instr(Pokedex.name, o.name) > 0
+                  AND o.name != Pokedex.name
+                  AND o.exp_curve != 'Fast'
+                LIMIT 1
+            ), exp_curve),
+            ev_hp = COALESCE((
+                SELECT o.ev_hp
+                FROM Pokedex AS o
+                WHERE instr(Pokedex.name, o.name) > 0
+                  AND o.name != Pokedex.name
+                  AND o.ev_hp != 0
+                LIMIT 1
+            ), ev_hp),
+            ev_atk = COALESCE((
+                SELECT o.ev_atk
+                FROM Pokedex AS o
+                WHERE instr(Pokedex.name, o.name) > 0
+                  AND o.name != Pokedex.name
+                  AND o.ev_atk != 0
+                LIMIT 1
+            ), ev_atk),
+            ev_def = COALESCE((
+                SELECT o.ev_def
+                FROM Pokedex AS o
+                WHERE instr(Pokedex.name, o.name) > 0
+                  AND o.name != Pokedex.name
+                  AND o.ev_def != 0
+                LIMIT 1
+            ), ev_def),
+            ev_spatk = COALESCE((
+                SELECT o.ev_spatk
+                FROM Pokedex AS o
+                WHERE instr(Pokedex.name, o.name) > 0
+                  AND o.name != Pokedex.name
+                  AND o.ev_spatk != 0
+                LIMIT 1
+            ), ev_spatk),
+            ev_spdef = COALESCE((
+                SELECT o.ev_spdef
+                FROM Pokedex AS o
+                WHERE instr(Pokedex.name, o.name) > 0
+                  AND o.name != Pokedex.name
+                  AND o.ev_spdef != 0
+                LIMIT 1
+            ), ev_spdef),
+            ev_speed = COALESCE((
+                SELECT o.ev_speed
+                FROM Pokedex AS o
+                WHERE instr(Pokedex.name, o.name) > 0
+                  AND o.name != Pokedex.name
+                  AND o.ev_speed != 0
+                LIMIT 1
+            ), ev_speed)
+        WHERE EXISTS (
+            SELECT 1
+            FROM Pokedex AS o
+            WHERE instr(Pokedex.name, o.name) > 0
+              AND o.name != Pokedex.name
+        )
+        AND (
+            base_experience = 0
+            OR exp_curve = 'Fast'
+            OR ev_hp = 0
+            OR ev_atk = 0
+            OR ev_def = 0
+            OR ev_spatk = 0
+            OR ev_spdef = 0
+            OR ev_speed = 0
+        )
+    """)
+    
     conn.commit()
     conn.close()
     print("Pokédex data inserted successfully.")
