@@ -5,10 +5,9 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from ..Common import exception_handler_decorator, DISPLAY_BYTE_ID, INPUT_BYTE_ID, game
-from .handle_pokemart_menu import handle_pokemart_menu
-
 @exception_handler_decorator
 async def handle_buy_items(reader, writer, player):
+    from .handle_pokemart_menu import handle_pokemart_menu
     while True:        
         writer.write(f"{DISPLAY_BYTE_ID}|Here are the items available for purchase:\n 1. Potion \n 2. Super Potion \n 3. Revive \n 4. PokeBall \n 5. Elixir \n 6. Antidote \n 7. Burn-Heal \n 8. Ice-Heal \n 9. awakening \n 10. Paralyze-Heal \n 11. Exit".encode())
         await writer.drain()

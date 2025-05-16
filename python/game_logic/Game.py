@@ -1,11 +1,14 @@
-from .Player import *
-from .Pokemon import *
-from .Battle import *
 from random import *
 
 
 class Game :
     def __init__(self):
+        from .Player import Player
+        from .Pokemon import Pokemon
+        from .Battle import Battle
+        self.Player = Player
+        self.Pokemon = Pokemon
+        self.Battle = Battle
         self.players = {}
 
     def add_player(self, ip_player, new_player):
@@ -51,14 +54,16 @@ class Game :
         self.players[ip_player].add_item(choose_item,quantity)
 
     def encounter_pokemon(self, ip_player):
-        conn = sqlite3.connect('database.db')
+        from sqlite3 import connect
+        from random import randint
+        conn = connect('database.db')
         cursor = conn.cursor()
         spawnable_pokemons = cursor.execute("SELECT Pokedexid FROM Pokedex WHERE Zoneid = ?", (self.players[ip_player].get_zoneid(),)).fetchall()
-        place_holder = Player()
-        place_holder.add_pokemon_to_team(Pokemon(spawnable_pokemons[randint(range(spawnable_pokemons))]))
-        wild_battle = Battle(self.players[ip_player], place_holder)
+        place_holder = self.Player()
+        place_holder.add_pokemon_to_team(self.Pokemon(spawnable_pokemons[randint(range(spawnable_pokemons))]))
+        wild_battle = self.Battle(self.players[ip_player], place_holder)
         wild_battle.start_battle()
     
     def generate_trainer(self, number_of_trainers, player_zone):
         for i in number_of_trainers:
-            self.add_player(0, Player().create_pnj_trainer("Billy", player_zone, [Pokemon(randint(1, 1303)), Pokemon(randint(1, 1303)), Pokemon(randint(1, 1303)), Pokemon(randint(1, 1303))]))
+            self.add_player(0, self.Player().create_pnj_trainer("Billy", player_zone, [self.Pokemon(randint(1, 1303)), self.Pokemon(randint(1, 1303)), self.Pokemon(randint(1, 1303)), self.Pokemon(randint(1, 1303))]))
