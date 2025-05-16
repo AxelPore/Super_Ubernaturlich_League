@@ -6,20 +6,22 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 
 import asyncio
 import aioconsole
+import colorama
 
 from network_logic.Common import INPUT_BYTE_ID, DISPLAY_BYTE_ID
 
 class bcolors:
-    HEADER = '\\033[95m'
-    OKBLUE = '\\033[94m'
-    OKCYAN = '\\033[96m'
-    OKGREEN = '\\033[92m'
-    WARNING = '\\033[93m'
-    FAIL = '\\033[91m'
-    ENDC = '\\033[0m'
-    BOLD = '\\033[1m'
-    UNDERLINE = '\\033[4m'
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
+colorama.init()
 
 async def send_input_to_server(writer, prompt):
     """
