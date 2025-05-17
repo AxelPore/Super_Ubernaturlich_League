@@ -34,9 +34,8 @@ class Game :
         move = self.players[ip_player].get_zone() + input
         print(self.zones)
         for i in self.zones:
-            print(self.zones[(i-1)[0]])
-            print((i-1)[0])
-            if (move == self.zones[(i-1)[0]]):
+            print(i[0])
+            if (move == i[0]):
                 self.players[ip_player].set_zone(move)
         return False
     
