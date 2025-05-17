@@ -32,6 +32,7 @@ class Game :
     
     def player_move(self, ip_player, input): #input: -1 = gauche, 1 = droite, -10 haut, 10 bas
         move = self.players[ip_player].get_zone() + input
+        print(type(self.zones))
         if move in self.zones:
             self.players[ip_player].set_zone(move)
         else:
@@ -69,10 +70,11 @@ class Game :
         wild_battle = Battle(self.players[ip_player], place_holder)
         wild_battle.start_battle()
     
-    ##def generate_trainer(self, number_of_trainers, player_zone,):
+    ##def generate_trainer(self, number_of_trainers, player_zone,ip_player):
       ##  higher_level = 0
         ##for i in 4:
-          ##  if (higher_level < self.players{}):
+          ##  if (higher_level < self.players[ip_player].get_equipe()[i]):
+            ##    higher_level = 
 
         ##for i in number_of_trainers:
           ##  self.add_player(0, Player().create_pnj_trainer("Billy", player_zone, [Pokemon(randint(1, self.max_pokemon +1)), Pokemon(randint(1, self.max_pokemon +1)), Pokemon(randint(1, self.max_pokemon +1)), Pokemon(randint(1, self.max_pokemon +1))]))
