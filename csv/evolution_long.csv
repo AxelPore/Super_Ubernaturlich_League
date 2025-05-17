@@ -477,4 +477,12 @@ Unnamed: 0,Evolving_from,Evolving_to,trigger,id,Condition,value
 2965,boldore,gigalith,level-up,302,min_level,37
 2966,gurdurr,conkeldurr,level-up,306,min_level,28
 2967,phantump,trevenant,level-up,392,min_level,19
-2968,pumpkaboo,gourgeist,level-up,393,min_level,1
+2968,pumpkaboo,gourgeist,level-up,393,min_level,3
+,raptor,indo-raptor,,,,36
+,indo-raptor,indominus-rex,,,,71
+,blue-eyes-white-dragon-egg,blue-eyes-white-dragon,,,,55
+,blue-eyes-white-dragon,ultimate-blue-eyes-white-dragon,,,,100
+,red-eyes-black-dragon-egg,red-eyes-black-dragon,,,,55
+,red-eyes-black-dragon,ultimate-red-eyes-black-dragon,,,,100
+,eevee,devileon,,,,54
+,eevee,dracoleon,,,,67

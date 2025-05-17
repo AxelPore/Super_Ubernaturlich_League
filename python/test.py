@@ -11,6 +11,7 @@ if __name__ == "__main__":
         player.register(username, mdp, random.randint(1, 1302))
     else:
         player.login(username, mdp)
+    player.add_pokemon(Pokemon(1303))
     equipe = player.get_equipe()
     equipe[0].all_moves
     

@@ -825,3 +825,15 @@ name,accuracy,effect_chance,pp,priority,power,class,type,crit_rate,drain,flinch_
 "shadow-panic",90,,-1,0,-1,status,shadow,,,,,,,,,,"Confuses the target."
 "shadow-shed",-1,,-1,0,-1,status,shadow,,,,,,,,,,"Removes the effects of light screen, reflect, and safeguard."
 "shadow-sky",-1,,-1,0,-1,status,shadow,,,,,,,,,,"Changes the weather to Shadow Sky for five turns.  Pokémon other than shadow Pokémon take 1/16 their max HP at the end of every turn.  This move is typeless for the purposes of weather ball."
+"obliterate",100,,20,1,180,special,ghost,2,,,,,,,,,
+"realm-of-death",100,,5,2,250,special,ghost,1,,,,,,,,,
+"ultimate-hunt",100,,10,3,150,special,dragon,10,,,,,,,,,
+"blue-eyes-breath",100,,20,2,180,special,dragon,1,,,,,,,,,
+"ultimate-blue-eyes-breath",100,,5,3,540,special,dragon,3,,,,,,,,,
+"red-eyes-fury",100,,20,2,180,physical,dragon,1,,,,,,,,,
+"ultimate-red-eyes-fury",100,,5,3,540,physical,dragon,3,,,,,,,,,
+"sky-dragon-thunder",100,,20,1,200,special,electric,2,,,,,,,,,
+"creation",100,,5,1,600,special,dragon,,,,,,,,,,
+"annihilation-ray",100,,5,3,400,special,dragon,5,,,,,,,,,
+"the-skies-descend",100,,5,6,600,special,dragon,,,,,,,,,,
+"singularity",100,,5,6,1000,special,dragon,10,,,,,,,,,
