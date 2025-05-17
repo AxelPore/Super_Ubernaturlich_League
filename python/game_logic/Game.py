@@ -33,6 +33,7 @@ class Game :
     def player_move(self, ip_player, input): #input: -1 = gauche, 1 = droite, -10 haut, 10 bas
         move = self.players[ip_player].get_zone() + input
         print(type(self.zones))
+        print(self.zones)
         if move in self.zones:
             self.players[ip_player].set_zone(move)
         else:
