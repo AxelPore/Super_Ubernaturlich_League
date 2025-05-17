@@ -22,24 +22,25 @@ class Pokemon :
             self.moves[move_name] = [[pp], [pp]]
         conn.close()
         self.ability = random.sample(abilities, 1)
+        self.Level = random.randint(self.min_spawn_level, self.max_spawn_level+1)
         self.surname = ""
         self.pokemonid = 0
         self.exp = 0
         self.total_ev = 0
         self.max_exp = 0
-        self.hp = self.base_hp
-        self.hp_max = self.base_hp
-        self.atk = self.base_atk
-        self.defense = self.base_defense
-        self.spatk = self.base_spatk
-        self.spdef = self.base_spdef
-        self.speed = self.base_speed
-        self.ev_defeated = [self.ev_hp, self.ev_atk, self.ev_def, self.ev_spatk, self.ev_spdef, self.ev_speed]
-        self.Level = random.randint(self.min_spawn_level, self.max_spawn_level+1)
         self.hp_ev = 0
         self.hp_iv = random.randint(1, 31)
         self.stats_ev = [0, 0, 0, 0, 0]
         self.stats_iv = [random.randint(1, 31), random.randint(1, 31), random.randint(1, 31), random.randint(1, 31), random.randint(1, 31)]
+        self.hp = int(((2 * self.base_hp + self.hp_iv) * self.Level) / 100 + self.Level + 10)
+        self.hp_max = int(((2 * self.base_hp + self.hp_iv) * self.Level) / 100 + self.Level + 10)
+        self.atk = int(((2 * self.base_atk + self.stats_iv[0]) * self.Level) / 100 + 5)
+        self.defense = int(((2 * self.base_defense + self.stats_iv[1]) * self.Level) / 100 + 5)
+        self.spatk = int(((2 * self.base_spatk + self.stats_iv[2]) * self.Level) / 100 + 5)
+        self.spdef = int(((2 * self.base_spdef + self.stats_iv[3]) * self.Level) / 100 + 5)
+        self.speed = int(((2 * self.base_speed + self.stats_iv[4]) * self.Level) / 100 + 5)
+        self.ev_defeated = [self.ev_hp, self.ev_atk, self.ev_def, self.ev_spatk, self.ev_spdef, self.ev_speed]
+        
         
     def get_needed_exp(self, level, curve):
         if curve == "Fast":
@@ -75,6 +76,27 @@ class Pokemon :
     
     def get_stat(self, level, base_stat, ev_stat, iv_stat):
         return int(((2 * base_stat + ev_stat/4 + iv_stat) * level) / 100 + 5)
+    
+    def get_hp(self):
+        return self.hp
+    
+    def get_hp_max(self):
+        return self.hp_max
+    
+    def get_atk(self):
+        return self.atk
+    
+    def get_def(self):
+        return self.defense
+    
+    def get_spatk(self):
+        return self.spatk
+    
+    def get_spdef(self):
+        return self.spdef
+    
+    def get_speed(self):
+        return self.speed
     
     def get_level(self):
         return self.Level
