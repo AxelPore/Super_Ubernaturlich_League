@@ -68,7 +68,8 @@ async def handle_wild_menu(reader, writer, player):
             await handle_change_player_zone(reader, writer, player)
             continue
         elif choice == "6":
-            game.remove_player(player)
+            addr = writer.get_extra_info('peername')
+            game.remove_player(addr)
             break
         else:
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please try again.".encode())
