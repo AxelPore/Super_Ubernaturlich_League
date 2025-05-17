@@ -1,15 +1,21 @@
 from random import *
+from .Player import Player
+from .Pokemon import Pokemon
+from .Battle import Battle
+from sqlite3 import connect
+from random import randint
 
 
 class Game :
     def __init__(self):
-        from .Player import Player
-        from .Pokemon import Pokemon
-        from .Battle import Battle
+        conn = connect('database.db')
+        cursor = conn.cursor()
+        max_pokemon = cursor.execute("SELECT Pokedexid FROM Pokedex").fetchall()[-1]
         self.Player = Player
         self.Pokemon = Pokemon
         self.Battle = Battle
         self.players = {}
+
 
     def add_player(self, ip_player, new_player):
         for i in self.players:
@@ -54,8 +60,6 @@ class Game :
         self.players[ip_player].add_item(choose_item,quantity)
 
     def encounter_pokemon(self, ip_player):
-        from sqlite3 import connect
-        from random import randint
         conn = connect('database.db')
         cursor = conn.cursor()
         spawnable_pokemons = cursor.execute("SELECT Pokedexid FROM Pokedex WHERE Zoneid = ?", (self.players[ip_player].get_zoneid(),)).fetchall()
