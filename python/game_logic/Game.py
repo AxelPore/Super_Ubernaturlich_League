@@ -1,7 +1,7 @@
 from random import *
-from .Player import Player
-from .Pokemon import Pokemon
-from .Battle import Battle
+from Player import *
+from Pokemon import *
+from Battle import *
 from sqlite3 import connect
 from random import randint
 
@@ -11,9 +11,7 @@ class Game :
         conn = connect('database.db')
         cursor = conn.cursor()
         self.max_pokemon = cursor.execute("SELECT Pokedexid FROM Pokedex").fetchall()[-1]
-        self.Player = Player
-        self.Pokemon = Pokemon
-        self.Battle = Battle
+        self.zones = cursor.execute("SELECT ZonePosition FROM Zone").fetchall()
         self.players = {}
 
 
@@ -33,7 +31,10 @@ class Game :
         return result_dict
     
     def player_move(self, ip_player, input): #input: -1 = gauche, 1 = droite, -10 haut, 10 bas
-        if self.players[ip_player].set_zone(self.players[ip_player].get_zone() + input) == False:
+        move = self.players[ip_player].get_zone() + input
+        if move in self.zones:
+            self.players[ip_player].set_zone(move)
+        else:
             return False
     
     def pokemon_captured(self, ip_player, new_pokemon):
@@ -63,11 +64,15 @@ class Game :
         conn = connect('database.db')
         cursor = conn.cursor()
         spawnable_pokemons = cursor.execute("SELECT Pokedexid FROM Pokedex WHERE Zoneid = ?", (self.players[ip_player].get_zoneid(),)).fetchall()
-        place_holder = self.Player()
-        place_holder.add_pokemon_to_team(self.Pokemon(spawnable_pokemons[randint(range(spawnable_pokemons))]))
-        wild_battle = self.Battle(self.players[ip_player], place_holder)
+        place_holder = Player()
+        place_holder.add_pokemon_to_team(Pokemon(spawnable_pokemons[randint(range(spawnable_pokemons))]))
+        wild_battle = Battle(self.players[ip_player], place_holder)
         wild_battle.start_battle()
     
-    def generate_trainer(self, number_of_trainers, player_zone):
+    def generate_trainer(self, number_of_trainers, player_zone,):
+        higher_level = 0
+        for i in 4:
+            if (higher_level < self.players{}):
+
         for i in number_of_trainers:
-            self.add_player(0, self.Player().create_pnj_trainer("Billy", player_zone, [self.Pokemon(randint(1, self.max_pokemon +1)), self.Pokemon(randint(1, self.max_pokemon +1)), self.Pokemon(randint(1, self.max_pokemon +1)), self.Pokemon(randint(1, self.max_pokemon +1))]))
+            self.add_player(0, Player().create_pnj_trainer("Billy", player_zone, [Pokemon(randint(1, self.max_pokemon +1)), Pokemon(randint(1, self.max_pokemon +1)), Pokemon(randint(1, self.max_pokemon +1)), Pokemon(randint(1, self.max_pokemon +1))]))
