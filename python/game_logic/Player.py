@@ -216,13 +216,13 @@ class Player :
     def set_zone(self, newZone):
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
-        self.zone = newZone
-        cursor.execute("SELECT ZoneName FROM Zone WHERE ZonePosition = ?", (self.zone,))
+        cursor.execute("SELECT ZoneName FROM Zone WHERE ZonePosition = ?", (newZone,))
         result = cursor.fetchone()
         self.zonename = result[0]
         if result is None:
             conn.close()
             return False
+        self.zone = newZone
         cursor.execute("UPDATE User SET Zoneid = Zone.Zoneid FROM Zone WHERE Zone.ZonePosition = ? AND User.Userid = ?", (self.zone, self.userid))
         self.zoneid = cursor.execute("SELECT Zoneid FROM User WHERE Userid = ?", (self.userid,)).fetchone()[0]
         conn.commit()
