@@ -26,15 +26,13 @@ async def handle_change_player_zone(reader, writer, player):
         move = await reader.read(1024)
         move = move.decode().strip()
         wrong = False
+        addr = writer.get_extra_info('peername')
         if move in MOVES:
-            for i in range(len(game.get_players())):
-                if game.get_players()[i] == player:
-                    if game.player_move(i, MOVES[move]) == False:
-                        writer.write(f"{DISPLAY_BYTE_ID}|You can't move in this direction.".encode())
-                        await writer.drain()
-                        await asyncio.sleep(0.5)
-                        wrong = True
-                    break
+            if game.player_move(addr, MOVES[move]) == False:
+                writer.write(f"{DISPLAY_BYTE_ID}|You can't move in this direction.".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+                wrong = True
             if wrong == False:
                 break
             else:
