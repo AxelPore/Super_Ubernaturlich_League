@@ -38,6 +38,7 @@ class Game :
             print(i[0])
             if (move == i[0]):
                 self.players[ip_player].set_zone(move)
+                return True
         return False
     
     def pokemon_captured(self, ip_player, new_pokemon):
