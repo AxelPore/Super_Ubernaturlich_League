@@ -6,7 +6,7 @@ class Pokemon :
         self.pokedex_id = random_pokemon
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
-        self.pokemon_name, self.type1, self.type2, self.base_hp, self.base_atk, self.base_defense, self.base_spatk, self.base_spdef, self.base_speed, self.base_exp, self.exp_curve, min_spawn_level, max_spawn_level, self.ev_hp, self.ev_atk, self.ev_def, self.ev_spatk, self.ev_spdef, self.ev_speed, self.evolving_level = cursor.execute("SELECT name, type_1, type_2, stat_hp, stat_attack, stat_defense, stat_spattack, stat_spdef, stat_speed, base_experience, exp_curve, min_spawn_level, max_spawn_level, ev_hp, ev_atk, ev_def, ev_spatk, ev_spdef, ev_speed, Evolving_level FROM Pokedex WHERE Pokedexid = ?", (random_pokemon,)).fetchall()[0]
+        self.pokemon_name, self.type1, self.type2, self.base_hp, self.base_atk, self.base_defense, self.base_spatk, self.base_spdef, self.base_speed, self.base_exp, self.exp_curve, self.min_spawn_level, self.max_spawn_level, self.ev_hp, self.ev_atk, self.ev_def, self.ev_spatk, self.ev_spdef, self.ev_speed, self.evolving_level = cursor.execute("SELECT name, type_1, type_2, stat_hp, stat_attack, stat_defense, stat_spattack, stat_spdef, stat_speed, base_experience, exp_curve, min_spawn_level, max_spawn_level, ev_hp, ev_atk, ev_def, ev_spatk, ev_spdef, ev_speed, Evolving_level FROM Pokedex WHERE Pokedexid = ?", (random_pokemon,)).fetchall()[0]
         self.pokedex_id, ability_1, ability_2, ability_3 = cursor.execute("""SELECT Pokedexid, ability_1, ability_2, ability_3 FROM Pokedex WHERE name = ?""", (self.pokemon_name,)).fetchone()
         abilities = [ability_1, ability_2, ability_3]
         abilities = [x for x in abilities if x is not None]
@@ -35,7 +35,7 @@ class Pokemon :
         self.spdef = self.base_spdef
         self.speed = self.base_speed
         self.ev_defeated = [self.ev_hp, self.ev_atk, self.ev_def, self.ev_spatk, self.ev_spdef, self.ev_speed]
-        self.Level = random.randint(min_spawn_level, max_spawn_level+1)
+        self.Level = random.randint(self.min_spawn_level, self.max_spawn_level+1)
         self.hp_ev = 0
         self.hp_iv = random.randint(1, 31)
         self.stats_ev = [0, 0, 0, 0, 0]
@@ -75,6 +75,18 @@ class Pokemon :
     
     def get_stat(self, level, base_stat, ev_stat, iv_stat):
         return int(((2 * base_stat + ev_stat/4 + iv_stat) * level) / 100 + 5)
+    
+    def get_level(self):
+        return self.Level
+    
+    def get_min_level(self):
+        return self.min_spawn_level
+    
+    def get_max_level(self):
+        return self.max_spawn_level
+    
+    def set_level(self, level):
+        self.Level = level
                
     def level_up(self, level):
         self.Level += level
