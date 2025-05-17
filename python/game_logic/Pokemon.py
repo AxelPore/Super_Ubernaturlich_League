@@ -40,6 +40,15 @@ class Pokemon :
         self.spdef = int(((2 * self.base_spdef + self.stats_iv[3]) * self.Level) / 100 + 5)
         self.speed = int(((2 * self.base_speed + self.stats_iv[4]) * self.Level) / 100 + 5)
         self.ev_defeated = [self.ev_hp, self.ev_atk, self.ev_def, self.ev_spatk, self.ev_spdef, self.ev_speed]
+        self.accuracy = 100
+        self.dodge = 100
+        self.buff_atk = 0
+        self.buff_def = 0
+        self.buff_spatk = 0
+        self.buff_spdef = 0
+        self.buff_speed = 0
+        self.buff_accuracy = 0
+        self.buff_dodge = 0
         
         
     def get_needed_exp(self, level, curve):
@@ -97,6 +106,148 @@ class Pokemon :
     
     def get_speed(self):
         return self.speed
+    
+    def get_accuracy(self):
+        return self.accuracy
+    
+    def get_dodge(self):
+        return self.dodge
+    
+    def set_hp(self, hp):
+        self.hp += hp
+        
+    def set_atk(self, buff_atk):
+        self.buff_atk = buff_atk
+        if -6 > buff_atk < 6:
+            self.atk = int((((2 * self.base_atk + self.stats_iv[0]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_atk))
+        elif -6 < buff_atk :
+            self.buff_atk = -6
+            self.atk = int((((2 * self.base_atk + self.stats_iv[0]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_atk))
+        else :
+            self.buff_atk = 6
+            self.atk = int((((2 * self.base_atk + self.stats_iv[0]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_atk))
+            
+    def set_def(self, buff_def):
+        self.buff_def = buff_def
+        if -6 > buff_def < 6:
+            self.defense = int((((2 * self.base_defense + self.stats_iv[1]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_def))
+        elif -6 < buff_def :
+            self.buff_def = -6
+            self.defense = int((((2 * self.base_defense + self.stats_iv[1]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_def))
+        else :
+            self.buff_def = 6
+            self.defense = int((((2 * self.base_defense + self.stats_iv[1]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_def))
+            
+    def set_spatk(self, buff_spatk):
+        self.buff_spatk = buff_spatk
+        if -6 > buff_spatk < 6:
+            self.spatk = int((((2 * self.base_spatk + self.stats_iv[2]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_spatk))
+        elif -6 < buff_spatk :
+            self.buff_spatk = -6
+            self.spatk = int((((2 * self.base_spatk + self.stats_iv[2]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_spatk))
+        else :
+            self.buff_spatk = 6
+            self.spatk = int((((2 * self.base_spatk + self.stats_iv[2]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_spatk))
+            
+    def set_spdef(self, buff_spdef):
+        self.buff_spdef = buff_spdef
+        if -6 > buff_spdef < 6:
+            self.spdef = int((((2 * self.base_spdef + self.stats_iv[3]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_spdef))
+        elif -6 < buff_spdef :
+            self.buff_spdef = -6
+            self.spdef = int((((2 * self.base_spdef + self.stats_iv[3]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_spdef))
+        else :
+            self.buff_spdef = 6
+            self.spdef = int((((2 * self.base_spdef + self.stats_iv[3]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_spdef))
+            
+    def set_speed(self, buff_speed):
+        self.buff_speed = buff_speed
+        if -6 > buff_speed < 6:
+            self.speed = int((((2 * self.base_speed + self.stats_iv[4]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_speed))
+        elif -6 < buff_speed :
+            self.buff_speed = -6
+            self.speed = int((((2 * self.base_speed + self.stats_iv[4]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_speed))
+        else :
+            self.buff_speed = 6
+            self.speed = int((((2 * self.base_speed + self.stats_iv[4]) * self.Level) / 100 + 5) * self.buff_stats(self.buff_speed))      
+        
+    def set_accuracy(self, buff_acc):
+        self.buff_accuracy = buff_acc
+        if -6 > buff_acc < 6:
+            self.accuracy = int(100 * self.buff_stats_acc_and_dodge(self.buff_accuracy))
+        elif -6 < buff_acc :
+            self.buff_accuracy = -6
+            self.accuracy = int(100 * self.buff_stats_acc_and_dodge(self.buff_accuracy))
+        else :
+            self.buff_accuracy = 6
+            self.accuracy = int(100 * self.buff_stats_acc_and_dodge(self.buff_accuracy))  
+            
+    def set_dodge(self, buff_dodge):
+        self.buff_dodge = buff_dodge
+        if -6 > buff_dodge < 6:
+            self.dodge = int(100 * self.buff_stats_acc_and_dodge(self.buff_dodge))
+        elif -6 < buff_dodge :
+            self.buff_dodge = -6
+            self.dodge = int(100 * self.buff_stats_acc_and_dodge(self.buff_dodge))
+        else :
+            self.buff_dodge = 6
+            self.dodge = int(100 * self.buff_stats_acc_and_dodge(self.buff_dodge)) 
+    
+    def buff_stats_acc_and_dodge(self, buff):
+        if buff == -6 :
+            return 0.33
+        elif buff == -5 :
+            return 0.38
+        elif buff == -4 :
+            return 0.43
+        elif buff == -3 :
+            return 0.5
+        elif buff == -2 :
+            return 0.6
+        elif buff == -1 :
+            return 0.75
+        elif buff == 0 :
+            return 1
+        elif buff == 1 :
+            return 1.33
+        elif buff == 2 :
+            return 1.67
+        elif buff == 3 :
+            return 2
+        elif buff == 4 :
+            return 2.33
+        elif buff == 5 :
+            return 2.67
+        else :
+            return 3
+    
+    def buff_stats(self, buff):
+        if buff == -6 :
+            return 0.25
+        elif buff == -5 :
+            return 0.29
+        elif buff == -4 :
+            return 0.33
+        elif buff == -3 :
+            return 0.4
+        elif buff == -2 :
+            return 0.5
+        elif buff == -1 :
+            return 0.67
+        elif buff == 0 :
+            return 1
+        elif buff == 1 :
+            return 1.5
+        elif buff == 2 :
+            return 2
+        elif buff == 3 :
+            return 2.5
+        elif buff == 4 :
+            return 3
+        elif buff == 5 :
+            return 3.5
+        else :
+            return 4
     
     def get_level(self):
         return self.Level
