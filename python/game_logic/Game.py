@@ -32,12 +32,11 @@ class Game :
     
     def player_move(self, ip_player, input): #input: -1 = gauche, 1 = droite, -10 haut, 10 bas
         move = self.players[ip_player].get_zone() + input
-        print(type(self.zones))
-        print(self.zones)
-        if move in self.zones:
-            self.players[ip_player].set_zone(move)
-        else:
-            return False
+        for i in self.zones:
+            if (move == self.zones[i[0]]):
+                self.players[ip_player].set_zone(move)
+            else:
+                return False
     
     def pokemon_captured(self, ip_player, new_pokemon):
         self.players[ip_player].add_pokemon(new_pokemon)
