@@ -1,7 +1,7 @@
 from random import *
-from Player import *
-from Pokemon import *
-from Battle import *
+from .Player import *
+from .Pokemon import *
+from .Battle import *
 from sqlite3 import connect
 from random import randint
 
