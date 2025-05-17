@@ -75,6 +75,9 @@ class Pokemon :
     
     def get_stat(self, level, base_stat, ev_stat, iv_stat):
         return int(((2 * base_stat + ev_stat/4 + iv_stat) * level) / 100 + 5)
+    
+    def get_level(self):
+        return self.Level
                
     def level_up(self, level):
         self.Level += level

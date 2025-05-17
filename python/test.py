@@ -8,12 +8,10 @@ if __name__ == "__main__":
     username = input("[01]Enter your username: ")
     mdp = input("Enter your password: ")
     if choice == "y":
-        player.register(username, mdp, random.randint(1, 1302))
+        player.register(username, mdp, random.randint(1, 1319))
     else:
         player.login(username, mdp)
-    player.add_pokemon(Pokemon(1303))
     equipe = player.get_equipe()
-    equipe[0].all_moves
     
         
 # hello
