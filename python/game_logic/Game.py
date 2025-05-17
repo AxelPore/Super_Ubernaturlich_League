@@ -11,7 +11,7 @@ class Game :
         conn = connect('database.db')
         cursor = conn.cursor()
         self.max_pokemon = cursor.execute("SELECT Pokedexid FROM Pokedex").fetchall()[-1]
-        self.zones = tuple(cursor.execute("SELECT ZonePosition FROM Zone").fetchall())
+        self.zones = int(cursor.execute("SELECT ZonePosition FROM Zone").fetchone())
         self.players = {}
 
 
