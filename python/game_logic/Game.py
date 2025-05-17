@@ -10,7 +10,7 @@ class Game :
     def __init__(self):
         conn = connect('database.db')
         cursor = conn.cursor()
-        max_pokemon = cursor.execute("SELECT Pokedexid FROM Pokedex").fetchall()[-1]
+        self.max_pokemon = cursor.execute("SELECT Pokedexid FROM Pokedex").fetchall()[-1]
         self.Player = Player
         self.Pokemon = Pokemon
         self.Battle = Battle
@@ -70,4 +70,4 @@ class Game :
     
     def generate_trainer(self, number_of_trainers, player_zone):
         for i in number_of_trainers:
-            self.add_player(0, self.Player().create_pnj_trainer("Billy", player_zone, [self.Pokemon(randint(1, 1303)), self.Pokemon(randint(1, 1303)), self.Pokemon(randint(1, 1303)), self.Pokemon(randint(1, 1303))]))
+            self.add_player(0, self.Player().create_pnj_trainer("Billy", player_zone, [self.Pokemon(randint(1, self.max_pokemon +1)), self.Pokemon(randint(1, self.max_pokemon +1)), self.Pokemon(randint(1, self.max_pokemon +1)), self.Pokemon(randint(1, self.max_pokemon +1))]))

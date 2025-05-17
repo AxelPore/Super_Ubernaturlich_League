@@ -35,7 +35,7 @@ class Pokemon :
         self.spdef = self.base_spdef
         self.speed = self.base_speed
         self.ev_defeated = [self.ev_hp, self.ev_atk, self.ev_def, self.ev_spatk, self.ev_spdef, self.ev_speed]
-        self.Level = random.randint(min_spawn_level, max_spawn_level)
+        self.Level = random.randint(min_spawn_level, max_spawn_level+1)
         self.hp_ev = 0
         self.hp_iv = random.randint(1, 31)
         self.stats_ev = [0, 0, 0, 0, 0]
