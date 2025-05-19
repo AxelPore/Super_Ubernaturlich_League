@@ -32,7 +32,7 @@ async def handle_login(reader, writer):
 
             player = Player()
             addr = writer.get_extra_info('peername')
-            if player.login(username, password):
+            if await player.login(username, password):
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Login successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 writer.write(f"{DISPLAY_BYTE_ID}|Welcome Trainer ! It's time to start your journey ".encode())
@@ -112,7 +112,7 @@ async def handle_login(reader, writer):
             addr = writer.get_extra_info('peername')
             try:
                 print(f"Attempting to register user: {username} with password: {password} and starter: {starter}")  # Debugging log
-                player.register(username, password, starter)
+                await player.register(username, password, starter)
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Registration successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5) 
