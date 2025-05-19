@@ -28,7 +28,7 @@ async def handle_change_player_zone(reader, writer, player):
         wrong = False
         addr = writer.get_extra_info('peername')
         if move in MOVES:
-            if game.player_move(addr, MOVES[move]) == False:
+            if await game.player_move(addr, MOVES[move]) == False:
                 writer.write(f"{DISPLAY_BYTE_ID}|You can't move in this direction.".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
