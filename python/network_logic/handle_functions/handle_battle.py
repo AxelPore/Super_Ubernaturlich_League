@@ -15,14 +15,12 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
 
     # Send initial messages to players
     other_player_name = await player2.get_username()
-    if writer1:
-        writer1.write(f"{DISPLAY_BYTE_ID}|You are in battle with {other_player_name}!".encode())
-        await writer1.drain()
-    if writer2:
-        player1_name = await player1.get_username()
-        writer2.write(f"{DISPLAY_BYTE_ID}|You are in battle with {player1_name}!".encode())
-        await writer2.drain()
-
+    writer1.write(f"{DISPLAY_BYTE_ID}|You are in battle with {other_player_name}!".encode())
+    await writer1.drain()
+    await asyncio.sleep(0.5)
+    player1_name = await player1.get_username()
+    writer2.write(f"{DISPLAY_BYTE_ID}|You are in battle with {player1_name}!".encode())
+    await writer2.drain()
     await asyncio.sleep(0.5)
 
     # Battle loop
@@ -30,42 +28,27 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
     while not battle_over:
         action1 = False
         action2 = False
-        # Send command options to players
-        if writer1:
-            writer1.write(f"{DISPLAY_BYTE_ID}|You can use the following commands:\n 1. Use Skill \n 2. Change Pokemon".encode())
-            await writer1.drain()
-        if writer2:
-            writer2.write(f"{DISPLAY_BYTE_ID}|You can use the following commands:\n 1. Use Skill \n 2. Change Pokemon".encode())
-            await writer2.drain()
+        # Send command options to players:
+        writer1.write(f"{DISPLAY_BYTE_ID}|You can use the following commands:\n 1. Use Skill \n 2. Change Pokemon".encode())
+        await writer1.drain()
+        await asyncio.sleep(0.5)
+        writer2.write(f"{DISPLAY_BYTE_ID}|You can use the following commands:\n 1. Use Skill \n 2. Change Pokemon".encode())
+        await writer2.drain()
+        await asyncio.sleep(0.5)
         # Player 1 action
-        if writer1:
-            writer1.write(f"{INPUT_BYTE_ID}|Player 1, what do you want to do: ".encode())
-            await writer1.drain()
-        choice1 = None
-        if reader1:
-            choice1_raw = await reader1.read(1)
-            if choice1_raw:
-                try:
-                    choice1 = int(choice1_raw.decode())
-                except:
-                    choice1 = None
+        writer1.write(f"{INPUT_BYTE_ID}|Player 1, what do you want to do: ".encode())
+        await writer1.drain()
+        choice1 = await reader1.read(1)
+        choice1 = int(choice1.decode())
 
-        # Player 2 action
-        if writer2:
-            writer2.write(f"{INPUT_BYTE_ID}|Player 2, what do you want to do: ".encode())
-            await writer2.drain()
-        choice2 = None
-        if reader2:
-            choice2_raw = await reader2.read(1)
-            if choice2_raw:
-                try:
-                    choice2 = int(choice2_raw.decode())
-                except:
-                    choice2 = None
+        writer2.write(f"{INPUT_BYTE_ID}|Player 2, what do you want to do: ".encode())
+        await writer2.drain()
+        choice2 = await reader2.read(1)
+        choice2 = int(choice2.decode())
 
         # Process player 1 action
         if choice1 == 1:
-            moves = battle.pokemon_moves(1)
+            moves = await battle.pokemon_moves(1)
             move_name = list(moves.keys())
             writer1.write(f"{INPUT_BYTE_ID}|Choose a skill to use: 1. {move_name[0]} 2. {move_name[1]} 3. {move_name[2]} 4. {move_name[3]}".encode())
             await writer1.drain()
@@ -88,7 +71,7 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
 
         # Process player 2 action
         if choice2 == 1:
-            moves = battle.pokemon_moves(2)
+            moves = await battle.pokemon_moves(2)
             move_name = list(moves.keys())
             writer2.write(f"{INPUT_BYTE_ID}|Choose a skill to use: 1. {move_name[0]} 2. {move_name[1]} 3. {move_name[2]} 4. {move_name[3]}".encode())
             await writer2.drain()
@@ -108,12 +91,28 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
             pokemon_name2 = pokemon_name2.decode().strip()
             await battle.changes_pokemon(1, battle.equipe2[pokemon_name2 - 1].pokemon_name)
             action2 = True
+
         if action1 and action2:
             result = await battle.end_turn(move_data1, move_data2)
+            writer1.write(f"{DISPLAY_BYTE_ID}|Your Pokemon : {battle.pokemon1.pokemon_name} {battle.pokemon1.hp}/{battle.pokemon1.hp_max}".encode())
+            await writer1.drain()
+            await asyncio.sleep(0.5)
+            writer1.write(f"{DISPLAY_BYTE_ID}|Your Opponent's Pokemon : {battle.pokemon2.pokemon_name} {battle.pokemon2.hp}/{battle.pokemon2.hp_max}".encode())
+            await writer2.drain()
+            await asyncio.sleep(0.5)
+            writer2.write(f"{DISPLAY_BYTE_ID}|Your Pokemon : {battle.pokemon2.pokemon_name} {battle.pokemon2.hp}/{battle.pokemon2.hp_max}".encode())
+            await writer2.drain()
+            await asyncio.sleep(0.5)
+            writer2.write(f"{DISPLAY_BYTE_ID}|Your Opponent's Pokemon : {battle.pokemon1.pokemon_name} {battle.pokemon1.hp}/{battle.pokemon1.hp_max}".encode())
+            await writer1.drain()
+            await asyncio.sleep(0.5)
+        
         writer1.write(f"{DISPLAY_BYTE_ID}|{result}".encode())
         await writer1.drain()
+        await asyncio.sleep(0.5)
         writer2.write(f"{DISPLAY_BYTE_ID}|{result}".encode())
         await writer2.drain()
+        await asyncio.sleep(0.5)
 
         # Check if battle is over
         if "a perdu" in result or battle_over:
@@ -121,12 +120,12 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
             break
 
     # Battle ended message
-    if writer1:
-        writer1.write(f"{DISPLAY_BYTE_ID}|Battle ended.".encode())
-        await writer1.drain()
-    if writer2:
-        writer2.write(f"{DISPLAY_BYTE_ID}|Battle ended.".encode())
-        await writer2.drain()
+    writer1.write(f"{DISPLAY_BYTE_ID}|Battle ended.".encode())
+    await writer1.drain()
+    await asyncio.sleep(0.5)
+    writer2.write(f"{DISPLAY_BYTE_ID}|Battle ended.".encode())
+    await writer2.drain()
+    await asyncio.sleep(0.5)
 
 
 @exception_handler_decorator
