@@ -167,7 +167,7 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
                 await asyncio.sleep(0.5)
 
         elif choice == 1:
-            moves = battle.pokemon_moves(1)
+            moves = await battle.pokemon_moves(1)
             move_name = list(moves.keys())
             writer.write(f"{INPUT_BYTE_ID}|Choose a skill to use: 1. {move_name[0]} 2. {move_name[1]} 3. {move_name[2]} 4. {move_name[3]}".encode())
             await writer.drain()
@@ -197,7 +197,7 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
                 break
             else:
                 continue
-        wild_move = battle.pokemon_moves(2)
+        wild_move = await battle.pokemon_moves(2)
         wild_move_name = list(wild_move.keys())
         wild_skill_name = wild_move_name[random.randint(0, 4)]
         move_data2 = await battle.use_skill(2, wild_skill_name)
