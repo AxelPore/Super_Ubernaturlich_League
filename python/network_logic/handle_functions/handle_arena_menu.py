@@ -24,8 +24,8 @@ async def handle_arena_menu(reader, writer, player):
             writer.write(f"{DISPLAY_BYTE_ID}|Here are the trainers nearby:\n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
-            number_of_trainers = random.randint(1, 5)
-            game.generate_trainer(number_of_trainers, player.get_zone())
+            #number_of_trainers = random.randint(1, 5)
+            #game.generate_trainer(number_of_trainers, player.get_zone())
             get_trainer = game.zone_check()
             for k, v in get_trainer.items():
                 if v == player.get_zone():
