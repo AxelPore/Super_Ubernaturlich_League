@@ -24,6 +24,7 @@ class Player:
             self.userid = result[0]
             self.equipeid = result[3]
             self.money = result[5]
+            self.zoneid = result[4]
             pc_cursor = await conn.execute("SELECT Pokedexid, Pokemonid FROM Pokemon WHERE Userid = ?", (self.userid,))
             pc = await pc_cursor.fetchall()
             self.pokemon.clear()
