@@ -38,10 +38,10 @@ class Battle :
     
     async def pokemon_moves(self, number): #Renvoi les moves du pokemon sur le terrain (1 ou 2)
         if (number == 1):
-            moves = await self.pokemon1.get_moves()
+            moves = self.pokemon1.get_moves()
             return moves
         elif (number == 2):
-            moves = await self.pokemon2.get_moves()
+            moves = self.pokemon2.get_moves()
             return moves
         else :
             return "Nombre invalide"
