@@ -226,6 +226,8 @@ class Player:
             await conn.execute("INSERT INTO Inventory (Itemid, Userid, Quantity) VALUES (?, ?, ?)", (4, self.userid, 10))
             await conn.commit()
             await self.login(username, mdp)
+        
+    # One line
 
     async def add_pokemon(self, pokemon):
         async with aiosqlite.connect('database.db') as conn:
