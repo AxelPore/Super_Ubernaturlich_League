@@ -4,22 +4,24 @@ from .Player import *
 from .Pokemon import *
 from .Battle import *
 from random import randint
+from sqlite3 import connect
 
 
 class Game:
     def __init__(self):
-        self.max_pokemon = None
-        self.zones = None
+        conn = connect('database.db')
+        cursor = conn.cursor()
+        self.max_pokemon = cursor.execute("SELECT Pokedexid FROM Pokedex").fetchall()[-1]
+        self.zones = cursor.execute("SELECT ZonePosition FROM Zone").fetchall()
         self.players = {}
-        self.db_path = 'database.db'
 
-    async def initialize(self):
-        async with aiosqlite.connect(self.db_path) as db:
-            async with db.execute("SELECT Pokedexid FROM Pokedex") as cursor:
-                rows = await cursor.fetchall()
-                self.max_pokemon = rows[-1][0] if rows else None
-            async with db.execute("SELECT ZonePosition FROM Zone") as cursor:
-                self.zones = await cursor.fetchall()
+    # async def initialize(self):
+    #     async with aiosqlite.connect(self.db_path) as db:
+    #         async with db.execute("SELECT Pokedexid FROM Pokedex") as cursor:
+    #             rows = await cursor.fetchall()
+    #             self.max_pokemon = rows[-1][0] if rows else None
+    #         async with db.execute("SELECT ZonePosition FROM Zone") as cursor:
+    #             self.zones = await cursor.fetchall()
 
     async def add_player(self, ip_player, new_player):
         for i in self.players:
