@@ -45,6 +45,11 @@ async def handle_client_msg(reader, writer):
     addr = writer.get_extra_info('peername')
     print(f"New connection from {addr}")
 
+    # Generate a unique client_id
+    client_id = generateId(16)
+    # Store reader and writer in CLIENTS
+    CLIENTS[client_id] = {'r': reader, 'w': writer, 'addr': addr}
+
     try:
         # Handle initial connection message
         initial_message = await reader.read(1024)
@@ -60,6 +65,8 @@ async def handle_client_msg(reader, writer):
             await asyncio.sleep(0.5)
             writer.close()
             await writer.wait_closed()
+            del CLIENTS[client_id]
+            return
         print (f"Zone : {player.get_zone()}")
 
         while True:
@@ -87,6 +94,9 @@ async def handle_client_msg(reader, writer):
             await writer.wait_closed()
         except Exception:
             pass
+        # Remove client from CLIENTS dictionary
+        if client_id in CLIENTS:
+            del CLIENTS[client_id]
 
 async def main():
     server = await asyncio.start_server(handle_client_msg, '10.1.2.69', 8888)
