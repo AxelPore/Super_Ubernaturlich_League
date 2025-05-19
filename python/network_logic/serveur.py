@@ -45,12 +45,18 @@ async def handle_client_msg(reader, writer):
     addr = writer.get_extra_info('peername')
     print(f"New connection from {addr}")
 
+    # Generate a unique client_id
+    client_id = generateId(16)
+    # Store reader and writer in CLIENTS
+    CLIENTS[client_id] = {'r': reader, 'w': writer, 'addr': addr}
+
     try:
         # Handle initial connection message
         initial_message = await reader.read(1024)
         initial_message = initial_message.decode().strip()
         print(f"Client chose: {initial_message}")  # Debugging log
         player = Player()
+        # await game.initialize()
         if initial_message == "Hello|new":
             # Call the login_or_register function
             player = await handle_login(reader, writer)
@@ -60,10 +66,12 @@ async def handle_client_msg(reader, writer):
             await asyncio.sleep(0.5)
             writer.close()
             await writer.wait_closed()
-        print (f"Zone : {player.get_zone()}")
+            del CLIENTS[client_id]
+            return
+        print (f"Zone : {await player.get_zone()}")
 
         while True:
-            if player.get_zone() == 10:
+            if await player.get_zone() == 10:
                 await handle_city_menu(reader, writer, player)
             else:
                 await handle_wild_menu(reader, writer, player)
@@ -87,6 +95,9 @@ async def handle_client_msg(reader, writer):
             await writer.wait_closed()
         except Exception:
             pass
+        # Remove client from CLIENTS dictionary
+        if client_id in CLIENTS:
+            del CLIENTS[client_id]
 
 async def main():
     server = await asyncio.start_server(handle_client_msg, '10.1.2.69', 8888)

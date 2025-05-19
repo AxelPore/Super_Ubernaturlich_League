@@ -19,7 +19,7 @@ async def handle_wild_menu(reader, writer, player):
         choice = await reader.read(1024)
         choice = choice.decode().strip()
         if choice == "1":
-            game.encounter_pokemon(player)
+            await game.encounter_pokemon(player)
             writer.write(f"{DISPLAY_BYTE_ID}|You encountered a wild Pokemon!".encode())
             continue
         elif choice == "2":
@@ -45,7 +45,7 @@ async def handle_wild_menu(reader, writer, player):
                     await asyncio.sleep(0.5)
             continue
         elif choice == "3":
-            equipe = player.get_equipe()
+            equipe = await player.get_equipe()
             writer.write(f"{DISPLAY_BYTE_ID}|Here are your Pokemons: \n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
@@ -55,7 +55,7 @@ async def handle_wild_menu(reader, writer, player):
                 await asyncio.sleep(0.5)
             continue
         elif choice == "4":
-            items = player.get_item()
+            items = await player.get_item()
             writer.write(f"{DISPLAY_BYTE_ID}|Here are your Items: \n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)

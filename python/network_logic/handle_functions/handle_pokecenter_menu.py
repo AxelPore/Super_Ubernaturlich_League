@@ -26,7 +26,7 @@ async def handle_pokecenter_menu(reader, writer, player):
             await asyncio.sleep(0.5)
             continue
         elif choice == "2":
-            equipe = player.get_equipe()
+            equipe = await player.get_equipe()
             writer.write(f"{DISPLAY_BYTE_ID}|Here are your Pokemons: \n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
@@ -36,7 +36,7 @@ async def handle_pokecenter_menu(reader, writer, player):
                 await asyncio.sleep(0.5)
             continue
         elif choice == "3":
-            items = player.get_item()
+            items = await player.get_item()
             writer.write(f"{DISPLAY_BYTE_ID}|Here are your Items: \n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
