@@ -127,79 +127,66 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
     battle = Battle()
     await battle.set_attribute(player, wild_pokemon)
 
-    if writer:
-        writer.write(f"{DISPLAY_BYTE_ID}|You are now in a battle with {wild_pokemon}!".encode())
-        await writer.drain()
-
+    writer.write(f"{DISPLAY_BYTE_ID}|You are now in a battle against {wild_pokemon}!".encode())
+    await writer.drain()
     await asyncio.sleep(0.5)
-
-    if writer:
-        writer.write(f"{DISPLAY_BYTE_ID}|You can use the following commands:\n 1. Use Skill \n 2. Change Pokemon \n 3. Flee".encode())
-        await writer.drain()
 
     battle_over = False
     while not battle_over:
-        if writer:
-            writer.write(f"{INPUT_BYTE_ID}|What do you want to do: ".encode())
-            await writer.drain()
-        choice = None
-        if reader:
-            choice_raw = await reader.read(1)
-            if choice_raw:
-                try:
-                    choice = int(choice_raw.decode())
-                except:
-                    choice = None
+        writer.write(f"{DISPLAY_BYTE_ID}|You can use the following commands:\n 1. Use Skill \n 2. Change Pokemon \n 3. Flee \n 4. Try to catch the pokemon".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
+        writer.write(f"{INPUT_BYTE_ID}|What do you want to do: ".encode())
+        await writer.drain()
+        choice = await reader.read(1)
+        choice = int(choice.decode())
 
         if choice == 3:
             flee_chance = random.random()
             if flee_chance <= 0.7:
-                if writer:
-                    writer.write(f"{DISPLAY_BYTE_ID}|You successfully fled the battle.".encode())
-                    await writer.drain()
+                writer.write(f"{DISPLAY_BYTE_ID}|You successfully fled the battle.".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
                 battle_over = True
                 break
             else:
-                if writer:
-                    writer.write(f"{DISPLAY_BYTE_ID}|Flee attempt failed!".encode())
-                    await writer.drain()
+                writer.write(f"{DISPLAY_BYTE_ID}|Flee attempt failed!".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
 
         elif choice == 1:
-            if writer:
-                writer.write(f"{DISPLAY_BYTE_ID}|Choose a skill to use:".encode())
-                await writer.drain()
-            skill_name = None
-            if reader:
-                skill_name_bytes = await reader.readline()
-                skill_name = skill_name_bytes.decode().strip()
-            if skill_name:
-                await battle.use_skill(1, skill_name)
+            writer.write(f"{INPUT_BYTE_ID}|Choose a skill to use:".encode())
+            await writer.drain()
+            skill_name = await reader.read(1024)
+            skill_name = skill_name.decode().strip()
+            await battle.use_skill(1, skill_name)
 
         elif choice == 2:
-            if writer:
-                writer.write(f"{DISPLAY_BYTE_ID}|Choose a pokemon to switch to:".encode())
-                await writer.drain()
-            pokemon_name = None
-            if reader:
-                pokemon_name_bytes = await reader.readline()
-                pokemon_name = pokemon_name_bytes.decode().strip()
-            if pokemon_name:
-                await battle.changes_pokemon(1, pokemon_name)
+            writer.write(f"{INPUT_BYTE_ID}|Choose a pokemon to switch to:".encode())
+            await writer.drain()
+            pokemon_name = await reader.read(1024)
+            pokemon_name = pokemon_name.decode().strip()
+            await battle.changes_pokemon(1, pokemon_name)
+        
+        elif choice == 4:
+            writer.write(f"{DISPLAY_BYTE_ID}|You throw a pokeball at the pokemon !".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+            writer.write(f"{DISPLAY_BYTE_ID}|{await battle.catch_pokemon()}".encode())
 
         # End turn and get result
         move_data1 = (10, 0, 0, 5)  # example dummy data
         move_data2 = (8, 0, 0, 4)   # example dummy data
 
         result = await battle.end_turn(move_data1, move_data2)
-
-        if writer:
-            writer.write(f"{DISPLAY_BYTE_ID}|{result}".encode())
-            await writer.drain()
+        writer.write(f"{DISPLAY_BYTE_ID}|{result}".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
 
         if "a perdu" in result or battle_over:
             battle_over = True
             break
 
-    if writer:
-        writer.write(f"{DISPLAY_BYTE_ID}|Battle ended.".encode())
-        await writer.drain()
+    writer.write(f"{DISPLAY_BYTE_ID}|Battle ended.".encode())
+    await writer.drain()
+    await asyncio.sleep(0.5)
