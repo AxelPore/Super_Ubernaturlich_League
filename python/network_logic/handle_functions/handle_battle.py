@@ -28,6 +28,8 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
     # Battle loop
     battle_over = False
     while not battle_over:
+        action1 = False
+        action2 = False
         # Send command options to players
         if writer1:
             writer1.write(f"{DISPLAY_BYTE_ID}|You can use the following commands:\n 1. Use Skill \n 2. Change Pokemon".encode())
@@ -71,6 +73,7 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
             move_choice1 = int(move_choice1.decode())    
             skill_name1 = move_name[move_choice1 - 1]
             move_data1 = await battle.use_skill(1, skill_name1)
+            action1 = True
         elif choice1 == 2:
             for i in range(len(battle.equipe1)):
                 writer1.write(f"{DISPLAY_BYTE_ID}|Choose a pokemon to switch to: {i+1}. {battle.equipe1[i].pokemon_name}".encode())
@@ -81,6 +84,7 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
             pokemon_name1 = await reader1.read(1024)
             pokemon_name1 = pokemon_name1.decode().strip()
             await battle.changes_pokemon(1, battle.equipe1[pokemon_name1 - 1].pokemon_name)
+            action1 = True
 
         # Process player 2 action
         if choice2 == 1:
@@ -92,6 +96,7 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
             move_choice2 = int(move_choice2.decode())    
             skill_name2 = move_name[move_choice2 - 1]
             move_data2 = await battle.use_skill(2, skill_name2)
+            action2 = True
         elif choice2 == 2:
             for i in range(len(battle.equipe1)):
                 writer2.write(f"{DISPLAY_BYTE_ID}|Choose a pokemon to switch to: {i+1}. {battle.equipe2[i].pokemon_name}".encode())
@@ -102,7 +107,9 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
             pokemon_name2 = await reader2.read(1024)
             pokemon_name2 = pokemon_name2.decode().strip()
             await battle.changes_pokemon(1, battle.equipe2[pokemon_name2 - 1].pokemon_name)
-        result = await battle.end_turn(move_data1, move_data2)
+            action2 = True
+        if action1 and action2:
+            result = await battle.end_turn(move_data1, move_data2)
         writer1.write(f"{DISPLAY_BYTE_ID}|{result}".encode())
         await writer1.drain()
         writer2.write(f"{DISPLAY_BYTE_ID}|{result}".encode())
