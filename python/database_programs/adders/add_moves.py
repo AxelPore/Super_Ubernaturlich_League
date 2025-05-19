@@ -19,8 +19,8 @@ def add_moves():
                     MoveName, type, power, effect_chance, accuracy,
                     priority, pp, class, crit_rate, drain,
                     flinch_chance, healing, max_hits, min_hits,
-                    max_turns, min_turns, stat_chance
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    max_turns, min_turns, stat_chance, effect, buff_debuff
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 row['name'],
                 row['type'],
@@ -38,7 +38,9 @@ def add_moves():
                 safe_int(row['min_hits']),
                 safe_int(row['max_turns']),
                 safe_int(row['min_turns']),
-                safe_int(row['stat_chance'])
+                safe_int(row['stat_chance']),
+                row['effect'],
+                row['']
             ))
 
     conn.commit()

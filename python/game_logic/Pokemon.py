@@ -335,10 +335,11 @@ class Pokemon :
         conn.close()
         
             
-    def attack(self, selected_move):
+    def use_move(self, selected_move):
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         move = self.moves[selected_move]
+        
         conn.close()
 
     def get_moves(self):
