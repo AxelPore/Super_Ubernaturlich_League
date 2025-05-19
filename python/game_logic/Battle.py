@@ -11,11 +11,12 @@ class Battle :
         
     async def set_attribute(self, player1, player2):
         self.player1 = player1
-        self.pokemon1 = await player1.get_equipe()[0]
         self.equipe1 = await player1.get_equipe()
+        self.pokemon1 = self.equipe1[0]
         self.player2 = player2
-        self.pokemon2 = await player2.get_equipe()[0]
         self.equipe2 = await player2.get_equipe()
+        self.pokemon2 = self.equipe2[0]
+        
     
     async def changes_pokemon(self, number, pokemon):
         if number == 1:
