@@ -22,7 +22,7 @@ async def handle_wild_menu(reader, writer, player):
         choice = choice.decode().strip()
         if choice == "1":
             async with aiosqlite.connect('database.db') as conn:
-                print(await player.get_zoneid())
+                print(player.zoneid)
                 cursor = await conn.execute("SELECT Pokedexid FROM Pokedex WHERE Zoneid = ?", (await player.get_zoneid(),))
                 spawnable_pokemons = await cursor.fetchall()
                 print (spawnable_pokemons)
