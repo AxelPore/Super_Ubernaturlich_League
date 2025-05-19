@@ -19,7 +19,7 @@ async def handle_wild_menu(reader, writer, player):
         choice = await reader.read(1024)
         choice = choice.decode().strip()
         if choice == "1":
-            game.encounter_pokemon(player)
+            await game.encounter_pokemon(player)
             writer.write(f"{DISPLAY_BYTE_ID}|You encountered a wild Pokemon!".encode())
             continue
         elif choice == "2":

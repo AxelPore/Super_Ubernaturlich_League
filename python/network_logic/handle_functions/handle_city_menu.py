@@ -29,7 +29,7 @@ async def handle_city_menu(reader, writer, player):
             await handle_arena_menu(reader, writer, player)
             continue
         elif choice == "4":
-            equipe = player.get_equipe()
+            equipe = await player.get_equipe()
             writer.write(f"{DISPLAY_BYTE_ID}|Here are your Pokemons: \n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
@@ -39,7 +39,7 @@ async def handle_city_menu(reader, writer, player):
                 await asyncio.sleep(0.5)
             continue
         elif choice == "5":
-            items = player.get_item()
+            items = await player.get_item()
             writer.write(f"{DISPLAY_BYTE_ID}|Here are your Items: \n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)

@@ -37,7 +37,7 @@ async def handle_buy_items(reader, writer, player):
                     writer.write(f"{DISPLAY_BYTE_ID}|You bought {quantity} {item[i]}!".encode()) 
                     await writer.drain()
                     await asyncio.sleep(0.5)
-                    game.buy_item(player, item[i], quantity)
+                    await game.buy_item(player, item[i], quantity)
                     break
             await asyncio.sleep(0.5)
             break

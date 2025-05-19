@@ -12,7 +12,7 @@ async def handle_sell_items(reader, writer, player):
         writer.write(f"{DISPLAY_BYTE_ID}|Here are the items you can sell:\n".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
-        items = player.get_item()
+        items = await player.get_item()
         for i in range(len(items)):
             writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {items[i][0]} : {items[i][1]}".encode())
             await writer.drain()
@@ -28,13 +28,13 @@ async def handle_sell_items(reader, writer, player):
             quantity = await reader.read(1024)
             quantity = quantity.decode().strip()
             item = items[item_choice][0]
-            writer.write(f"{INPUT_BYTE_ID}|You will sell {quantity} {item} for the price of {quantity * player.get_price(item)}, continue ? : y/n ".encode())
+            writer.write(f"{INPUT_BYTE_ID}|You will sell {quantity} {item} for the price of {quantity * await player.get_price(item)}, continue ? : y/n ".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
             writer.write(f"{DISPLAY_BYTE_ID}|You sold {quantity} {item}!".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
-            game.sell_item(player, item, quantity)
+            await game.sell_item(player, item, quantity)
             await asyncio.sleep(0.5)
             break
         else:
