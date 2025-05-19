@@ -36,14 +36,14 @@ class Game:
             result_dict[self.players[i].get_username()] = self.players[i].get_zone()
         return result_dict
 
-    def player_move(self, ip_player, input):  # input: -1 = gauche, 1 = droite, -10 haut, 10 bas
-        move = self.players[ip_player].get_zone() + input
+    async def player_move(self, ip_player, input):  # input: -1 = gauche, 1 = droite, -10 haut, 10 bas
+        move = await self.players[ip_player].get_zone() + input
         print(self.zones)
         print(move)
         for i in self.zones:
             print(i[0])
             if move == i[0]:
-                self.players[ip_player].set_zone(move)
+                await self.players[ip_player].set_zone(move)
                 return True
         return False
 
