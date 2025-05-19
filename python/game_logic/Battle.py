@@ -1,7 +1,15 @@
 from .Player import *
 
 class Battle :
-    def __init__(self, player1, player2):
+    def __init__(self):
+        self.player1 = None
+        self.pokemon1 = None
+        self.equipe1 = []
+        self.player2 = None
+        self.pokemon2 = None
+        self.equipe2 = []
+        
+    def set_attribute(self, player1, player2):
         self.player1 = player1
         self.pokemon1 = player1.get_equipe()[0]
         self.equipe1 = player1.get_equipe()
