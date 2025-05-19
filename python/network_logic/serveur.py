@@ -56,7 +56,7 @@ async def handle_client_msg(reader, writer):
         initial_message = initial_message.decode().strip()
         print(f"Client chose: {initial_message}")  # Debugging log
         player = Player()
-        await game.initialize()
+        # await game.initialize()
         if initial_message == "Hello|new":
             # Call the login_or_register function
             player = await handle_login(reader, writer)
