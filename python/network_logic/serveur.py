@@ -67,10 +67,10 @@ async def handle_client_msg(reader, writer):
             await writer.wait_closed()
             del CLIENTS[client_id]
             return
-        print (f"Zone : {player.get_zone()}")
+        print (f"Zone : {await player.get_zone()}")
 
         while True:
-            if player.get_zone() == 10:
+            if await player.get_zone() == 10:
                 await handle_city_menu(reader, writer, player)
             else:
                 await handle_wild_menu(reader, writer, player)

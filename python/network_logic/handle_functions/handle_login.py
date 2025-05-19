@@ -39,7 +39,7 @@ async def handle_login(reader, writer):
                 await writer.drain()
                 await asyncio.sleep(0.5) 
                 pprint(f"Player object after registration: {player}")  # Debugging log
-                game.add_player(addr, player)
+                await game.add_player(addr, player)
                 return player
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Login failed or account not found. Please try again or Register.{bcolors.ENDC}\n".encode())
@@ -120,7 +120,7 @@ async def handle_login(reader, writer):
                 await writer.drain()
                 await asyncio.sleep(0.5)
                 pprint(f"Player object after registration: {player}")  # Debugging log
-                game.add_player(addr, player)
+                await game.add_player(addr, player)
                 return player
             except Exception as e:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Registration failed: {str(e)}{bcolors.ENDC}\n".encode())
@@ -131,7 +131,7 @@ async def handle_login(reader, writer):
         elif choice == "3":
             writer.close()
             await writer.wait_closed()
-            game.remove_player(writer.get_extra_info('peername'))
+            await game.remove_player(writer.get_extra_info('peername'))
         else:
             # Invalid input, send the user back to the menu
             writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice. Please enter 1 to Login or 2 to Register.\n".encode())
