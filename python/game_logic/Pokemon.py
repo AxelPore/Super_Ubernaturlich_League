@@ -1,5 +1,6 @@
 import sqlite3
 import random
+import math
 
 class Pokemon :
     def __init__(self, random_pokemon):
@@ -335,13 +336,95 @@ class Pokemon :
         conn.close()
         
             
-    def use_move(self, selected_move):
+    def use_move(self, selected_move, target):
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
-        move = self.moves[selected_move]
-        
+        move_type, move_power, move_accuracy, move_crit, move_effect, move_class, move_effect_chance, move_drain, move_heal, move_priority, move_max_hits, move_min_hits, move_min_turns, move_max_turns, move_buff_debuff, move_flinch = cursor.execute("SELECT type, power, accuracy, crit_rate, effect, class, effect_chance, drain, healing, priority, max_hits, min_hits, min_turns, max_turns, buff_debuff, flinch_chance FROM Move WHERE MoveName = ?", (selected_move,)).fetchone()
+        if 0 > move_accuracy * self.accuracy < random.randint(1, 101):
+            return
+        dmg = 0
+        if move_class == 'physical' and move_power > 0:
+            dmg = self.get_dmg(move_power, target, move_type, move_crit, move_class)
+            # if move_effect not in [None, 'None', 'None.']: # If move has an effect
+            #     effect = self.get_effect(move_effect_chance, move_effect, move_buff_debuff)
+        elif move_class == 'special' and move_power > 0:
+            dmg = self.get_dmg(move_power, target, move_type, move_crit, move_class)
+        #     if move_effect not in [None, 'None', 'None.']: # If move has an effect
+        #         effect = self.get_effect(move_effect_chance, move_effect, move_buff_debuff)
+        # else:
+        #     effect = self.get_effect(move_effect_chance, move_effect, move_buff_debuff)
         conn.close()
+        return [dmg, move_drain, move_heal, move_priority]
 
+    def get_dmg(self, move_power, target, move_type, move_crit, move_class):
+        atk = 0
+        defense = 0
+        if move_class == 'physical':
+            atk = self.atk
+            defense = target.defense
+        elif move_class == 'special':
+            atk = self.spatk
+            defense = target.spdef
+        stab = self.get_stab(move_type)
+        efficacity = self.get_move_efficacity(move_type, target)
+        rand = random.uniform(0.85, 1.0)
+        crit = self.get_crit(move_crit)
+        Mod = stab * efficacity * crit * 1 * rand
+        base = math.floor((2 * self.Level) / 5) + 2
+        dmg = math.floor((base * move_power * atk) / defense) / 50 + 2
+        final_dmg = math.floor(dmg * Mod)
+        return final_dmg
+    
+    # def get_effect(self, move_effect_chance, move_effect, move_buff_debuff):
+    #     return
+    
+    def get_crit(self, move_crit):
+        if move_crit == 0:
+            if random.randint(1, 101) > 96:
+                return (2 * self.Level + 5) / (self.Level + 5) + 0.1
+        if move_crit == 1:
+            if random.randint(1, 101) > 87:
+                return (2 * self.Level + 5) / (self.Level + 5) + 0.5
+        if move_crit == 2:
+            if random.randint(1, 101) > 50 :
+                return (2 * self.Level + 5) / (self.Level + 5) + 1.5
+        else :
+            return (2 * self.Level + 5) / (self.Level + 5) + 2
+        
+    def get_stab(self, move_type):
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT type_1, type_2 FROM Pokedex WHERE Pokedexid = ?", (self.pokedex_id,))
+        result = cursor.fetchone()
+        if result[0] == move_type:
+            return 1.5
+        elif result[1] == move_type:
+            return 1.5
+        else:
+            return 1
+        
+    def get_move_efficacity(self, move_type, target):
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT type_1, type_2 FROM Pokedex WHERE Pokedexid = ?", (target.pokedex_id,))
+        result = cursor.fetchone()
+        move_type = move_type.capitalize()
+        if result[1] is None:
+            type1 = result[0].capitalize()
+            cursor.execute(f" SELECT {type1} FROM Type WHERE Attacking = ? ", (move_type,))
+            result = cursor.fetchone()
+            return result[0]
+        else :
+            type1 = result[0].capitalize()
+            type2 = result[1].capitalize()
+            cursor.execute(f" SELECT {type1}, {type2} FROM Type WHERE Attacking = ? ", (move_type,))
+            result = cursor.fetchone()
+            return result[0] * result[1]
+    
+    def get_catch_rate(self):
+        value = [0.9, 1.1]
+        return int(1 * (1 + ((100 * self.Level) / 100) / 4) * ((2 - self.hp / self.hp_max) * 4) * random.choice(value) * random.randint(1, 5) * 30)
+    
     def get_moves(self):
         return self.moves
     

@@ -40,7 +40,7 @@ def add_moves():
                 safe_int(row['min_turns']),
                 safe_int(row['stat_chance']),
                 row['effect'],
-                row['']
+                row['buff_debuff']
             ))
 
     conn.commit()

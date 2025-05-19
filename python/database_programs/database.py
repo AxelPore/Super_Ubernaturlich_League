@@ -8,6 +8,7 @@ import adders.add_pokedex as add_pokedex
 import adders.add_moves as add_moves
 import adders.add_learning as add_learning
 import adders.add_zones as add_zones
+import adders.add_type as add_type
 
 def create_tables():
     conn = sqlite3.connect('database.db')
@@ -118,8 +119,35 @@ def create_tables():
         min_hits INTEGER NOT NULL,
         max_turns INTEGER NOT NULL,
         min_turns INTEGER NOT NULL,
-        stat_chance INTEGER NOT NULL
+        stat_chance INTEGER NOT NULL,
+        effect Text,
+        buff_debuff INTEGER
     );
+    """)
+    
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS Type (
+        Typeid INTEGER PRIMARY KEY AUTOINCREMENT,
+        Attacking TEXT NOT NULL,
+        Normal INTEGER NOT NULL,
+        Fire INTEGER NOT NULL,
+        Water INTEGER NOT NULL,
+        Electric INTEGER NOT NULL,
+        Grass INTEGER NOT NULL,
+        Ice INTEGER NOT NULL,
+        Fighting INTEGER NOT NULL,
+        Poison INTEGER NOT NULL,
+        Ground INTEGER NOT NULL,
+        Flying INTEGER NOT NULL,
+        Psychic INTEGER NOT NULL,
+        Bug INTEGER NOT NULL,
+        Rock INTEGER NOT NULL,
+        Ghost INTEGER NOT NULL,
+        Dragon INTEGER NOT NULL,
+        Dark INTEGER NOT NULL,
+        Steel INTEGER NOT NULL,
+        Fairy INTEGER NOT NULL
+    );              
     """)
     
     cursor.execute("""
@@ -214,4 +242,5 @@ if __name__ == "__main__":
     add_learning.add_learning()
     add_items.add_items()
     add_zones.add_zones()
+    add_type.add_type()
     print("Database and tables created successfully.")
