@@ -30,9 +30,9 @@ class Battle :
     async def catch_pokemon(self):
         if await self.pokemon2.get_catch_rate() > 65:
             await self.player1.add_pokemon(self.pokemon2)
-            return "You successfully catched the pokemon !"
+            return "You successfully catched the pokemon !", True
         else :
-            return "You didn't catch the pokemon !"
+            return "You didn't catch the pokemon !" , False
             
     
     async def pokemon_moves(self, number): #Renvoi les moves du pokemon sur le terrain (1 ou 2)
