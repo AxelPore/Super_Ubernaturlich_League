@@ -7,6 +7,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from ..Common import DISPLAY_BYTE_ID, INPUT_BYTE_ID, game
 
 async def handle_change_player_zone(reader, writer, player):
+    from .handle_wild_menu import handle_wild_menu
+    from .handle_city_menu import handle_city_menu
     while True:
         writer.write(f"{INPUT_BYTE_ID}|You are going to change your zone. Are you sure ? : y/n \n".encode())
         await writer.drain()
@@ -34,6 +36,13 @@ async def handle_change_player_zone(reader, writer, player):
                 await asyncio.sleep(0.5)
                 wrong = True
             if wrong == False:
+                if await player.get_zone() == 10 :
+                    writer.write(f"{DISPLAY_BYTE_ID}|You are now in the wity.".encode())
+                    await writer.drain()
+                    await asyncio.sleep(0.5)
+                    await handle_city_menu(reader, writer, player)
+                else:
+                    await handle_wild_menu(reader, writer, player)
                 break
             else:
                 continue
