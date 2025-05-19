@@ -9,8 +9,8 @@ from ..Common import exception_handler_decorator, DISPLAY_BYTE_ID, INPUT_BYTE_ID
 @exception_handler_decorator
 async def handle_team_change(reader, writer, player):
     while True:
-        equipe = player.get_equipe()
-        pokemon = player.get_pokemon()        
+        equipe = await player.get_equipe()
+        pokemon = await player.get_pokemon()        
         if len(equipe) == 1:
             writer.write(f"{DISPLAY_BYTE_ID}|Here you can manage your team : \n 1. Add a Pokemon \n 2. Replace a Pokemon \n 3. Exit".encode())
             await writer.drain()
@@ -36,7 +36,7 @@ async def handle_team_change(reader, writer, player):
                     await writer.drain()
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
-                player.add_pokemon_to_team(int(choice))
+                await player.add_pokemon_to_team(int(choice))
             elif choice == "2":
                 if len(pokemon) == 0:
                     writer.write(f"{DISPLAY_BYTE_ID}|You don't have any Pokemon in your PC.".encode())
@@ -54,7 +54,7 @@ async def handle_team_change(reader, writer, player):
                     await writer.drain()
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
-                player.replace_pokemon_in_team(1, int(choice))
+                await player.replace_pokemon_in_team(1, int(choice))
             elif choice == "3":
                 break
             else:
@@ -99,7 +99,7 @@ async def handle_team_change(reader, writer, player):
                     await writer.drain()
                     choice2 = await reader.read(1024)
                     choice2 = choice2.decode().strip()
-                player.replace_pokemon_in_team(int(choice), int(choice2))
+                await player.replace_pokemon_in_team(int(choice), int(choice2))
             elif choice == "2":
                 writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
                 await writer.drain()
@@ -112,7 +112,7 @@ async def handle_team_change(reader, writer, player):
                     await writer.drain()
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
-                player.remove_pokemon_to_team(int(choice))
+                await player.remove_pokemon_to_team(int(choice))
             elif choice == "3":
                 break
             else:
@@ -145,7 +145,7 @@ async def handle_team_change(reader, writer, player):
                     await writer.drain()
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
-                player.add_pokemon_to_team(int(choice))
+                await player.add_pokemon_to_team(int(choice))
             elif choice == "2":
                 if len(pokemon) == 0:
                     writer.write(f"{DISPLAY_BYTE_ID}|You don't have any Pokemon in your PC.".encode())
@@ -175,7 +175,7 @@ async def handle_team_change(reader, writer, player):
                     await writer.drain()
                     choice2 = await reader.read(1024)
                     choice2 = choice2.decode().strip()
-                player.replace_pokemon_in_team(int(choice), int(choice2))
+                await player.replace_pokemon_in_team(int(choice), int(choice2))
             elif choice == "3":
                 writer.write(f"{DISPLAY_BYTE_ID}|Here is your team: \n".encode())
                 await writer.drain()
@@ -188,7 +188,7 @@ async def handle_team_change(reader, writer, player):
                     await writer.drain()
                     choice = await reader.read(1024)
                     choice = choice.decode().strip()
-                player.remove_pokemon_to_team(int(choice))
+                await player.remove_pokemon_to_team(int(choice))
             elif choice == "4":
                 break
             else:
