@@ -1,12 +1,14 @@
 import asyncio
 import random
-
+import aiosqlite
+from game_logic.Player import Player
+from game_logic.Pokemon import Pokemon
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from ..Common import DISPLAY_BYTE_ID, INPUT_BYTE_ID, game
-from .handle_battle import handle_battle
+from .handle_battle import handle_wild_fight, handle_duel
 from .handle_change_player_zone import handle_change_player_zone
 
 async def handle_wild_menu(reader, writer, player):
@@ -19,8 +21,15 @@ async def handle_wild_menu(reader, writer, player):
         choice = await reader.read(1024)
         choice = choice.decode().strip()
         if choice == "1":
-            await game.encounter_pokemon(player)
+            async with aiosqlite.connect('database.db') as conn:
+                async with conn.execute("SELECT Pokedexid FROM Pokedex WHERE Zoneid = ?", (player.get_zoneid(),)) as cursor:
+                    spawnable_pokemons = await cursor.fetchall()
+                place_holder = Player()
+                place_holder.equipe.append(Pokemon(spawnable_pokemons[random.randint(0, len(spawnable_pokemons) - 1)][0]))
             writer.write(f"{DISPLAY_BYTE_ID}|You encountered a wild Pokemon!".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
+            await handle_wild_fight(reader, writer, player, place_holder)
             continue
         elif choice == "2":
             writer.write(f"{DISPLAY_BYTE_ID}|Here are the trainers nearby:\n".encode())
@@ -38,7 +47,7 @@ async def handle_wild_menu(reader, writer, player):
                     await writer.drain()
                     trainer = await reader.read(1024)
                     trainer = trainer.decode().strip()
-                    await handle_battle(reader, writer, player, trainer)
+                    await handle_duel(reader1, writer1, player, reader2, writer2, trainer)
                 else:
                     writer.write(f"{DISPLAY_BYTE_ID}|No trainers nearby.".encode())
                     await writer.drain()

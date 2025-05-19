@@ -28,6 +28,18 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
     while not battle_over:
         action1 = False
         action2 = False
+        writer1.write(f"{DISPLAY_BYTE_ID}|Your Pokemon : {battle.pokemon1.pokemon_name} {battle.pokemon1.hp}/{battle.pokemon1.hp_max}".encode())
+        await writer1.drain()
+        await asyncio.sleep(0.5)
+        writer1.write(f"{DISPLAY_BYTE_ID}|Your Opponent's Pokemon : {battle.pokemon2.pokemon_name} {battle.pokemon2.hp}/{battle.pokemon2.hp_max}".encode())
+        await writer2.drain()
+        await asyncio.sleep(0.5)
+        writer2.write(f"{DISPLAY_BYTE_ID}|Your Pokemon : {battle.pokemon2.pokemon_name} {battle.pokemon2.hp}/{battle.pokemon2.hp_max}".encode())
+        await writer2.drain()
+        await asyncio.sleep(0.5)
+        writer2.write(f"{DISPLAY_BYTE_ID}|Your Opponent's Pokemon : {battle.pokemon1.pokemon_name} {battle.pokemon1.hp}/{battle.pokemon1.hp_max}".encode())
+        await writer1.drain()
+        await asyncio.sleep(0.5)
         # Send command options to players:
         writer1.write(f"{DISPLAY_BYTE_ID}|You can use the following commands:\n 1. Use Skill \n 2. Change Pokemon".encode())
         await writer1.drain()
@@ -94,18 +106,6 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
 
         if action1 and action2:
             result = await battle.end_turn(move_data1, move_data2)
-            writer1.write(f"{DISPLAY_BYTE_ID}|Your Pokemon : {battle.pokemon1.pokemon_name} {battle.pokemon1.hp}/{battle.pokemon1.hp_max}".encode())
-            await writer1.drain()
-            await asyncio.sleep(0.5)
-            writer1.write(f"{DISPLAY_BYTE_ID}|Your Opponent's Pokemon : {battle.pokemon2.pokemon_name} {battle.pokemon2.hp}/{battle.pokemon2.hp_max}".encode())
-            await writer2.drain()
-            await asyncio.sleep(0.5)
-            writer2.write(f"{DISPLAY_BYTE_ID}|Your Pokemon : {battle.pokemon2.pokemon_name} {battle.pokemon2.hp}/{battle.pokemon2.hp_max}".encode())
-            await writer2.drain()
-            await asyncio.sleep(0.5)
-            writer2.write(f"{DISPLAY_BYTE_ID}|Your Opponent's Pokemon : {battle.pokemon1.pokemon_name} {battle.pokemon1.hp}/{battle.pokemon1.hp_max}".encode())
-            await writer1.drain()
-            await asyncio.sleep(0.5)
         
         writer1.write(f"{DISPLAY_BYTE_ID}|{result}".encode())
         await writer1.drain()
@@ -133,12 +133,18 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
     battle = Battle()
     await battle.set_attribute(player, wild_pokemon)
 
-    writer.write(f"{DISPLAY_BYTE_ID}|You are now in a battle against {wild_pokemon}!".encode())
+    writer.write(f"{DISPLAY_BYTE_ID}|You are now in a battle against {battle.pokemon2.pokemon_name}!".encode())
     await writer.drain()
     await asyncio.sleep(0.5)
 
     battle_over = False
     while not battle_over:
+        writer.write(f"{DISPLAY_BYTE_ID}|Your Pokemon : {battle.pokemon1.pokemon_name} {battle.pokemon1.hp}/{battle.pokemon1.hp_max}".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
+        writer.write(f"{DISPLAY_BYTE_ID}|Your Opponent's Pokemon : {battle.pokemon2.pokemon_name} {battle.pokemon2.hp}/{battle.pokemon2.hp_max}".encode())
+        await writer.drain()
+        await asyncio.sleep(0.5)
         writer.write(f"{DISPLAY_BYTE_ID}|You can use the following commands:\n 1. Use Skill \n 2. Change Pokemon \n 3. Try to catch the pokemon \n 4. Flee".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
