@@ -47,7 +47,7 @@ async def handle_wild_menu(reader, writer, player):
                     await writer.drain()
                     trainer = await reader.read(1024)
                     trainer = trainer.decode().strip()
-                    await handle_duel(reader1, writer1, player, reader2, writer2, trainer)
+                    await handle_duel(reader, writer, player, reader2, writer2, trainer)
                 else:
                     writer.write(f"{DISPLAY_BYTE_ID}|No trainers nearby.".encode())
                     await writer.drain()
