@@ -30,6 +30,7 @@ async def handle_wild_menu(reader, writer, player):
             await writer.drain()
             await asyncio.sleep(0.5)
             await handle_wild_fight(reader, writer, player, place_holder)
+            await player.reset_equipe()
             continue
         elif choice == "2":
             writer.write(f"{DISPLAY_BYTE_ID}|Here are the trainers nearby:\n".encode())

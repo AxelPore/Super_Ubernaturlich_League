@@ -181,6 +181,24 @@ class Player:
 
         return self.username
 
+    async def reset_equipe(self):
+        async with aiosqlite.connect('database.db') as conn:
+            self.pokemon.clear()
+            self.equipe.clear()
+            pc_cursor = await conn.execute("SELECT Pokedexid, Pokemonid FROM Pokemon WHERE Userid = ?", (self.userid,))
+            pc = await pc_cursor.fetchall()
+            for i in pc:
+                tmp_poke = Pokemon(i[0])
+                tmp_poke.set_attribute(self.userid, i[1])
+                self.pokemon.append(tmp_poke)
+            tmp_equipe_cursor = await conn.execute("SELECT Pokemon1, Pokemon2, Pokemon3, Pokemon4 FROM Equipe WHERE Equipeid = ?", (self.equipeid,))
+            tmp_equipe = await tmp_equipe_cursor.fetchone()
+            for j in tmp_equipe:
+                for k in self.pokemon:
+                    if k.pokemonid == j:
+                        self.equipe.append(k)
+                        self.pokemon.remove(k)
+            
     async def get_zone(self):
         return self.zone
 
