@@ -191,7 +191,7 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
             pokemon_name = pokemon_name.decode().strip()
             await battle.changes_pokemon(1, battle.equipe1[pokemon_name - 1].pokemon_name)
         
-        elif choice == 4:
+        elif choice == 3:
             writer.write(f"{DISPLAY_BYTE_ID}|You throw a pokeball at the pokemon !".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
