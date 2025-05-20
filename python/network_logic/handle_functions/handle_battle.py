@@ -79,6 +79,7 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
             pokemon_name1 = await reader1.read(1024)
             pokemon_name1 = pokemon_name1.decode().strip()
             await battle.changes_pokemon(1, battle.equipe1[pokemon_name1 - 1].pokemon_name)
+            move_data1 = [0,0,0,0]
             action1 = True
 
         # Process player 2 action
@@ -102,6 +103,7 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
             pokemon_name2 = await reader2.read(1024)
             pokemon_name2 = pokemon_name2.decode().strip()
             await battle.changes_pokemon(2, battle.equipe2[pokemon_name2 - 1].pokemon_name)
+            move_data2 = [0,0,0,0]
             action2 = True
 
         if action1 and action2:
