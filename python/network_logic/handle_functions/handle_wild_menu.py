@@ -18,7 +18,11 @@ async def handle_wild_menu(reader, writer, player):
         await asyncio.sleep(0.5)
         writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
         await writer.drain()
-        async with CLIENTS[await player.get_username()]['lock']:
+        from ..Common import get_client_id_by_username
+        client_id = get_client_id_by_username(await player.get_username())
+        if client_id is None:
+            raise KeyError(f"Client ID not found for username {await player.get_username()}")
+        async with CLIENTS[client_id]['lock']:
             choice = await reader.read(1024)
         choice = choice.decode().strip()
         if choice == "1":
@@ -63,7 +67,11 @@ async def handle_wild_menu(reader, writer, player):
                 await asyncio.sleep(0.5)
             writer.write(f"{INPUT_BYTE_ID}|Enter the number of the trainer you want to fight: ".encode())
             await writer.drain()
-            async with CLIENTS[await player.get_username()]['lock']:
+            from ..Common import get_client_id_by_username
+            client_id = get_client_id_by_username(await player.get_username())
+            if client_id is None:
+                raise KeyError(f"Client ID not found for username {await player.get_username()}")
+            async with CLIENTS[client_id]['lock']:
                 choice = await reader.read(1024)
             choice = choice.decode().strip()
             try:
@@ -92,7 +100,11 @@ async def handle_wild_menu(reader, writer, player):
                 # Send challenge request to opponent
                 opponent_writer.write(f"{DISPLAY_BYTE_ID}|You have been challenged to a battle by {await player.get_username()}. Accept? (yes/no)".encode())
                 await opponent_writer.drain()
-                async with opponent_lock:
+                from ..Common import get_client_id_by_username
+                opponent_client_id = get_client_id_by_username(opponent_pseudo)
+                if opponent_client_id is None:
+                    raise KeyError(f"Client ID not found for username {opponent_pseudo}")
+                async with CLIENTS[opponent_client_id]['lock']:
                     response = await opponent_reader.read(1024)
                 response = response.decode().strip().lower()
                 player2 = None

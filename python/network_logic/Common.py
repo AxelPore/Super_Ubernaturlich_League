@@ -56,3 +56,9 @@ def exception_handler_decorator(func):
             await writer.wait_closed()
             game.remove_player(addr)
     return wrapper
+
+def get_client_id_by_username(username: str):
+    for client_id, client_info in CLIENTS.items():
+        if client_info.get('pseudo') == username:
+            return client_id
+    return None

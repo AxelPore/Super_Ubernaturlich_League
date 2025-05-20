@@ -50,13 +50,21 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
         # Player 1 action
         writer1.write(f"{INPUT_BYTE_ID}|Player 1, what do you want to do: ".encode())
         await writer1.drain()
-        async with CLIENTS[await player1.get_username()]['lock']:
+        from ..Common import get_client_id_by_username
+        client_id1 = get_client_id_by_username(await player1.get_username())
+        if client_id1 is None:
+            raise KeyError(f"Client ID not found for username {await player1.get_username()}")
+        async with CLIENTS[client_id1]['lock']:
             choice1 = await reader1.read(1)
         choice1 = int(choice1.decode())
 
         writer2.write(f"{INPUT_BYTE_ID}|Player 2, what do you want to do: ".encode())
         await writer2.drain()
-        async with CLIENTS[await player2.get_username()]['lock']:
+        from ..Common import get_client_id_by_username
+        client_id2 = get_client_id_by_username(await player2.get_username())
+        if client_id2 is None:
+            raise KeyError(f"Client ID not found for username {await player2.get_username()}")
+        async with CLIENTS[client_id2]['lock']:
             choice2 = await reader2.read(1)
         choice2 = int(choice2.decode())
         move_data1 = [0,0,0,0]
@@ -68,7 +76,11 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
             move_name = list(moves.keys())
             writer1.write(f"{INPUT_BYTE_ID}|Choose a skill to use: 1. {move_name[0]} 2. {move_name[1]} 3. {move_name[2]} 4. {move_name[3]}".encode())
             await writer1.drain()
-            async with CLIENTS[await player1.get_username()]['lock']:
+            from ..Common import get_client_id_by_username
+            client_id1 = get_client_id_by_username(await player1.get_username())
+            if client_id1 is None:
+                raise KeyError(f"Client ID not found for username {await player1.get_username()}")
+            async with CLIENTS[client_id1]['lock']:
                 move_choice1 = await reader1.read(1)
             move_choice1 = int(move_choice1.decode())    
             skill_name1 = move_name[move_choice1 - 1]
@@ -81,7 +93,11 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
                 await asyncio.sleep(0.5)
             writer1.write(f"{INPUT_BYTE_ID}|Choose a number:")
             await writer1.drain()
-            async with CLIENTS[await player1.get_username()]['lock']:
+            from ..Common import get_client_id_by_username
+            client_id1 = get_client_id_by_username(await player1.get_username())
+            if client_id1 is None:
+                raise KeyError(f"Client ID not found for username {await player1.get_username()}")
+            async with CLIENTS[client_id1]['lock']:
                 pokemon_name1 = await reader1.read(1024)
             pokemon_name1 = pokemon_name1.decode().strip()
             await battle.changes_pokemon(1, battle.equipe1[pokemon_name1 - 1].pokemon_name)
@@ -93,7 +109,11 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
             move_name = list(moves.keys())
             writer2.write(f"{INPUT_BYTE_ID}|Choose a skill to use: 1. {move_name[0]} 2. {move_name[1]} 3. {move_name[2]} 4. {move_name[3]}".encode())
             await writer2.drain()
-            async with CLIENTS[await player2.get_username()]['lock']:
+            from ..Common import get_client_id_by_username
+            client_id2 = get_client_id_by_username(await player2.get_username())
+            if client_id2 is None:
+                raise KeyError(f"Client ID not found for username {await player2.get_username()}")
+            async with CLIENTS[client_id2]['lock']:
                 move_choice2 = await reader2.read(1)
             move_choice2 = int(move_choice2.decode())    
             skill_name2 = move_name[move_choice2 - 1]
@@ -106,7 +126,11 @@ async def handle_duel(reader1, writer1, player1, reader2, writer2, player2):
                 await asyncio.sleep(0.5)
             writer2.write(f"{INPUT_BYTE_ID}|Choose a number:")
             await writer2.drain()
-            async with CLIENTS[await player2.get_username()]['lock']:
+            from ..Common import get_client_id_by_username
+            client_id2 = get_client_id_by_username(await player2.get_username())
+            if client_id2 is None:
+                raise KeyError(f"Client ID not found for username {await player2.get_username()}")
+            async with CLIENTS[client_id2]['lock']:
                 pokemon_name2 = await reader2.read(1024)
             pokemon_name2 = pokemon_name2.decode().strip()
             await battle.changes_pokemon(2, battle.equipe2[pokemon_name2 - 1].pokemon_name)
