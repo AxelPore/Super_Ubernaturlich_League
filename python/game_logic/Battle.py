@@ -61,7 +61,7 @@ class Battle :
             if self.pokemon2.hp <= 0 :
                 for i in range(len(self.equipe2)):
                     if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                        self.equipe2.pop(i)
+                        self.equipe2.remove(i)
                         break
                 if len(self.equipe2) == 0 :
                     return "Le joueur 2 a perdu"
@@ -69,7 +69,7 @@ class Battle :
             elif self.pokemon1.hp <= 0 :
                 for i in range(len(self.equipe1)):
                     if self.equipe1[i].get_name() ==  self.pokemon1.get_name():
-                        self.equipe1.pop(i)
+                        self.equipe1.remove(i)
                         break
                 if len(self.equipe1) == 0 :
                     return "Le joueur 1 a perdu"
@@ -79,7 +79,7 @@ class Battle :
             if self.pokemon1.hp <= 0 :
                 for i in range(len(self.equipe1)):
                     if self.equipe1[i].get_name() == self.pokemon1.get_name():
-                        self.equipe1.pop(i)
+                        self.equipe1.remove(i)
                         break
                 if len(self.equipe1) == 0 :
                     return "Le joueur 1 a perdu"
@@ -87,7 +87,7 @@ class Battle :
             elif self.pokemon2.hp <= 0 :
                 for i in range(len(self.equipe2)):
                     if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                        self.equipe2.pop(i)
+                        self.equipe2.remove(i)
                         break
                 if len(self.equipe2) == 0 :
                     return "Le joueur 2 a perdu"
@@ -100,7 +100,7 @@ class Battle :
             if self.pokemon1.hp <= 0 :
                 for i in range(len(self.equipe1)):
                     if self.equipe1[i].get_name() == self.pokemon1.get_name():
-                        self.equipe1.pop(i)
+                        self.equipe1.remove(i)
                         break
                 if len(self.equipe1) == 0 :
                     return "Le joueur 1 a perdu"
@@ -108,7 +108,7 @@ class Battle :
             elif self.pokemon2.hp <= 0 :
                 for i in range(len(self.equipe2)):
                     if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                        self.equipe2.pop(i)
+                        self.equipe2.remove(i)
                         break
                 if len(self.equipe2) == 0 :
                     return "Le joueur 2 a perdu"
@@ -118,7 +118,7 @@ class Battle :
             if self.pokemon2.hp <= 0 :
                 for i in range(len(self.equipe2)):
                     if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                        self.equipe2.pop(i)
+                        self.equipe2.remove(i)
                         break
                 if len(self.equipe2) == 0 :
                     return "Le joueur 2 a perdu"
@@ -126,7 +126,7 @@ class Battle :
             elif self.pokemon1.hp <= 0 :
                 for i in range(len(self.equipe1)):
                     if self.equipe1[i].get_name() == self.pokemon1.get_name():
-                        self.equipe1.pop(i)
+                        self.equipe1.remove(i)
                         break
                 if len(self.equipe1) == 0 :
                     return "Le joueur 1 a perdu"
@@ -139,7 +139,7 @@ class Battle :
             if self.pokemon2.hp <= 0 :
                 for i in range(len(self.equipe2)):
                     if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                        self.equipe2.pop(i)
+                        self.equipe2.remove(i)
                         break
                 if len(self.equipe2) == 0 :
                     return "Le joueur 2 a perdu"
@@ -147,7 +147,7 @@ class Battle :
             elif self.pokemon1.hp <= 0 :
                 for i in range(len(self.equipe1)):
                     if self.equipe1[i].get_name() == self.pokemon1.get_name():
-                        self.equipe1.pop(i)
+                        self.equipe1.remove(i)
                         break
                 if len(self.equipe1) == 0 :
                     return "Le joueur 1 a perdu"
@@ -157,7 +157,7 @@ class Battle :
             if self.pokemon1.hp <= 0 :
                 for i in range(len(self.equipe1)):
                     if self.equipe1[i].get_name() == self.pokemon1.get_name():
-                        self.equipe1.pop(i)
+                        self.equipe1.remove(i)
                         break
                 if len(self.equipe1) == 0 :
                     return "Le joueur 1 a perdu"
@@ -165,7 +165,7 @@ class Battle :
             elif self.pokemon2.hp <= 0 :
                 for i in range(len(self.equipe2)):
                     if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                        self.equipe2.pop(i)
+                        self.equipe2.remove(i)
                         break
                 if len(self.equipe2) == 0 :
                     return "Le joueur 2 a perdu"
@@ -178,7 +178,7 @@ class Battle :
             if self.pokemon1.hp <= 0 :
                 for i in range(len(self.equipe1)):
                     if self.equipe1[i].get_name() == self.pokemon1.get_name():
-                        self.equipe1.pop(i)
+                        self.equipe1.remove(i)
                         break
                 if len(self.equipe1) == 0 :
                     return "Le joueur 1 a perdu"
@@ -186,7 +186,7 @@ class Battle :
             elif self.pokemon2.hp <= 0 :
                 for i in range(len(self.equipe2)):
                     if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                        self.equipe2.pop(i)
+                        self.equipe2.remove(i)
                         break
                 if len(self.equipe2) == 0 :
                     return "Le joueur 2 a perdu"
@@ -196,7 +196,7 @@ class Battle :
             if self.pokemon2.hp <= 0 :
                 for i in range(len(self.equipe2)):
                     if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                        self.equipe2.pop(i)
+                        self.equipe2.remove(i)
                         break
                 if len(self.equipe2) == 0 :
                     return "Le joueur 2 a perdu"
@@ -204,7 +204,7 @@ class Battle :
             elif self.pokemon1.hp <= 0 :
                 for i in range(len(self.equipe1)):
                     if self.equipe1[i].get_name() == self.pokemon1.get_name():
-                        self.equipe1.pop(i)
+                        self.equipe1.remove(i)
                         break
                 if len(self.equipe1) == 0 :
                     return "Le joueur 1 a perdu"
@@ -219,7 +219,7 @@ class Battle :
                 if self.pokemon2.hp <= 0 :
                     for i in range(len(self.equipe2)):
                         if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                            self.equipe2.pop(i)
+                            self.equipe2.remove(i)
                             break
                     if len(self.equipe2) == 0 :
                         return "Le joueur 2 a perdu"
@@ -227,7 +227,7 @@ class Battle :
                 elif self.pokemon1.hp <= 0 :
                     for i in range(len(self.equipe1)):
                         if self.equipe1[i].get_name() == self.pokemon1.get_name():
-                            self.equipe1.pop(i)
+                            self.equipe1.remove(i)
                             break
                     if len(self.equipe1) == 0 :
                         return "Le joueur 1 a perdu"
@@ -237,7 +237,7 @@ class Battle :
                 if self.pokemon1.hp <= 0 :
                     for i in range(len(self.equipe1)):
                         if self.equipe1[i].get_name() == self.pokemon1.get_name():
-                            self.equipe1.pop(i)
+                            self.equipe1.remove(i)
                             break
                     if len(self.equipe1) == 0 :
                         return "Le joueur 1 a perdu"
@@ -245,7 +245,7 @@ class Battle :
                 elif self.pokemon2.hp <= 0 :
                     for i in range(len(self.equipe2)):
                         if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                            self.equipe2.pop(i)
+                            self.equipe2.remove(i)
                             break
                     if len(self.equipe2) == 0 :
                         return "Le joueur 2 a perdu"
@@ -258,7 +258,7 @@ class Battle :
                 if self.pokemon1.hp <= 0 :
                     for i in range(len(self.equipe1)):
                         if self.equipe1[i].get_name() == self.pokemon1.get_name():
-                            self.equipe1.pop(i)
+                            self.equipe1.remove(i)
                             break
                     if len(self.equipe1) == 0 :
                         return "Le joueur 1 a perdu"
@@ -266,7 +266,7 @@ class Battle :
                 elif self.pokemon2.hp <= 0 :
                     for i in range(len(self.equipe2)):
                         if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                            self.equipe2.pop(i)
+                            self.equipe2.remove(i)
                             break
                     if len(self.equipe2) == 0 :
                         return "Le joueur 2 a perdu"
@@ -276,7 +276,7 @@ class Battle :
                 if self.pokemon2.hp <= 0 :
                     for i in range(len(self.equipe2)):
                         if self.equipe2[i].get_name() == self.pokemon2.get_name():
-                            self.equipe2.pop(i)
+                            self.equipe2.remove(i)
                             break
                     if len(self.equipe2) == 0 :
                         return "Le joueur 2 a perdu"
@@ -284,7 +284,7 @@ class Battle :
                 elif self.pokemon1.hp <= 0 :
                     for i in range(len(self.equipe1)):
                         if self.equipe1[i].get_name() == self.pokemon1.get_name():
-                            self.equipe1.pop(i)
+                            self.equipe1.remove(i)
                             break
                     if len(self.equipe1) == 0 :
                         return "Le joueur 1 a perdu"
