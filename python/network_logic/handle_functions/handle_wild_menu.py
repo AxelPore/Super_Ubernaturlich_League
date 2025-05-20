@@ -45,7 +45,7 @@ async def handle_wild_menu(reader, writer, player):
                     # Since we don't have player object here, we check game.players or similar
                     # Assuming game.players is a dict of player objects keyed by pseudo or client_id
                     # We will try to find the player object by pseudo
-                    for p, v in game.players:
+                    for p, v in game.players.items():
                         print (p, v)
                         if v.username == client_info['pseudo']:
                             if await v.get_zone() == current_zone:
@@ -91,7 +91,7 @@ async def handle_wild_menu(reader, writer, player):
                 response = await opponent_reader.read(1024)
                 response = response.decode().strip().lower()
                 player2 = None
-                for p , v in game.players:
+                for p , v in game.players.items():
                         if v.username == opponent_pseudo:
                             player2 = v
                             break
