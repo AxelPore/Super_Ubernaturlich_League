@@ -213,7 +213,16 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
         writer.write(f"{DISPLAY_BYTE_ID}|{result}".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
-
+        if "Pokemon 1 est KO" in result:
+            for i in range(len(battle.equipe1)):
+                writer.write(f"{DISPLAY_BYTE_ID}|Choose a pokemon to switch to: {i+1}. {battle.equipe1[i].pokemon_name}".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+            writer.write(f"{INPUT_BYTE_ID}|Choose a number:")
+            await writer.drain()
+            pokemon_name = await reader.read(1024)
+            pokemon_name = pokemon_name.decode().strip()
+            await battle.changes_pokemon(1, battle.equipe1[pokemon_name - 1].pokemon_name)
         if "a perdu" in result or battle_over:
             battle_over = True
             break
