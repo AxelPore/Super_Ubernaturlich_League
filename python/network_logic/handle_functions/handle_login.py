@@ -32,6 +32,7 @@ async def handle_login(reader, writer):
 
             player = Player()
             addr = writer.get_extra_info('peername')
+            print (addr)
             if await player.login(username, password):
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Login successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()
