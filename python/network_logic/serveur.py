@@ -68,6 +68,8 @@ async def handle_client_msg(reader, writer):
             await writer.wait_closed()
             del CLIENTS[client_id]
             return
+        # Add pseudo to CLIENTS
+        CLIENTS[client_id]['pseudo'] = await player.get_username()
         print (f"Zone : {await player.get_zone()}")
 
         while True:

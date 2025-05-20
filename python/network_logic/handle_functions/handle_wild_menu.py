@@ -7,7 +7,7 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from ..Common import DISPLAY_BYTE_ID, INPUT_BYTE_ID, game
+from ..Common import DISPLAY_BYTE_ID, INPUT_BYTE_ID, game, CLIENTS
 from .handle_battle import handle_wild_fight, handle_duel
 from .handle_change_player_zone import handle_change_player_zone
 
@@ -36,23 +36,69 @@ async def handle_wild_menu(reader, writer, player):
             writer.write(f"{DISPLAY_BYTE_ID}|Here are the trainers nearby:\n".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
-            # number_of_trainers = random.randint(1, 5)
-            # game.generate_trainer(number_of_trainers, player.get_zone())
-            get_trainer = game.zone_check()
-            for k, v in get_trainer.items():
-                if v == player.get_zone():
-                    writer.write(f"{DISPLAY_BYTE_ID}|{k} is nearby.".encode())
+            # Find all players in the same zone
+            current_zone = await player.get_zone()
+            nearby_players = []
+            for client_id, client_info in CLIENTS.items():
+                if 'pseudo' in client_info and client_info['pseudo'] != await player.get_username():
+                    # We need to get the player's zone for this client
+                    # Since we don't have player object here, we check game.players or similar
+                    # Assuming game.players is a dict of player objects keyed by pseudo or client_id
+                    # We will try to find the player object by pseudo
+                    for p in game.players:
+                        if p.username == client_info['pseudo']:
+                            if await p.get_zone() == current_zone:
+                                nearby_players.append(client_info['pseudo'])
+            if not nearby_players:
+                writer.write(f"{DISPLAY_BYTE_ID}|No trainers nearby.".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+                continue
+            # List nearby players
+            for idx, pseudo in enumerate(nearby_players):
+                writer.write(f"{DISPLAY_BYTE_ID}|{idx + 1}. {pseudo}".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
+            writer.write(f"{INPUT_BYTE_ID}|Enter the number of the trainer you want to fight: ".encode())
+            await writer.drain()
+            choice = await reader.read(1024)
+            choice = choice.decode().strip()
+            try:
+                choice_idx = int(choice) - 1
+                if choice_idx < 0 or choice_idx >= len(nearby_players):
+                    writer.write(f"{DISPLAY_BYTE_ID}|Invalid choice.".encode())
                     await writer.drain()
                     await asyncio.sleep(0.5)
-                    writer.write(f"{INPUT_BYTE_ID}|Enter the number of the trainer you want to fight: ".encode())
+                    continue
+                opponent_pseudo = nearby_players[choice_idx]
+                # Find opponent's reader and writer
+                opponent_reader = None
+                opponent_writer = None
+                for client_id, client_info in CLIENTS.items():
+                    if client_info.get('pseudo') == opponent_pseudo:
+                        opponent_reader = client_info['r']
+                        opponent_writer = client_info['w']
+                        break
+                if opponent_reader is None or opponent_writer is None:
+                    writer.write(f"{DISPLAY_BYTE_ID}|Opponent not found.".encode())
                     await writer.drain()
-                    trainer = await reader.read(1024)
-                    trainer = trainer.decode().strip()
-                    await handle_duel(reader, writer, player, reader2, writer2, trainer)
+                    await asyncio.sleep(0.5)
+                    continue
+                # Send challenge request to opponent
+                opponent_writer.write(f"{DISPLAY_BYTE_ID}|You have been challenged to a battle by {await player.get_username()}. Accept? (yes/no)".encode())
+                await opponent_writer.drain()
+                response = await opponent_reader.read(1024)
+                response = response.decode().strip().lower()
+                if response == "yes":
+                    await handle_duel(reader, writer, player, opponent_reader, opponent_writer, game.get_player_by_username(opponent_pseudo))
                 else:
-                    writer.write(f"{DISPLAY_BYTE_ID}|No trainers nearby.".encode())
+                    writer.write(f"{DISPLAY_BYTE_ID}|Challenge declined.".encode())
                     await writer.drain()
                     await asyncio.sleep(0.5)
+            except Exception as e:
+                writer.write(f"{DISPLAY_BYTE_ID}|Error: {str(e)}".encode())
+                await writer.drain()
+                await asyncio.sleep(0.5)
             continue
         elif choice == "3":
             equipe = await player.get_equipe()
