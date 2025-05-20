@@ -116,6 +116,8 @@ class Pokemon :
     
     def set_hp(self, hp):
         self.hp += hp
+        if self.hp < 0:
+            self.hp = 0
         
     def set_atk(self, buff_atk):
         self.buff_atk = buff_atk
