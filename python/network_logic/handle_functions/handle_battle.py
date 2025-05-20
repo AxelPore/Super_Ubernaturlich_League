@@ -139,10 +139,10 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
 
     battle_over = False
     while not battle_over:
-        writer.write(f"{DISPLAY_BYTE_ID}|Your Pokemon : {battle.pokemon1.pokemon_name} {battle.pokemon1.hp}/{battle.pokemon1.hp_max}".encode())
+        writer.write(f"{DISPLAY_BYTE_ID}|Your Pokemon : {battle.pokemon1.pokemon_name} {battle.pokemon1.Level}. {battle.pokemon1.hp}/{battle.pokemon1.hp_max}".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
-        writer.write(f"{DISPLAY_BYTE_ID}|Your Opponent's Pokemon : {battle.pokemon2.pokemon_name} {battle.pokemon2.hp}/{battle.pokemon2.hp_max}".encode())
+        writer.write(f"{DISPLAY_BYTE_ID}|Your Opponent's Pokemon : {battle.pokemon2.pokemon_name} {battle.pokemon2.Level}. {battle.pokemon2.hp}/{battle.pokemon2.hp_max}".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
         writer.write(f"{DISPLAY_BYTE_ID}|You can use the following commands:\n 1. Use Skill \n 2. Change Pokemon \n 3. Try to catch the pokemon \n 4. Flee".encode())
