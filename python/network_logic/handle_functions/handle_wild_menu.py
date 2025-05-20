@@ -13,7 +13,7 @@ from .handle_change_player_zone import handle_change_player_zone
 
 async def handle_wild_menu(reader, writer, player):
     while True:
-        writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the wild! Here are your options:\n 1. Find and fight a wild Pokemon \n 2. Fight another trainer nearby \n 3. Check your Pokemon \n 4. Check your items \n 5. Explore somewhere else \n 6. Go back to the main menu \n".encode())
+        writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the wild! You are in the {await player.zone_name()} Here are your options:\n 1. Find and fight a wild Pokemon \n 2. Fight another trainer nearby \n 3. Check your Pokemon \n 4. Check your items \n 5. Explore somewhere else \n 6. Go back to the main menu \n".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
         writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
