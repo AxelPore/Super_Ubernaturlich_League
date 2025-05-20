@@ -31,7 +31,7 @@ async def handle_pokecenter_menu(reader, writer, player):
             await writer.drain()
             await asyncio.sleep(0.5)
             for i in range(len(equipe)):
-                writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {equipe[i].pokemon_name} : {equipe[i].get_moves()}".encode())
+                writer.write(f"{DISPLAY_BYTE_ID}|{i+1}. {equipe[i].pokemon_name} : {equipe[i].hp}/{equipe[i].hp_max}".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
             continue
