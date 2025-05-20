@@ -199,7 +199,7 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
                 continue
         wild_move = await battle.pokemon_moves(2)
         wild_move_name = list(wild_move.keys())
-        wild_skill_name = wild_move_name[random.randint(0, 4)]
+        wild_skill_name = wild_move_name[random.randint(0, len(wild_move_name))]
         move_data2 = await battle.use_skill(2, wild_skill_name)
 
         result = await battle.end_turn(move_data1, move_data2)
