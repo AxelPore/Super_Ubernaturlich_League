@@ -141,6 +141,7 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
 
     battle_over = False
     while not battle_over:
+        move_data1 = [0,0,0,0]
         writer.write(f"{DISPLAY_BYTE_ID}|Your Pokemon : {battle.pokemon1.pokemon_name} {battle.pokemon1.Level}. {battle.pokemon1.hp}/{battle.pokemon1.hp_max}".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
@@ -167,7 +168,7 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
                 writer.write(f"{DISPLAY_BYTE_ID}|Flee attempt failed!".encode())
                 await writer.drain()
                 await asyncio.sleep(0.5)
-                move_data1 = [0,0,0,0]
+                
 
         elif choice == 1:
             moves = await battle.pokemon_moves(1)
@@ -189,7 +190,6 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
             pokemon_name = await reader.read(1024)
             pokemon_name = pokemon_name.decode().strip()
             await battle.changes_pokemon(1, battle.equipe1[pokemon_name - 1].pokemon_name)
-            move_data1 = [0,0,0,0]
         
         elif choice == 4:
             writer.write(f"{DISPLAY_BYTE_ID}|You throw a pokeball at the pokemon !".encode())
@@ -199,7 +199,6 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
             writer.write(f"{DISPLAY_BYTE_ID}|{response}".encode())
             await writer.drain()
             await asyncio.sleep(0.5)
-            move_data1 = [0,0,0,0]
             if success:
                 break
             else:
