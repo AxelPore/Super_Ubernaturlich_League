@@ -193,6 +193,8 @@ async def handle_wild_fight(reader, writer, player, wild_pokemon):
             await asyncio.sleep(0.5)
             response, success = await battle.catch_pokemon()
             writer.write(f"{DISPLAY_BYTE_ID}|{response}".encode())
+            await writer.drain()
+            await asyncio.sleep(0.5)
             if success:
                 break
             else:
