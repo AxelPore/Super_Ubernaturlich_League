@@ -13,7 +13,7 @@ from .handle_change_player_zone import handle_change_player_zone
 
 async def handle_wild_menu(reader, writer, player):
     while True:
-        writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the wild! Here are your options:\n 1. Find and fight a wild Pokemon \n 2. Fight another trainer nearby \n 3. Check your Pokemon \n 4. Check your items \n 5. Explore somewhere else \n 6. Go back to the main menu \n".encode())
+        writer.write(f"{DISPLAY_BYTE_ID}|Welcome to the wild! You are in the {await player.zone_name()} Here are your options:\n 1. Find and fight a wild Pokemon \n 2. Fight another trainer nearby \n 3. Check your Pokemon \n 4. Check your items \n 5. Explore somewhere else \n 6. Go back to the main menu \n".encode())
         await writer.drain()
         await asyncio.sleep(0.5)
         writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
@@ -46,9 +46,10 @@ async def handle_wild_menu(reader, writer, player):
                     # Since we don't have player object here, we check game.players or similar
                     # Assuming game.players is a dict of player objects keyed by pseudo or client_id
                     # We will try to find the player object by pseudo
-                    for p in game.players:
-                        if p.username == client_info['pseudo']:
-                            if await p.get_zone() == current_zone:
+                    for p, v in game.players.items():
+                        print (p, v)
+                        if v.username == client_info['pseudo']:
+                            if await v.get_zone() == current_zone:
                                 nearby_players.append(client_info['pseudo'])
             if not nearby_players:
                 writer.write(f"{DISPLAY_BYTE_ID}|No trainers nearby.".encode())
@@ -95,9 +96,9 @@ async def handle_wild_menu(reader, writer, player):
                     response = await opponent_reader.read(1024)
                 response = response.decode().strip().lower()
                 player2 = None
-                for p in game.players:
-                        if p.username == opponent_pseudo:
-                            player2 = p
+                for p , v in game.players.items():
+                        if v.username == opponent_pseudo:
+                            player2 = v
                             break
                 if response == "yes":
                     await handle_duel(reader, writer, player, opponent_reader, opponent_writer, player2)

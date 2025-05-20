@@ -32,6 +32,7 @@ async def handle_login(reader, writer):
 
             player = Player()
             addr = writer.get_extra_info('peername')
+            print (addr[0])
             if await player.login(username, password):
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.OKGREEN}Login successful! Welcome, {username}.{bcolors.ENDC}\n".encode())
                 await writer.drain()
@@ -39,7 +40,7 @@ async def handle_login(reader, writer):
                 await writer.drain()
                 await asyncio.sleep(0.5) 
                 pprint(f"Player object after registration: {player}")  # Debugging log
-                await game.add_player(addr, player)
+                await game.add_player(addr[0], player)
                 return player
             else:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Login failed or account not found. Please try again or Register.{bcolors.ENDC}\n".encode())
@@ -120,7 +121,7 @@ async def handle_login(reader, writer):
                 await writer.drain()
                 await asyncio.sleep(0.5)
                 pprint(f"Player object after registration: {player}")  # Debugging log
-                await game.add_player(addr, player)
+                await game.add_player(addr[0], player)
                 return player
             except Exception as e:
                 writer.write(f"{DISPLAY_BYTE_ID}|{bcolors.WARNING}Registration failed: {str(e)}{bcolors.ENDC}\n".encode())
