@@ -47,20 +47,23 @@ class Player:
 
     async def register(self, username, mdp, starter_pokemon):
         async with aiosqlite.connect('database.db') as conn:
-            await conn.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 14))
-            self.userid = conn.last_insert_rowid()
+            cursor = await conn.execute("INSERT INTO User (username, password, Zoneid) VALUES (?, ?, ?)", (username, mdp, 14))
+            self.userid = cursor.lastrowid
             await conn.commit()
             first_pokemon = Pokemon(starter_pokemon)
             moves = []
             for i in first_pokemon.moves.items():
                 moves.append(i)
             pokedexid = int(first_pokemon.pokedex_id)
-            await conn.execute("INSERT INTO Pokemon (PokemonName, Userid, Ability, Move1, Move2, Move3, Move4, Pokedexid, Level, Exp, Needed_exp, Stat_hp, Stat_attack, Stat_defense, Stat_spattack, Stat_spdefense, Stat_speed, Stat_hp_ev, Stat_attack_ev, Stat_defense_ev, Stat_spattack_ev, Stat_spdefense_ev, Stat_speed_ev, Max_ev, Stat_hp_iv , Stat_attack_iv, Stat_defense_iv, Stat_spattack_iv, Stat_spdefense_iv, Stat_speed_iv) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (first_pokemon.pokemon_name, self.userid, first_pokemon.ability[0], moves[0][0], moves[1][0], moves[2][0], moves[3][0], pokedexid, 5, 0, int(first_pokemon.get_needed_exp(5, first_pokemon.exp_curve)), first_pokemon.get_stat_hp(5,first_pokemon.base_hp, first_pokemon.hp_ev, first_pokemon.hp_iv), first_pokemon.get_stat(5,first_pokemon.base_atk, first_pokemon.stats_ev[0], first_pokemon.stats_iv[0]), first_pokemon.get_stat(5,first_pokemon.base_defense, first_pokemon.stats_ev[1], first_pokemon.stats_iv[1]), first_pokemon.get_stat(5,first_pokemon.base_spatk, first_pokemon.stats_ev[2], first_pokemon.stats_iv[2]), first_pokemon.get_stat(5,first_pokemon.base_spdef, first_pokemon.stats_ev[3], first_pokemon.stats_iv[3]), first_pokemon.get_stat(5,first_pokemon.base_speed, first_pokemon.stats_ev[4], first_pokemon.stats_iv[4]), first_pokemon.hp_ev, first_pokemon.stats_ev[0], first_pokemon.stats_ev[1], first_pokemon.stats_ev[2], first_pokemon.stats_ev[3], first_pokemon.stats_ev[4],first_pokemon.get_max_ev(first_pokemon.stats_ev), first_pokemon.hp_iv, first_pokemon.stats_iv[0], first_pokemon.stats_iv[1], first_pokemon.stats_iv[2], first_pokemon.stats_iv[3], first_pokemon.stats_iv[4]))
-            await conn.execute("INSERT INTO Equipe (Pokemon1) VALUES (?)", (conn.last_insert_rowid(),))
-            await conn.execute("UPDATE User SET Equipeid = ? WHERE Userid = ?", (conn.last_insert_rowid(), self.userid))
+            cursor_pokemon = await conn.execute("INSERT INTO Pokemon (PokemonName, Userid, Ability, Move1, Move2, Move3, Move4, Pokedexid, Level, Exp, Needed_exp, Stat_hp, Stat_attack, Stat_defense, Stat_spattack, Stat_spdefense, Stat_speed, Stat_hp_ev, Stat_attack_ev, Stat_defense_ev, Stat_spattack_ev, Stat_spdefense_ev, Stat_speed_ev, Max_ev, Stat_hp_iv , Stat_attack_iv, Stat_defense_iv, Stat_spattack_iv, Stat_spdefense_iv, Stat_speed_iv) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", (first_pokemon.pokemon_name, self.userid, first_pokemon.ability[0], moves[0][0], moves[1][0], moves[2][0], moves[3][0], pokedexid, 5, 0, int(first_pokemon.get_needed_exp(5, first_pokemon.exp_curve)), first_pokemon.get_stat_hp(5,first_pokemon.base_hp, first_pokemon.hp_ev, first_pokemon.hp_iv), first_pokemon.get_stat(5,first_pokemon.base_atk, first_pokemon.stats_ev[0], first_pokemon.stats_iv[0]), first_pokemon.get_stat(5,first_pokemon.base_defense, first_pokemon.stats_ev[1], first_pokemon.stats_iv[1]), first_pokemon.get_stat(5,first_pokemon.base_spatk, first_pokemon.stats_ev[2], first_pokemon.stats_iv[2]), first_pokemon.get_stat(5,first_pokemon.base_spdef, first_pokemon.stats_ev[3], first_pokemon.stats_iv[3]), first_pokemon.get_stat(5,first_pokemon.base_speed, first_pokemon.stats_ev[4], first_pokemon.stats_iv[4]), first_pokemon.hp_ev, first_pokemon.stats_ev[0], first_pokemon.stats_ev[1], first_pokemon.stats_ev[2], first_pokemon.stats_ev[3], first_pokemon.stats_ev[4],first_pokemon.get_max_ev(first_pokemon.stats_ev), first_pokemon.hp_iv, first_pokemon.stats_iv[0], first_pokemon.stats_iv[1], first_pokemon.stats_iv[2], first_pokemon.stats_iv[3], first_pokemon.stats_iv[4]))
+            pokemonid = cursor_pokemon.lastrowid
+            cursor_equipe = await conn.execute("INSERT INTO Equipe (Pokemon1) VALUES (?)", (pokemonid,))
+            equipeid = cursor_equipe.lastrowid
+            await conn.execute("UPDATE User SET Equipeid = ? WHERE Userid = ?", (equipeid, self.userid))
             await conn.execute("INSERT INTO Inventory (Itemid, Userid, Quantity) VALUES (?, ?, ?)", (4, self.userid, 10))
             await conn.commit()
             await self.login(username, mdp)
+        
         
     # One line
 
