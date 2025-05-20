@@ -47,8 +47,9 @@ async def handle_client_msg(reader, writer):
 
     # Generate a unique client_id
     client_id = generateId(16)
-    # Store reader and writer in CLIENTS
-    CLIENTS[client_id] = {'r': reader, 'w': writer, 'addr': addr}
+    from network_logic.Common import create_client_entry
+    # Store reader and writer in CLIENTS using create_client_entry to include lock
+    CLIENTS[client_id] = create_client_entry(reader, writer)
 
     try:
         # Handle initial connection message
