@@ -46,6 +46,7 @@ async def handle_wild_menu(reader, writer, player):
                     # Assuming game.players is a dict of player objects keyed by pseudo or client_id
                     # We will try to find the player object by pseudo
                     for p, v in game.players:
+                        print (p, v)
                         if v.username == client_info['pseudo']:
                             if await v.get_zone() == current_zone:
                                 nearby_players.append(client_info['pseudo'])
