@@ -89,8 +89,13 @@ async def handle_wild_menu(reader, writer, player):
                 await opponent_writer.drain()
                 response = await opponent_reader.read(1024)
                 response = response.decode().strip().lower()
+                player2 = None
+                for p in game.players:
+                        if p.username == opponent_pseudo:
+                            player2 = p
+                            break
                 if response == "yes":
-                    await handle_duel(reader, writer, player, opponent_reader, opponent_writer, game.get_player_by_username(opponent_pseudo))
+                    await handle_duel(reader, writer, player, opponent_reader, opponent_writer, player2)
                 else:
                     writer.write(f"{DISPLAY_BYTE_ID}|Challenge declined.".encode())
                     await writer.drain()
