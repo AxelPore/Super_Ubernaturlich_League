@@ -8,8 +8,18 @@ from game_logic.Player import Player
 from game_logic.Game import Game
 from game_logic.Battle import Battle
 
+import asyncio
+
 global CLIENTS
 CLIENTS = {}
+
+def create_client_entry(reader, writer, pseudo=None):
+    return {
+        'r': reader,
+        'w': writer,
+        'pseudo': pseudo,
+        'lock': asyncio.Lock()
+    }
 
 INPUT_BYTE_ID = 'r=Ip'
 DISPLAY_BYTE_ID = 'r=Dp'

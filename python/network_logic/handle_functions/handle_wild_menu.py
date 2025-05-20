@@ -18,7 +18,8 @@ async def handle_wild_menu(reader, writer, player):
         await asyncio.sleep(0.5)
         writer.write(f"{INPUT_BYTE_ID}|Enter the number of your choice: ".encode())
         await writer.drain()
-        choice = await reader.read(1024)
+        async with CLIENTS[await player.get_username()]['lock']:
+            choice = await reader.read(1024)
         choice = choice.decode().strip()
         if choice == "1":
             async with aiosqlite.connect('database.db') as conn:
@@ -61,7 +62,8 @@ async def handle_wild_menu(reader, writer, player):
                 await asyncio.sleep(0.5)
             writer.write(f"{INPUT_BYTE_ID}|Enter the number of the trainer you want to fight: ".encode())
             await writer.drain()
-            choice = await reader.read(1024)
+            async with CLIENTS[await player.get_username()]['lock']:
+                choice = await reader.read(1024)
             choice = choice.decode().strip()
             try:
                 choice_idx = int(choice) - 1
@@ -74,10 +76,12 @@ async def handle_wild_menu(reader, writer, player):
                 # Find opponent's reader and writer
                 opponent_reader = None
                 opponent_writer = None
+                opponent_lock = None
                 for client_id, client_info in CLIENTS.items():
                     if client_info.get('pseudo') == opponent_pseudo:
                         opponent_reader = client_info['r']
                         opponent_writer = client_info['w']
+                        opponent_lock = client_info['lock']
                         break
                 if opponent_reader is None or opponent_writer is None:
                     writer.write(f"{DISPLAY_BYTE_ID}|Opponent not found.".encode())
@@ -87,7 +91,8 @@ async def handle_wild_menu(reader, writer, player):
                 # Send challenge request to opponent
                 opponent_writer.write(f"{DISPLAY_BYTE_ID}|You have been challenged to a battle by {await player.get_username()}. Accept? (yes/no)".encode())
                 await opponent_writer.drain()
-                response = await opponent_reader.read(1024)
+                async with opponent_lock:
+                    response = await opponent_reader.read(1024)
                 response = response.decode().strip().lower()
                 player2 = None
                 for p in game.players:
@@ -117,7 +122,7 @@ async def handle_wild_menu(reader, writer, player):
             continue
         elif choice == "4":
             items = await player.get_item()
-            writer.write(f"{DISPLAY_BYTE_ID}|Here are your Items: \n".encode())
+            writer.write
             await writer.drain()
             await asyncio.sleep(0.5)
             for i in range(len(items)):
